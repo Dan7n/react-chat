@@ -1,0 +1,46 @@
+@mixin center-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+@mixin center-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+@mixin center-hv {
+  display: grid;
+  place-content: center;
+}
+
+@mixin btn-hover($backgroundColor, $textColor) {
+  transition: all 200ms ease;
+  @content;
+  &:hover {
+    background-color: $backgroundColor;
+    color: $textColor;
+  }
+}
+@mixin flex-col {
+  display: flex;
+  flex-direction: column;
+}
+@mixin flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+@mixin media($bp) {
+  @media screen and (max-width: $bp) {
+    @content;
+  }
+}
+@mixin mediaQuery($bp) {
+  @media screen and (min-width: $bp) {
+    @content;
+  }
+}

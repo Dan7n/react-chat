@@ -1,0 +1,20 @@
+@use "./../../styles/partials/mixins";
+
+main {
+  height: 100vh;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+
+  .three-container {
+    background-color: lightblue;
+    grid-column: 1/5;
+    width: 100%;
+    @include mixins.center-col;
+  }
+
+  .loging-container {
+    grid-column: 5/13;
+    width: 100%;
+  }
+}
