@@ -13,8 +13,6 @@ import LoginPage from "./components/LoginPage";
 function App() {
   const [loggedInUser, loading, error] = useAuthState(auth);
 
-  console.log(loggedInUser);
-
   return (
     <Routes>
       <Route path="account/auth" element={<LoginPage />} />

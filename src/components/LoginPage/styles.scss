@@ -7,14 +7,44 @@ main {
   grid-template-columns: repeat(12, 1fr);
 
   .three-container {
-    background-color: lightblue;
-    grid-column: 1/5;
+    background-color: var(--secondary-bg-color);
+    grid-column: 1/6;
     width: 100%;
     @include mixins.center-col;
+    @include mixins.media(600px) {
+      display: none;
+    }
   }
 
   .loging-container {
-    grid-column: 5/13;
+    grid-column: 6/13;
     width: 100%;
+    text-align: center;
+    @include mixins.center-col;
+    @include mixins.media(600px) {
+      grid-column: 1 / span 12;
+    }
+
+    #authForm {
+      @include mixins.center-col;
+      gap: 2rem;
+      width: 100%;
+      text-align: center;
+
+      p {
+        text-align: center;
+        font-size: 0.8rem;
+        max-width: 90%;
+      }
+
+      .input-fields-container {
+        @include mixins.center-col;
+        gap: 0.7rem;
+        min-width: 50%;
+        .authForm--input-field {
+          width: 100%;
+        }
+      }
+    }
   }
 }
