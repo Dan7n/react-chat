@@ -26,6 +26,8 @@ export const defaultFormValue = {
   isPasswordValid: null,
 };
 
+type signInCaseType = "SIGN_IN" | "CREATE_ACCOUNT";
+
 export const LoginForm = () => {
   const [formInputValue, setFormInputValue] = useState<IFormValue>(defaultFormValue);
   const [accountFound, setAccountFound] = useState(false);
@@ -33,7 +35,7 @@ export const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigateTo = useNavigate();
 
-  const [createUserWithEmailAndPassword, loading, error] = useCreateUserWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, error, user] = useCreateUserWithEmailAndPassword(auth);
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
 
   useEffect(() => {
@@ -57,8 +59,8 @@ export const LoginForm = () => {
     setFormInputValue(currentState => ({ ...currentState, ...{ isEmailValid: emailValid } }));
     if (!emailValid) return handleFalseEmailAdressMsg();
     else {
-      console.log("here 60");
       setIsLoading(true);
+
       checkUserExists();
     }
   }, [formInputValue]);
@@ -70,23 +72,50 @@ export const LoginForm = () => {
     if (foundUser) {
       handleUserFoundMsg();
       setAccountFound(foundUser);
-      handleSignInWithEmailAndPassword();
+      handleSignInWithEmailAndPassword("SIGN_IN");
     } else {
       setIsNewUser(true);
       handleNewUserMsg();
+      handleSignInWithEmailAndPassword("CREATE_ACCOUNT");
       console.log("not found");
     }
-  }, [formInputValue?.isEmailValid, formInputValue?.email]);
+  }, [formInputValue?.isEmailValid, formInputValue?.email, formInputValue?.password]);
 
   //Sign in methods
-  const handleSignInWithEmailAndPassword = useCallback(async () => {
-    if (!formInputValue.password) return handleNoPasswordMsg();
-    const passwordValid = isPasswordValid(formInputValue.password);
-    setFormInputValue(currentState => ({ ...currentState, ...{ isPasswordValid: passwordValid } }));
-    if (passwordValid) {
-      signInWithEmailAndPassword(formInputValue.email, formInputValue.password);
-    }
-  }, [formInputValue.email, formInputValue.password, signInWithEmailAndPassword]);
+  const handleSignInWithEmailAndPassword = useCallback(
+    async (signInCase: signInCaseType) => {
+      const { email, password } = formInputValue;
+      console.log(password);
+      // if (!password) return handleNoPasswordMsg();
+      const passwordValid = isPasswordValid(password);
+      if (password === "") return;
+      setFormInputValue(currentState => ({ ...currentState, ...{ isPasswordValid: passwordValid } }));
+
+      if (signInCase === "SIGN_IN") {
+        // signInWithEmailAndPassword(email, password);
+        console.log("sign in");
+      } else {
+        console.log("create account");
+        createUserWithEmailAndPassword(email, password).then(async () => {
+          if (user) {
+            console.log(user);
+            // const signedInUserId = user.uid;
+
+            // //check if the user is saved in cloud firestore
+            // const docRef = doc(db, "users", signedInUserId);
+            // const docSnapshot = await getDoc(docRef);
+            // const isUserRegistered = docSnapshot.exists();
+
+            // if (!isUserRegistered) {
+            //   console.log(docRef, credentials.user);
+            //   await createUserInCloudFirestore(docRef, credentials.user);
+            // }
+          }
+        });
+      }
+    },
+    [formInputValue.email, formInputValue.password, signInWithEmailAndPassword]
+  );
 
   return (
     <>
@@ -118,14 +147,16 @@ export const LoginForm = () => {
               value={formInputValue.password}
               onChange={handleChange}
               error={formInputValue.isPasswordValid === false || false}
-              helperText={formInputValue.isPasswordValid === false && "Password must contain stuff"}
+              helperText={
+                formInputValue.isPasswordValid === false && "Password must be at least 8 chars and contain one number"
+              }
             />
           )}
         </div>
       </FormControl>
       <div className="buttons-container">
         <NormalButton width="50%" bgColor="#6246ea" hoverShadowColor="251deg 68% 36%" onClick={handleClick}>
-          {isLoading ? <ScaleLoader /> : "Continue"}
+          {isLoading ? <ScaleLoader color="white" /> : "Continue"}
         </NormalButton>
         <SignInWithGoogleBtn />
       </div>
