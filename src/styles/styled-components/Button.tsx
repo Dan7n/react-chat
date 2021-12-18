@@ -15,7 +15,6 @@ export const NormalButton = styled.button<IButtonProps>`
   border: none;
   border-radius: 3px;
   cursor: pointer;
-  margin: 1.2rem;
   color: ${props => (props.bgColor ? "white" : "black")};
   box-shadow: 0px 0.4px 0.5px hsl(var(--shadow-color) / 0.09), 0px 1.3px 1.6px -0.7px hsl(var(--shadow-color) / 0.1),
     -0.1px 3.1px 3.7px -1.3px hsl(var(--shadow-color) / 0.11), -0.2px 7.2px 8.6px -2px hsl(var(--shadow-color) / 0.13);

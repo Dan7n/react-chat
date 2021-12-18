@@ -33,7 +33,7 @@ main {
 
       p {
         text-align: center;
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         max-width: 90%;
       }
 
@@ -46,5 +46,11 @@ main {
         }
       }
     }
+  }
+  .buttons-container {
+    width: 100%;
+    @include mixins.center-col;
+    gap: 0.7rem;
+    margin-top: 1.5rem;
   }
 }

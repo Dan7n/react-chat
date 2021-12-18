@@ -1,6 +1,6 @@
 import { GoogleButton } from "./../../styles/styled-components/GoogleButton";
 import { useCallback } from "react";
-import { createUserInCloudFirestore } from "../../helpers/firebase-user";
+import { createUserInCloudFirestore } from "../../helpers/firebaseUserHelpers";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "../../firebase-config";
 import { doc, getDoc } from "@firebase/firestore";

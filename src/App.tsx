@@ -5,6 +5,7 @@ import "firebase/auth";
 import { firebaseApp, db, auth } from "./firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 //------------- Component imports -------------
 import HomeComponent from "./components/HomeComponent";
@@ -14,11 +15,14 @@ function App() {
   const [loggedInUser, loading, error] = useAuthState(auth);
 
   return (
-    <Routes>
-      <Route path="account/auth" element={<LoginPage />} />
-      <Route path="/" element={<HomeComponent />} />
-      <Route path="*" element={<h1>Not found</h1>} />
-    </Routes>
+    <>
+      <Toaster />
+      <Routes>
+        <Route path="account/auth" element={<LoginPage />} />
+        <Route path="/" element={<HomeComponent />} />
+        <Route path="*" element={<h1>Not found</h1>} />
+      </Routes>
+    </>
   );
 }
 
