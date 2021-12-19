@@ -52,7 +52,7 @@ export const findUserByEmailOrPhoneNumber = async (queryString: string, queryTyp
 };
 
 export const createUserInCloudFirestore = async (newUserDocument: any, userCredentials: any) => {
-  console.log("Hello from createUserInCloudFirestore");
+  //TODO: rewrite this to check if the user exists before posting to cloud firestore
 
   const newUser = {
     id: userCredentials.uid,
