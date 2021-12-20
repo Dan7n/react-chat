@@ -28,3 +28,7 @@ export const updateIsLoading = (isLoading: boolean) => {
 export const updateMessage = (newMessage: string) => {
   return { type: "UPDATE_EMAIL", payload: newMessage };
 };
+
+export const updateIsDialogOpen = (isDialogOpen: boolean) => {
+  return { type: "SET_DIALOG_OPEN", payload: isDialogOpen };
+};

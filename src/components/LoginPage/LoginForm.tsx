@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useReducer } from "react";
+import { useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 //Components
@@ -39,6 +39,7 @@ import {
   updateIsNewUser,
   updateIsLoading,
   updateMessage,
+  updateIsDialogOpen,
 } from "./state/actionCreators";
 import { ILoginState, ILoginForm } from "../../models/IFormValue";
 
@@ -114,7 +115,7 @@ export const LoginForm = (props: ILoginForm) => {
         await createUserWithEmailAndPassword(email, password);
       }
     },
-    [email, password, signInWithEmailAndPassword]
+    [createUserWithEmailAndPassword, dispatch, email, password, signInWithEmailAndPassword]
   );
 
   return (
@@ -150,7 +151,9 @@ export const LoginForm = (props: ILoginForm) => {
               helperText={isPasswordValid === false && "Password must be at least 8 chars and contain one number"}
             />
           )}
-          <button className="authForm__reset-link">Forget password?</button>
+          <button className="authForm__reset-link" onClick={() => dispatch(updateIsDialogOpen(true))}>
+            Forget password?
+          </button>
           <p className="authForm__error">{message}</p>
         </div>
       </FormControl>

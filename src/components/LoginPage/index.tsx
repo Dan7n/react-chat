@@ -1,11 +1,11 @@
-import React, { useReducer } from "react";
+import React, { useReducer, lazy, Suspense } from "react";
 import { reducer } from "./state/reducer";
 import { LoginForm } from "./LoginForm";
 import "./styles.scss";
 import { ILoginState } from "../../models/IFormValue";
-import { PasswordResetDialog } from "./PasswordResetDialog";
 
-export const initialFormState: ILoginState = {
+const PasswordResetDialog = lazy(() => import("./PasswordResetDialog"));
+const initialFormState: ILoginState = {
   email: "",
   password: "",
   isEmailValid: null,
@@ -19,11 +19,14 @@ export const initialFormState: ILoginState = {
 
 export default function LoginPage() {
   const [formState, formDispatch] = useReducer(reducer, initialFormState);
+  console.log(formState.isDialogOpen);
 
   return (
     <main>
       <section className="three-container">Placeholder</section>
-      <PasswordResetDialog />
+      <Suspense fallback={null}>
+        <PasswordResetDialog isDialogOpen={formState?.isDialogOpen} dispatch={formDispatch} />
+      </Suspense>
       <section className="loging-container">
         <LoginForm loginPageState={formState} dispatch={formDispatch} />
       </section>

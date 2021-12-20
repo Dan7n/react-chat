@@ -7,40 +7,42 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export const PasswordResetDialog = () => {
-  const [open, setOpen] = React.useState(true);
+import { updateIsDialogOpen } from "./state/actionCreators";
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+interface IPasswordResetDialog {
+  isDialogOpen: boolean;
+  dispatch: React.Dispatch<any>;
+}
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+const PasswordResetDialog = (props: IPasswordResetDialog) => {
+  const { isDialogOpen, dispatch } = props;
+  console.log(props);
 
   return (
-      <>
-      <Dialog open={open} onClose={handleClose}>
+    <div style={{ position: "absolute" }}>
+      <Dialog open={isDialogOpen} onClose={() => dispatch(updateIsDialogOpen(true))}>
         <DialogTitle>Subscribe</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            To subscribe to this website, please enter your email address here. We will send updates occasionally.
+            Please type the email adress associated with your account down below to reset your password.
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
-            id="name"
             label="Email Address"
             type="email"
+            name="resetEmail"
             fullWidth
             variant="standard"
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
+          <Button onClick={() => dispatch(updateIsDialogOpen(false))}>Cancel</Button>
+          <Button onClick={() => dispatch(updateIsDialogOpen(true))}>Send Reset Email</Button>
         </DialogActions>
       </Dialog>
-      </>
+    </div>
   );
 };
+
+export default PasswordResetDialog;
