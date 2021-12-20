@@ -1,6 +1,6 @@
 import { GoogleButton } from "./../../styles/styled-components/GoogleButton";
 import { useCallback } from "react";
-import { createUserInCloudFirestore } from "../../helpers/firebaseUserHelpers";
+import { createUserInCloudFirestore } from "../../utils/firebaseUserHelpers";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "../../firebase-config";
 import { doc, getDoc } from "@firebase/firestore";
@@ -13,17 +13,16 @@ export const SignInWithGoogleBtn = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then(async credentials => {
-        const signedInUserId = credentials.user.uid;
+        // const signedInUserId = credentials.user.uid;
 
         //check if the user is saved in cloud firestore
-        const docRef = doc(db, "users", signedInUserId);
-        const docSnapshot = await getDoc(docRef);
-        const isUserRegistered = docSnapshot.exists();
+        // const docRef = doc(db, "users", signedInUserId);
+        // const docSnapshot = await getDoc(docRef);
+        // const isUserRegistered = docSnapshot.exists();
 
-        if (!isUserRegistered) {
-          console.log(docRef, credentials.user);
-          await createUserInCloudFirestore(docRef, credentials.user);
-        }
+        // if (!isUserRegistered) {
+        //   console.log(docRef, credentials.user);
+        await createUserInCloudFirestore(credentials.user);
 
         navigateTo("/chat");
       })

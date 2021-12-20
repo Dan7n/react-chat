@@ -51,8 +51,17 @@ export const findUserByEmailOrPhoneNumber = async (queryString: string, queryTyp
   return { foundUser, userExists, errorMessage, done };
 };
 
-export const createUserInCloudFirestore = async (newUserDocument: any, userCredentials: any) => {
-  //TODO: rewrite this to check if the user exists before posting to cloud firestore
+export const createUserInCloudFirestore = async (userCredentials: any) => {
+  //Note: all documents in the "users" collections have a title that's equal to their UID, this makes it much easier and more efficient when querying
+
+  //Get a reference to the user document
+  const docRef = doc(db, "users", userCredentials.uid);
+
+  //Check if user is already saved in cloud firestore
+  const docSnapshot = await getDoc(docRef);
+  const isUserRegistered = docSnapshot.exists();
+
+  if (isUserRegistered) return console.log("User exists");
 
   const newUser = {
     id: userCredentials.uid,
@@ -66,7 +75,7 @@ export const createUserInCloudFirestore = async (newUserDocument: any, userCrede
   };
 
   try {
-    await setDoc(newUserDocument, newUser);
+    await setDoc(docRef, newUser);
   } catch (error) {
     error && console.log("An error has occured while creating a user: ", error);
   }

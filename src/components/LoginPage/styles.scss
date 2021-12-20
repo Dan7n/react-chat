@@ -45,6 +45,24 @@ main {
           width: 100%;
         }
       }
+
+      .authForm__error {
+        color: #f33800;
+      }
+
+      .authForm__reset-link {
+        background-color: white;
+        outline: none;
+        border: none;
+        font-size: 0.85rem;
+        color: #6247ea;
+        align-self: flex-start;
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
   .buttons-container {

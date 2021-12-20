@@ -1,120 +1,120 @@
-import { useState, useEffect, useCallback } from "react";
-import { IFormValue } from "../../models/IFormValue";
-import { SignInWithGoogleBtn } from "./SignInWithGoogleBtn";
-import signInImage from "./../../assets/sign-in.png";
+import { useEffect, useCallback, useReducer } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+//Components
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
-import { FormHelperText, Input, InputLabel } from "@mui/material";
+import { FormHelperText } from "@mui/material";
 import { NormalButton } from "../../styles/styled-components/Button";
-import { isEmailValid, isPasswordValid } from "../../helpers/regexHelpers";
-import { findUserByEmailOrPhoneNumber } from "../../helpers/firebaseUserHelpers";
-import { useNavigate } from "react-router-dom";
-import { useCreateUserWithEmailAndPassword, useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import ScaleLoader from "react-spinners/ClipLoader";
+import { SignInWithGoogleBtn } from "./SignInWithGoogleBtn";
+import signInImage from "./../../assets/sign-in.png";
+
+//Utils
+import { checkEmailValid, checkPasswordValid } from "../../utils/regexHelpers";
+import { createUserInCloudFirestore, findUserByEmailOrPhoneNumber } from "../../utils/firebaseUserHelpers";
+
+//Firebase imports
+import {
+  useAuthState,
+  useCreateUserWithEmailAndPassword,
+  useSignInWithEmailAndPassword,
+} from "react-firebase-hooks/auth";
 import {
   handleFalseEmailAdressMsg,
   handleUserFoundMsg,
   handleNewUserMsg,
   handleNoPasswordMsg,
-} from "./../../helpers/toastHelpers";
+} from "../../utils/toastHelpers";
 import { auth } from "./../../firebase-config";
-import ScaleLoader from "react-spinners/ClipLoader";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 
-export const defaultFormValue = {
-  email: "",
-  password: "",
-  isEmailValid: null,
-  isPasswordValid: null,
-};
+//App state
+import {
+  updateEmail,
+  updatePassword,
+  updateIsEmailValid,
+  updateIsPasswordValid,
+  updateIsAccountFound,
+  updateIsNewUser,
+  updateIsLoading,
+  updateMessage,
+} from "./state/actionCreators";
+import { ILoginState, ILoginForm } from "../../models/IFormValue";
 
 type signInCaseType = "SIGN_IN" | "CREATE_ACCOUNT";
 
-export const LoginForm = () => {
-  const [formInputValue, setFormInputValue] = useState<IFormValue>(defaultFormValue);
-  const [accountFound, setAccountFound] = useState(false);
-  const [isNewUser, setIsNewUser] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+export const LoginForm = (props: ILoginForm) => {
+  const { email, password, isEmailValid, isPasswordValid, isAccountFound, isNewUser, isLoading, message } =
+    props.loginPageState;
+  const { dispatch } = props;
+
+  const [loggedInUser] = useAuthState(auth);
   const navigateTo = useNavigate();
 
-  const [createUserWithEmailAndPassword, error, user] = useCreateUserWithEmailAndPassword(auth);
-  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, user, loading, error] = useSignInWithEmailAndPassword(auth);
 
   useEffect(() => {
-    if (error) console.log(error);
-  }, [error]);
+    //fires off when user creates
+    if (error) {
+      const errorMsg = error.message;
+      errorMsg.includes("wrong-password") &&
+        dispatch(updateMessage("Opps, looks like the password you entered was incorrect!"));
+    }
+    if (loggedInUser) {
+      console.log({ loggedInUser });
+      (async function () {
+        await createUserInCloudFirestore(loggedInUser);
+      })();
+    }
+  }, [loggedInUser, loading, error]);
 
   // Event handlers ------------------
-  const handleChange = useCallback(
-    e => {
-      const updatedState = { [e.target.name]: e.target.value };
-      setFormInputValue(currentState => {
-        return { ...currentState, ...updatedState };
-      });
-    },
-    [formInputValue]
-  );
 
-  const handleClick = useCallback(async () => {
-    if (!formInputValue.email) return handleFalseEmailAdressMsg();
-    const emailValid = isEmailValid(formInputValue.email);
-    setFormInputValue(currentState => ({ ...currentState, ...{ isEmailValid: emailValid } }));
+  const handleClick = async () => {
+    if (!email) return handleFalseEmailAdressMsg();
+    const emailValid = checkEmailValid(email!);
+    dispatch(updateIsEmailValid(emailValid));
     if (!emailValid) return handleFalseEmailAdressMsg();
     else {
-      setIsLoading(true);
-
+      dispatch(updateIsLoading(true));
       checkUserExists();
     }
-  }, [formInputValue]);
+  };
 
   const checkUserExists = useCallback(async () => {
-    const { foundUser, userExists, done } = await findUserByEmailOrPhoneNumber(formInputValue?.email, "email");
-    done === "OK" && setIsLoading(false);
+    const { foundUser, userExists, done } = await findUserByEmailOrPhoneNumber(email, "email");
+    done === "OK" && dispatch(updateIsLoading(false));
 
     if (foundUser) {
       handleUserFoundMsg();
-      setAccountFound(foundUser);
+      dispatch(updateIsAccountFound(foundUser));
       handleSignInWithEmailAndPassword("SIGN_IN");
     } else {
-      setIsNewUser(true);
+      dispatch(updateIsNewUser(true));
       handleNewUserMsg();
       handleSignInWithEmailAndPassword("CREATE_ACCOUNT");
-      console.log("not found");
     }
-  }, [formInputValue?.isEmailValid, formInputValue?.email, formInputValue?.password]);
+  }, [isEmailValid, email, password]);
 
   //Sign in methods
   const handleSignInWithEmailAndPassword = useCallback(
     async (signInCase: signInCaseType) => {
-      const { email, password } = formInputValue;
-      console.log(password);
       // if (!password) return handleNoPasswordMsg();
-      const passwordValid = isPasswordValid(password);
+      const passwordValid = checkPasswordValid(password);
       if (password === "") return;
-      setFormInputValue(currentState => ({ ...currentState, ...{ isPasswordValid: passwordValid } }));
+      else dispatch(updateIsPasswordValid(passwordValid));
 
       if (signInCase === "SIGN_IN") {
-        // signInWithEmailAndPassword(email, password);
+        await signInWithEmailAndPassword(email, password);
         console.log("sign in");
       } else {
         console.log("create account");
-        createUserWithEmailAndPassword(email, password).then(async () => {
-          if (user) {
-            console.log(user);
-            // const signedInUserId = user.uid;
-
-            // //check if the user is saved in cloud firestore
-            // const docRef = doc(db, "users", signedInUserId);
-            // const docSnapshot = await getDoc(docRef);
-            // const isUserRegistered = docSnapshot.exists();
-
-            // if (!isUserRegistered) {
-            //   console.log(docRef, credentials.user);
-            //   await createUserInCloudFirestore(docRef, credentials.user);
-            // }
-          }
-        });
+        await createUserWithEmailAndPassword(email, password);
       }
     },
-    [formInputValue.email, formInputValue.password, signInWithEmailAndPassword]
+    [email, password, signInWithEmailAndPassword]
   );
 
   return (
@@ -131,27 +131,27 @@ export const LoginForm = () => {
             size="small"
             className="authForm--input-field"
             name="email"
-            value={formInputValue.email}
-            onChange={handleChange}
+            value={email}
+            onChange={e => dispatch(updateEmail(e.target.value))}
             autoComplete="off"
-            error={formInputValue.isEmailValid === false || false}
+            error={isEmailValid === false || false}
           />
 
-          {(accountFound || isNewUser) && (
+          {(isAccountFound || isNewUser) && (
             <TextField
               label="Password"
               id="passwordInput"
               size="small"
               className="authForm--input-field"
               name="password"
-              value={formInputValue.password}
-              onChange={handleChange}
-              error={formInputValue.isPasswordValid === false || false}
-              helperText={
-                formInputValue.isPasswordValid === false && "Password must be at least 8 chars and contain one number"
-              }
+              value={password}
+              onChange={e => dispatch(updatePassword(e.target.value))}
+              error={isPasswordValid === false || false}
+              helperText={isPasswordValid === false && "Password must be at least 8 chars and contain one number"}
             />
           )}
+          <button className="authForm__reset-link">Forget password?</button>
+          <p className="authForm__error">{message}</p>
         </div>
       </FormControl>
       <div className="buttons-container">

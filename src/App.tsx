@@ -14,6 +14,10 @@ import LoginPage from "./components/LoginPage";
 function App() {
   const [loggedInUser, loading, error] = useAuthState(auth);
 
+  useEffect(() => {
+    if (loggedInUser) console.log({ loggedInUser });
+  }, [loggedInUser]);
+
   return (
     <>
       <Toaster />
