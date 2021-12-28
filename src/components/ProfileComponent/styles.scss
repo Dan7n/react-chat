@@ -1,0 +1,7 @@
+@use "./../../styles/partials/mixins";
+
+.profile-container {
+  min-width: 100vw;
+  min-height: 100vh;
+  @include mixins.center-col;
+}
