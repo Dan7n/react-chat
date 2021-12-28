@@ -9,9 +9,14 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  QueryDocumentSnapshot,
+  DocumentData,
 } from "@firebase/firestore";
-
 import { usersCollectionRef, conversationsCollectionRef, db, auth } from "../firebase-config";
+import { sendPasswordResetEmail, sendEmailVerification } from "firebase/auth";
+import { IUser } from "../models/IUser";
+
+//------------------------------------------------------------------
 
 /**
  * Finds a user in the "users" collection in cloud firestore
@@ -20,25 +25,29 @@ import { usersCollectionRef, conversationsCollectionRef, db, auth } from "../fir
  * @returns the user object if it exists, otherwise null
  */
 
-export const findUserByEmailOrPhoneNumber = async (queryString: string, queryType: string) => {
-  let foundUser;
+export const findUserByEmailOrPhoneNumber = async (queryType: string, queryString: string) => {
+  let foundUser: IUser | any;
   let userExists;
   let errorMessage;
   let done;
-
   const searchQuery = query(usersCollectionRef, where(queryType, "==", queryString));
 
   try {
     const userSnapshot = await getDocs(searchQuery);
-    userSnapshot.forEach(doc => {
-      if (!doc.exists) {
-        foundUser = null;
-        userExists = false;
-      } else {
+    console.log(userSnapshot);
+
+    if (userSnapshot.empty) {
+      foundUser = null;
+      userExists = false;
+      errorMessage = `No users found with this ${queryType}`;
+      done = "OK";
+    } else {
+      userSnapshot.forEach(doc => {
         foundUser = doc.data();
         userExists = true;
-      }
-    });
+        errorMessage = null;
+      });
+    }
   } catch (error) {
     if (error) {
       console.log("Error while trying to find user: ", error);
@@ -46,28 +55,39 @@ export const findUserByEmailOrPhoneNumber = async (queryString: string, queryTyp
     }
   } finally {
     done = "OK";
+    return { foundUser, userExists, errorMessage, done };
   }
-
-  return { foundUser, userExists, errorMessage, done };
 };
 
-export const createUserInCloudFirestore = async (userCredentials: any) => {
-  //Note: all documents in the "users" collections have a title that's equal to their UID, this makes it much easier and more efficient when querying
+//------------------------------------------------------------------
 
+/**
+ *
+ * @param userCredentials firebase credentials object
+ * @returns true if document exists in the "users" collection, otherwise false
+ */
+export const checkIfUserExists = async (userCredentials: any) => {
   //Get a reference to the user document
   const docRef = doc(db, "users", userCredentials.uid);
 
   //Check if user is already saved in cloud firestore
   const docSnapshot = await getDoc(docRef);
-  const isUserRegistered = docSnapshot.exists();
+  return docSnapshot.exists();
+};
 
+//------------------------------------------------------------------
+
+export const createUserInCloudFirestore = async (userCredentials: any) => {
+  //Note: all documents in the "users" collections have a title that's equal to their UID, this makes it much easier and more efficient when querying
+  const docRef = doc(db, "users", userCredentials.uid);
+
+  const isUserRegistered = await checkIfUserExists(userCredentials);
   if (isUserRegistered) return console.log("User exists");
 
   const newUser = {
     id: userCredentials.uid,
     displayName: userCredentials.displayName,
     email: userCredentials.email,
-    emailVerified: userCredentials.emailVerified,
     phoneNumber: userCredentials.phoneNumber,
     photoURL: userCredentials.photoURL,
     conversations: [],
@@ -78,5 +98,39 @@ export const createUserInCloudFirestore = async (userCredentials: any) => {
     await setDoc(docRef, newUser);
   } catch (error) {
     error && console.log("An error has occured while creating a user: ", error);
+  }
+};
+
+export const sendPasswordReset = async (userEmail: string) => {
+  return sendPasswordResetEmail(auth, userEmail);
+};
+
+//------------------------------------------------------------------
+
+export const createNewConversation = async (userId: string, receiverId: string) => {
+  const newConversationObj = {
+    createdAt: serverTimestamp(),
+    participants: [userId, receiverId],
+    messages: [],
+  };
+
+  const userDocumentRef = doc(db, "users", userId);
+  const receiverDocumentRef = doc(db, "users", receiverId);
+
+  try {
+    const newConversationDocument = await addDoc(conversationsCollectionRef, newConversationObj);
+    const newDocumentId = await newConversationDocument.id;
+
+    //add a reference to this new conversation to both sender and receiver user documents
+    await updateDoc(userDocumentRef, {
+      conversations: arrayUnion(newDocumentId),
+    });
+    await updateDoc(receiverDocumentRef, {
+      conversations: arrayUnion(newDocumentId),
+    });
+
+    return newConversationDocument;
+  } catch (error) {
+    error && console.log("An error has occured while creating a new conversation: ", error);
   }
 };

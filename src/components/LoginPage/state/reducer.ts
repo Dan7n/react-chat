@@ -1,9 +1,6 @@
-interface IReducerAction {
-  type: string;
-  payload: string | boolean | number;
-}
+import { IAction } from "../../../models/IAction";
 
-export const reducer = (state: any, action: IReducerAction) => {
+export const reducer = (state: any, action: IAction) => {
   switch (action.type) {
     case "UPDATE_EMAIL":
       return { ...state, email: action.payload };
@@ -23,7 +20,15 @@ export const reducer = (state: any, action: IReducerAction) => {
       return { ...state, message: action.payload };
     case "SET_DIALOG_OPEN":
       return { ...state, isDialogOpen: action.payload };
+    case "SET_RESET_EMAIL":
+      return { ...state, resetEmail: action.payload };
+    case "SET_RESET_EMAIL_VALID":
+      return { ...state, isResetEmailValid: action.payload };
+    case "RESET_PASSWORD_RESET_DIALOG":
+      return { ...state, resetEmail: "", isResetEmailValid: null };
+    case "TOGGLE_SHOW_PASSWORD":
+      return { ...state, isPasswordShown: action.payload };
     default:
-      return console.log("Error");
+      throw new Error("Something went wrong, check your action type and payload");
   }
 };

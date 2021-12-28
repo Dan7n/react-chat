@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import "./App.scss";
 import "firebase/firestore";
 import "firebase/auth";
@@ -11,21 +11,35 @@ import { Toaster } from "react-hot-toast";
 import HomeComponent from "./components/HomeComponent";
 import LoginPage from "./components/LoginPage";
 
+//------------- Context API -------------
+import { GlobalContext } from "./context/GlobalContext";
+import { defaultState, IDefaultState } from "./context/defaultState";
+import { reducer } from "./context/reducer";
+import { loginUser } from "./context/actionCreators";
+import { IAction } from "./models/IAction";
+import { ChatComponent } from "./components/ChatComponent";
+import { ProfilePage } from "./components/ProfileComponent";
+
 function App() {
   const [loggedInUser, loading, error] = useAuthState(auth);
+  const [globalState, dispatch] = useReducer<React.Reducer<IDefaultState, IAction>>(reducer, defaultState);
 
   useEffect(() => {
-    if (loggedInUser) console.log({ loggedInUser });
+    if (loggedInUser) dispatch(loginUser(loggedInUser));
   }, [loggedInUser]);
 
   return (
     <>
       <Toaster />
-      <Routes>
-        <Route path="account/auth" element={<LoginPage />} />
-        <Route path="/" element={<HomeComponent />} />
-        <Route path="*" element={<h1>Not found</h1>} />
-      </Routes>
+      <GlobalContext.Provider value={{ state: globalState, dispatch: dispatch }}>
+        <Routes>
+          <Route path="auth" element={<LoginPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="chat" element={<ChatComponent />} />
+          <Route path="/" element={<HomeComponent />} />
+          <Route path="*" element={<h1>Not found</h1>} />
+        </Routes>
+      </GlobalContext.Provider>
     </>
   );
 }

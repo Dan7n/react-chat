@@ -13,18 +13,8 @@ export const SignInWithGoogleBtn = () => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then(async credentials => {
-        // const signedInUserId = credentials.user.uid;
-
-        //check if the user is saved in cloud firestore
-        // const docRef = doc(db, "users", signedInUserId);
-        // const docSnapshot = await getDoc(docRef);
-        // const isUserRegistered = docSnapshot.exists();
-
-        // if (!isUserRegistered) {
-        //   console.log(docRef, credentials.user);
         await createUserInCloudFirestore(credentials.user);
-
-        navigateTo("/chat");
+        navigateTo("/profile");
       })
       .catch(error => {
         console.log(error);
