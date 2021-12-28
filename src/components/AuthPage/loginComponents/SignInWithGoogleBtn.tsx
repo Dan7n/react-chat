@@ -1,8 +1,8 @@
-import { GoogleButton } from "./../../styles/styled-components/GoogleButton";
+import { GoogleButton } from "../../../styles/styled-components/GoogleButton";
 import { useCallback } from "react";
-import { createUserInCloudFirestore } from "../../utils/firebaseUserHelpers";
+import { createUserInCloudFirestore } from "../../../utils/firebaseUserHelpers";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, db } from "../../firebase-config";
+import { auth, db } from "../../../firebase-config";
 import { doc, getDoc } from "@firebase/firestore";
 import { useNavigate } from "react-router-dom";
 

@@ -12,9 +12,9 @@ import {
   updateIsResetEmailValid,
   updateResetEmail,
   resetPasswordResetDialog,
-} from "./state/actionCreators";
-import { checkEmailValid } from "../../utils/regexHelpers";
-import { findUserByEmailOrPhoneNumber, sendPasswordReset } from "../../utils/firebaseUserHelpers";
+} from "../state/actionCreators";
+import { checkEmailValid } from "../../../utils/regexHelpers";
+import { findUserByEmailOrPhoneNumber, sendPasswordReset } from "../../../utils/firebaseUserHelpers";
 
 const CustomButton = styled(Button)({
   backgroundColor: "#6247ea",

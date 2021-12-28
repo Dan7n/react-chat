@@ -71,4 +71,35 @@ main {
     gap: 0.7rem;
     margin-top: 1.5rem;
   }
+
+  .profile-container {
+    grid-column: 6/13;
+    width: 100%;
+    text-align: center;
+    @include mixins.center-col;
+    gap: 3rem;
+    @include mixins.media(600px) {
+      grid-column: 1 / span 12;
+    }
+
+    .profile-container__title {
+      h1 {
+        font-size: 1.4rem;
+      }
+      p {
+        font-size: 0.9rem;
+        color: var(--dark-gray-7);
+      }
+    }
+    .profile-container__body {
+      img {
+        width: 7.8rem;
+        height: 7.8rem;
+        border-radius: 50%;
+        // border: 1px solid var(--light-gray);
+        padding: 9px;
+        @include mixins.lightShadow;
+      }
+    }
+  }
 }

@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import { FormHelperText } from "@mui/material";
-import { NormalButton } from "../../styles/styled-components/Button";
+import { NormalButton } from "../../../styles/styled-components/Button";
 import ScaleLoader from "react-spinners/ClipLoader";
 import { SignInWithGoogleBtn } from "./SignInWithGoogleBtn";
 import signInImage from "./../../assets/sign-in.png";
@@ -14,8 +14,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 //Utils
-import { checkEmailValid, checkPasswordValid } from "../../utils/regexHelpers";
-import { createUserInCloudFirestore, findUserByEmailOrPhoneNumber } from "../../utils/firebaseUserHelpers";
+import { checkEmailValid, checkPasswordValid } from "../../../utils/regexHelpers";
+import { createUserInCloudFirestore, findUserByEmailOrPhoneNumber } from "../../../utils/firebaseUserHelpers";
 
 //Firebase imports
 import {
@@ -23,8 +23,8 @@ import {
   useCreateUserWithEmailAndPassword,
   useSignInWithEmailAndPassword,
 } from "react-firebase-hooks/auth";
-import { handleFalseEmailAdressMsg, handleUserFoundMsg, handleNewUserMsg } from "../../utils/toastHelpers";
-import { auth } from "./../../firebase-config";
+import { handleFalseEmailAdressMsg, handleUserFoundMsg, handleNewUserMsg } from "../../../utils/toastHelpers";
+import { auth } from "../../../firebase-config";
 import { sendEmailVerification } from "firebase/auth";
 
 //App state
@@ -39,9 +39,11 @@ import {
   updateMessage,
   updateIsDialogOpen,
   toggleShowPassword,
-} from "./state/actionCreators";
-import { ILoginState, ILoginForm } from "../../models/IFormValue";
-import { GlobalContext } from "../../context/GlobalContext";
+} from "../state/actionCreators";
+import { ILoginState, ILoginForm } from "../../../models/IFormValue";
+import { GlobalContext } from "../../../context/GlobalContext";
+
+import { motion } from "framer-motion";
 
 export const LoginForm = (props: ILoginForm) => {
   const {
@@ -132,7 +134,11 @@ export const LoginForm = (props: ILoginForm) => {
   );
 
   return (
-    <>
+    <motion.div
+      initial={{ x: 300, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      exit={{ x: -300, opacity: 0 }}
+      transition={{ ease: "easeInOut", duration: 0.4 }}>
       {state.user ? (
         <h1>Logged in</h1>
       ) : (
@@ -193,7 +199,7 @@ export const LoginForm = (props: ILoginForm) => {
           </div>
         </>
       )}
-    </>
+    </motion.div>
   );
 };
 

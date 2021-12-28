@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useReducer, lazy, Suspense, useContext } from "react";
 import { reducer } from "./state/reducer";
-import { LoginForm } from "./LoginForm";
+import { LoginForm } from "./loginComponents/LoginForm";
+import { ProfilePage } from "./profileComponents/ProfilePage";
 import "./styles.scss";
 import { ILoginState } from "../../models/IFormValue";
 import { GlobalContext, IContext } from "../../context/GlobalContext";
+import { Route, Routes, Link } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
-const PasswordResetDialog = lazy(() => import("./PasswordResetDialog"));
+const PasswordResetDialog = lazy(() => import("./loginComponents/PasswordResetDialog"));
 const initialFormState: ILoginState = {
   email: "",
   password: "",
@@ -27,7 +30,10 @@ export default function LoginPage() {
 
   return (
     <main>
-      <section className="three-container">Placeholder</section>
+      <section className="three-container">
+        Placeholder <Link to={"profile"}>to profile</Link> <Link to={"login"}>to login</Link>
+      </section>
+
       <Suspense fallback={null}>
         <PasswordResetDialog
           isDialogOpen={formState?.isDialogOpen}
@@ -36,7 +42,12 @@ export default function LoginPage() {
         />
       </Suspense>
       <section className="loging-container">
-        <LoginForm loginPageState={formState} dispatch={formDispatch} />
+        <AnimatePresence exitBeforeEnter>
+          <Routes>
+            <Route path="login" element={<LoginForm loginPageState={formState} dispatch={formDispatch} />} />
+            <Route path="profile" element={<ProfilePage />} />
+          </Routes>
+        </AnimatePresence>
       </section>
     </main>
   );
