@@ -1,31 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useReducer, lazy, Suspense, useContext } from "react";
+import { useReducer, lazy, Suspense, useContext } from "react";
 import { reducer } from "./state/reducer";
 import { LoginForm } from "./loginComponents/LoginForm";
 import { ProfilePage } from "./profileComponents/ProfilePage";
 import "./styles.scss";
-import { ILoginState } from "../../models/IFormValue";
+import { ILoginState, initialFormState } from "../../models/IFormValue";
 import { GlobalContext, IContext } from "../../context/GlobalContext";
 import { Route, Routes, Link } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import { RequireAuth } from "../shared/RequireAuth";
 
 const PasswordResetDialog = lazy(() => import("./loginComponents/PasswordResetDialog"));
-const initialFormState: ILoginState = {
-  email: "",
-  password: "",
-  isEmailValid: null,
-  isPasswordValid: null,
-  isAccountFound: null,
-  isDialogOpen: false,
-  isNewUser: null,
-  isLoading: false,
-  message: "",
-  resetEmail: "",
-  isResetEmailValid: null,
-  isPasswordShown: false,
-};
 
-export default function LoginPage() {
+export default function AuthPage() {
   const [formState, formDispatch] = useReducer(reducer, initialFormState);
 
   return (
@@ -41,11 +28,27 @@ export default function LoginPage() {
           data={{ resetEmail: formState.resetEmail, isResetEmailValid: formState.isResetEmailValid }}
         />
       </Suspense>
+
       <section className="loging-container">
         <AnimatePresence exitBeforeEnter>
           <Routes>
-            <Route path="login" element={<LoginForm loginPageState={formState} dispatch={formDispatch} />} />
-            <Route path="profile" element={<ProfilePage />} />
+            <Route
+              path="login"
+              element={
+                //todo: change shouldUserBeLoggedIn to false
+                // <RequireAuth navigateTo="/chat" shouldUserBeLoggedIn={false}>
+                <LoginForm loginPageState={formState} dispatch={formDispatch} />
+                // </RequireAuth>
+              }
+            />
+            <Route
+              path="profile"
+              element={
+                // <RequireAuth navigateTo="/auth/login">
+                <ProfilePage />
+                // </RequireAuth>
+              }
+            />
           </Routes>
         </AnimatePresence>
       </section>

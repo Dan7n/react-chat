@@ -17,3 +17,18 @@ export interface ILoginForm {
   loginPageState: ILoginState;
   dispatch: any;
 }
+
+export const initialFormState: ILoginState = {
+  email: "",
+  password: "",
+  isEmailValid: null,
+  isPasswordValid: null,
+  isAccountFound: null,
+  isDialogOpen: false,
+  isNewUser: null,
+  isLoading: false,
+  message: "",
+  resetEmail: "",
+  isResetEmailValid: null,
+  isPasswordShown: false,
+};

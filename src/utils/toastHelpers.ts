@@ -15,3 +15,8 @@ export const handleNoPasswordMsg = () => toast.error("Password field is empty");
 export const handleNoUserFoundWithEmail = () => toast.error("We can't find any users matching this email adress.");
 
 export const handleUserFoundWithEmail = () => toast.success("A reset link will shortly be sent to you email adress!");
+
+export const handleEmptyInputFields = () => toast.error("Please make sure both form fields are correctly filled");
+
+export const handleSuccessfulProfileUpdate = () =>
+  toast.success("Awesome! Your profile has been created and you'll shortly be redirected to the chat page");

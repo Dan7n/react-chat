@@ -13,8 +13,9 @@ import {
   DocumentData,
 } from "@firebase/firestore";
 import { usersCollectionRef, conversationsCollectionRef, db, auth } from "../firebase-config";
-import { sendPasswordResetEmail, sendEmailVerification } from "firebase/auth";
+import { sendPasswordResetEmail, sendEmailVerification, updateProfile, getAuth } from "firebase/auth";
 import { IUser } from "../models/IUser";
+import { IDefaultProfileInfo } from "../models/IDefaultProfileInfo";
 
 //------------------------------------------------------------------
 
@@ -132,5 +133,24 @@ export const createNewConversation = async (userId: string, receiverId: string) 
     return newConversationDocument;
   } catch (error) {
     error && console.log("An error has occured while creating a new conversation: ", error);
+  }
+};
+
+//------------------------------------------------------------------
+
+export const updateCurrentlyLoggedInUserProfile = async (updatedProfileInfo: IDefaultProfileInfo) => {
+  const auth = getAuth();
+
+  try {
+    if (auth.currentUser) {
+      //Update the user document in cloud firestore
+      const userDocRef = doc(db, "users", auth.currentUser.uid);
+      await setDoc(userDocRef, updatedProfileInfo, { merge: true });
+
+      //and the user profile in firebase auth
+      await updateProfile(auth.currentUser, updatedProfileInfo);
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
