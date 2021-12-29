@@ -10,6 +10,8 @@ import { Route, Routes, Link } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { RequireAuth } from "../shared/RequireAuth";
 
+import { ThreeScene } from "./3dComponent";
+
 const PasswordResetDialog = lazy(() => import("./loginComponents/PasswordResetDialog"));
 
 export default function AuthPage() {
@@ -18,7 +20,8 @@ export default function AuthPage() {
   return (
     <main>
       <section className="three-container">
-        Placeholder <Link to={"profile"}>to profile</Link> <Link to={"login"}>to login</Link>
+        {/* Placeholder <Link to={"profile"}>to profile</Link> <Link to={"login"}>to login</Link> */}
+        <ThreeScene />
       </section>
 
       <Suspense fallback={null}>
