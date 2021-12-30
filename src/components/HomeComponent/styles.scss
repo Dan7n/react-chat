@@ -1,0 +1,26 @@
+@use "./../../styles/partials/mixins";
+
+.landing-page-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+  //   @include mixins.center-col;
+
+  .landing-page__hero-text {
+    position: inherit;
+    color: white;
+    font-size: 3rem;
+    padding-top: 4rem;
+    text-align: center;
+  }
+
+  .three-container {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100vw;
+    height: 100vw;
+    background-color: #111d5e;
+    overflow: hidden;
+  }
+}

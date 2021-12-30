@@ -1,0 +1,276 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 2178,
+      "max": [1, 0.99999994039535522, 1],
+      "min": [-0.99999994039535522, -0.99999994039535522, -0.94320821762084961],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 26136,
+      "componentType": 5126,
+      "count": 2178,
+      "max": [0.99597150087356567, 0.99616146087646484, 0.99727612733840942],
+      "min": [-0.99597156047821045, -0.99616146087646484, -0.91958922147750854],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 2178,
+      "max": [1, 1],
+      "min": [0, 0],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 2178,
+      "max": [2177],
+      "min": [0],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 52272,
+      "componentType": 5126,
+      "count": 2315,
+      "max": [0.94847887754440308, 1.0127918720245361, 1.0016489028930664],
+      "min": [-1.0087165832519531, -1.0265377759933472, -0.90765172243118286],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 80052,
+      "componentType": 5126,
+      "count": 2315,
+      "max": [0.99634635448455811, 0.98595666885375977, 0.99854004383087158],
+      "min": [-0.99140197038650513, -0.99616128206253052, -0.99827450513839722],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 17424,
+      "componentType": 5126,
+      "count": 2315,
+      "max": [1, 1],
+      "min": [0, 0],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 8712,
+      "componentType": 5125,
+      "count": 2757,
+      "max": [2314],
+      "min": [0],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 107832,
+      "componentType": 5126,
+      "count": 347,
+      "max": [0.46200966835021973, 0.61360198259353638, 0.99065166711807251],
+      "min": [-0.45963805913925171, -0.48228928446769714, -1.0554907321929932],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 111996,
+      "componentType": 5126,
+      "count": 347,
+      "max": [0.91524612903594971, 0.99523913860321045, 0.98414027690887451],
+      "min": [-0.95587825775146484, -0.97179752588272095, -0.99727612733840942],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 35944,
+      "componentType": 5126,
+      "count": 347,
+      "max": [1, 1],
+      "min": [0, 0],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 19740,
+      "componentType": 5125,
+      "count": 405,
+      "max": [346],
+      "min": [0],
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "JasperTobias (https://sketchfab.com/JasperTobias)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/lowpoly-earth-ce0cce9b528b47c7984bf0b2b600d705",
+      "title": "LowPoly Earth"
+    },
+    "generator": "Sketchfab-8.83.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 21360,
+      "byteOffset": 0,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 38720,
+      "byteOffset": 21360,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 116160,
+      "byteOffset": 60080,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 176240
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "emissiveFactor": [0, 0, 0],
+      "name": "watr",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [0.037031700000000001, 0.159472, 0.28464299999999998, 1],
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      }
+    },
+    {
+      "doubleSided": true,
+      "emissiveFactor": [0, 0, 0],
+      "name": "Lampd",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [0.20755699999999999, 0.354688, 0.0653474, 1],
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      }
+    },
+    {
+      "doubleSided": true,
+      "emissiveFactor": [0, 0, 0],
+      "name": "Lampd_Ice",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [0.58618199999999998, 0.82078899999999999, 0.67752100000000004, 1],
+        "metallicFactor": 0,
+        "roughnessFactor": 1
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "URF-Height_watr_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "URF-Height_Lampd_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 5,
+            "POSITION": 4,
+            "TEXCOORD_0": 6
+          },
+          "indices": 7,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "URF-Height_Lampd_Ice_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 9,
+            "POSITION": 8,
+            "TEXCOORD_0": 10
+          },
+          "indices": 11,
+          "material": 2,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [1],
+      "name": "RootNode (gltf orientation matrix)",
+      "rotation": [-0.70710678118654746, -0, -0, 0.70710678118654757]
+    },
+    {
+      "children": [2],
+      "name": "RootNode (model correction matrix)"
+    },
+    {
+      "children": [3],
+      "matrix": [1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1],
+      "name": "91aa8ae705db41b9a77132a467107dd2.fbx"
+    },
+    {
+      "children": [4],
+      "name": "RootNode"
+    },
+    {
+      "children": [5, 6, 7],
+      "matrix": [
+        99.863713600336681, -6.9388939039072284e-16, -5.2190713685417345, 0, -5.2190713685417292,
+        -4.3711390063094768e-6, -99.863713600336581, 0, -2.2813286398859489e-7, 99.999999999999901,
+        -4.3651817493994827e-6, 0, 0, 0, 0, 1
+      ],
+      "name": "URF-Height"
+    },
+    {
+      "mesh": 0,
+      "name": "URF-Height_watr_0"
+    },
+    {
+      "mesh": 1,
+      "name": "URF-Height_Lampd_0"
+    },
+    {
+      "mesh": 2,
+      "name": "URF-Height_Lampd_Ice_0"
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "OSG_Scene",
+      "nodes": [0]
+    }
+  ]
+}
