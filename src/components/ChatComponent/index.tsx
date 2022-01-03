@@ -44,7 +44,7 @@ export const ChatComponent = React.memo(() => {
                   initial={{ opacity: 0, translateX: 50 }}
                   animate={{ translateX: 0, opacity: 1 }}
                   className="messages-container">
-                  <MessagesPanel />
+                  <MessagesPanel loggedInUser={loggedInUser} />
                 </motion.div>
               }
             />

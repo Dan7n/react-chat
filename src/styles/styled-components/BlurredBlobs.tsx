@@ -5,6 +5,7 @@ interface IBlobProps {
   top?: string;
   left?: string;
   right?: string;
+  bottom?: string;
   color: string;
   delay?: string;
   transformTranslate?: string;
@@ -36,6 +37,7 @@ const Blob = styled.div<IBlobProps>`
   top: ${props => props.top || 0};
   ${props => props.left && { left: props.left }};
   ${props => props.right && { right: props.right }};
+  ${props => props.bottom && { right: props.bottom }};
   background-color: ${props => props.color};
   height: 18rem;
   width: 18rem;
@@ -47,7 +49,8 @@ const Blob = styled.div<IBlobProps>`
   mix-blend-mode: multiply;
   transform: translate(${props => props.transformTranslate || "0, 0"});
   animation-name: scale-up-down;
-  filter: blur(65px);
+  filter: blur(65px) opacity(0.6);
+
   z-index: 1;
 
   @keyframes scale-up-down {

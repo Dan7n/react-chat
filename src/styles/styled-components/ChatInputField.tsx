@@ -9,8 +9,10 @@ export const ChatInputField = styled.textarea`
   resize: none;
   overflow: scroll;
   transition: all ease 300ms;
+  padding: 4px;
 
   &:focus {
     border-color: var(--app-main-color);
+    height: 3.5rem;
   }
 `;
