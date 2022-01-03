@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast";
 
 //------------- Component imports -------------
 import HomeComponent from "./components/HomeComponent";
-import LoginPage from "./components/AuthPage";
+import AuthPage from "./components/AuthPage";
 
 //------------- Context API -------------
 import { GlobalContext } from "./context/GlobalContext";
@@ -31,8 +31,8 @@ function App() {
       <Toaster />
       <GlobalContext.Provider value={{ state: globalState, dispatch: dispatch }}>
         <Routes>
-          <Route path="auth/*" element={<LoginPage />} />
-          <Route path="chat" element={<ChatComponent />} />
+          <Route path="auth/*" element={<AuthPage />} />
+          <Route path="chat/*" element={<ChatComponent />} />
           <Route path="/" element={<HomeComponent />} />
           <Route path="*" element={<h1>Not found</h1>} />
         </Routes>

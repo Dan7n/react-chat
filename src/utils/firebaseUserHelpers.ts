@@ -13,9 +13,10 @@ import {
   DocumentData,
 } from "@firebase/firestore";
 import { usersCollectionRef, conversationsCollectionRef, db, auth } from "../firebase-config";
-import { sendPasswordResetEmail, sendEmailVerification, updateProfile, getAuth } from "firebase/auth";
+import { sendPasswordResetEmail, sendEmailVerification, updateProfile, getAuth, User } from "firebase/auth";
 import { IUser } from "../models/IUser";
 import { IDefaultProfileInfo } from "../models/IDefaultProfileInfo";
+import { IConversationUser } from "../models/IConversationUser";
 
 //------------------------------------------------------------------
 
@@ -108,15 +109,21 @@ export const sendPasswordReset = async (userEmail: string) => {
 
 //------------------------------------------------------------------
 
-export const createNewConversation = async (userId: string, receiverId: string) => {
+export const createNewConversation = async (loggedInUser: User, receiver: IConversationUser) => {
+  const loggedInUserParticipant = {
+    id: loggedInUser.uid,
+    displayName: loggedInUser.displayName,
+    photoURL: loggedInUser.photoURL,
+  };
+
   const newConversationObj = {
     createdAt: serverTimestamp(),
-    participants: [userId, receiverId],
+    participants: [loggedInUserParticipant, receiver],
     messages: [],
   };
 
-  const userDocumentRef = doc(db, "users", userId);
-  const receiverDocumentRef = doc(db, "users", receiverId);
+  const userDocumentRef = doc(db, "users", loggedInUser.uid);
+  const receiverDocumentRef = doc(db, "users", receiver.id);
 
   try {
     const newConversationDocument = await addDoc(conversationsCollectionRef, newConversationObj);

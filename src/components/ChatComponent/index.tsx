@@ -1,4 +1,4 @@
-import React, { useReducer, useContext } from "react";
+import React, { useReducer, useContext, useState, useEffect } from "react";
 
 import { SidePanel } from "./children/SidePanel";
 import { MessagesPanel } from "./children/MessagesPanel";
@@ -8,10 +8,17 @@ import { Header } from "./children/Header";
 import { reducer } from "./state/reducer";
 import { initialState } from "./state/initialState";
 import { GlobalContext } from "../../context/GlobalContext";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase-config";
+import { ScaleLoader } from "react-spinners";
+import { Route, Routes } from "react-router-dom";
+import { motion } from "framer-motion";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export const ChatComponent = React.memo(() => {
   const [chatState, chatDispatch] = useReducer(reducer, initialState);
-  const { state } = useContext<any>(GlobalContext);
+  const [loggedInUser] = useAuthState(auth);
+  const isDesktop = useMediaQuery("(min-width:640px)");
 
   const sidePanelProps = {
     dispatch: chatDispatch,
@@ -19,16 +26,35 @@ export const ChatComponent = React.memo(() => {
     isAutocompleteOpen: chatState.isAutocompleteOpen,
     isSearchLoading: chatState.isSearchLoading,
     searchUserFound: chatState.searchUserFound,
-    loggedInUser: state.user,
+    loggedInUser: loggedInUser,
   };
 
   return (
     <main className="chat-container">
       <Header />
-      <section className="chat-container__body">
-        <SidePanel {...sidePanelProps} />
-        <MessagesPanel />
-      </section>
+      {loggedInUser ? (
+        <section className="chat-container__body">
+          {isDesktop && <SidePanel {...sidePanelProps} />}
+          <Routes>
+            {!isDesktop && <Route path="*" element={<SidePanel {...sidePanelProps} />} />}
+            <Route
+              path=":id"
+              element={
+                <motion.div
+                  initial={{ opacity: 0, translateX: 50 }}
+                  animate={{ translateX: 0, opacity: 1 }}
+                  className="messages-container">
+                  <MessagesPanel />
+                </motion.div>
+              }
+            />
+          </Routes>
+        </section>
+      ) : (
+        <div className="loader">
+          <ScaleLoader color="#6246ea" height="5rem" width="0.5rem" />
+        </div>
+      )}
     </main>
   );
 });

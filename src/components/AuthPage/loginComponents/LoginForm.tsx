@@ -74,7 +74,7 @@ export const LoginForm = (props: ILoginForm) => {
         await createUserInCloudFirestore(loggedInUser);
         //TODO fix email vertification
         await sendEmailVerification(createUserObject.user);
-        navigateTo("/profile");
+        navigateTo("/auth/profile");
       })();
     }
 

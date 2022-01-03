@@ -8,7 +8,7 @@ export default function HomeComponent() {
   return (
     <div className="landing-page-container">
       {/* <BlurredBlobs></BlurredBlobs> */}
-      <motion.div className="landing-page__hero-text">
+      <motion.div className="landing-page__hero-text" >
         <h1>ReactChat</h1>
       </motion.div>
       <ThreeScene />
