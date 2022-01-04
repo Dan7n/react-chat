@@ -161,3 +161,18 @@ export const updateCurrentlyLoggedInUserProfile = async (updatedProfileInfo: IDe
     console.log(error);
   }
 };
+
+//------------------------------------------------------------------
+
+export const sendMessageToCloudFirestore = async (messageText: string, conversationId: string, uid: string) => {
+  const conversationDocRef = doc(db, "conversations", conversationId);
+
+  const messageBody = {
+    text: messageText,
+    sender: uid,
+    createdAt: Date.now(),
+  };
+  await updateDoc(conversationDocRef, {
+    messages: arrayUnion(messageBody),
+  });
+};

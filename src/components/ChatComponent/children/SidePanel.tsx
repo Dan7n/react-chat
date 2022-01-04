@@ -68,14 +68,14 @@ export const SidePanel = React.memo((props: ISidePanel) => {
       );
     });
 
-  useEffect(() => {
-    if (documentsData) {
-      console.log("data: ");
-      documentsData.docs.map(doc => console.log(doc.data()));
-    }
-    if (loggedInUser) console.log(loggedInUser.uid);
-    // if (userData) console.log("user: ", userData.data());
-  }, [documentsData, userData]);
+  // useEffect(() => {
+  //   if (documentsData) {
+  //     console.log("data: ");
+  //     documentsData.docs.map(doc => console.log(doc.data()));
+  //   }
+  //   if (loggedInUser) console.log(loggedInUser.uid);
+  //   // if (userData) console.log("user: ", userData.data());
+  // }, [documentsData, userData]);
 
   useEffect(() => {
     if (debouncedSearchValue.length) {

@@ -36,6 +36,7 @@ export const ChatComponent = React.memo(() => {
         <section className="chat-container__body">
           {isDesktop && <SidePanel {...sidePanelProps} />}
           <Routes>
+            <Route path="*" element={<h2>Click on a conversation to get started</h2>} />
             {!isDesktop && <Route path="*" element={<SidePanel {...sidePanelProps} />} />}
             <Route
               path=":documentId"

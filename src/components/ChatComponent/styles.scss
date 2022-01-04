@@ -3,6 +3,7 @@
 .chat-container {
   min-width: 100vw;
   min-height: 100vh;
+  background-color: var(--chat-main-bg);
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 10% auto;
@@ -14,24 +15,23 @@
 
   .chat-container__header {
     width: 100%;
-    border: 1px solid black;
   }
 
   .chat-container__body {
     width: 100%;
     height: 100%;
-    border: 1px solid black;
     display: grid;
-    grid-template-columns: 30% 1fr;
+    grid-template-columns: 25% 1fr;
 
     @include mixins.media(640px) {
       grid-template-columns: 1fr;
     }
 
     .side-panel {
-      border: 1px solid black;
+      border: 1px solid #9ca3af;
       .side-panel__conversations-container {
         overflow: hidden;
+        @include mixins.center-col;
         .side-panel__single-conversation {
           display: flex;
           justify-content: flex-start;
@@ -39,15 +39,16 @@
           gap: 0.6rem;
           padding: 0.7rem 6px;
           cursor: pointer;
+          width: 100%;
           transition: all ease-in-out 200ms;
           &:hover {
-            background-color: lightblue;
+            background-color: lighten(#6246ea, 30%);
           }
         }
       }
     }
-
     .messages-container {
+      border-top: 1px solid #9ca3af;
       width: 100%;
       height: 100%;
       overflow: hidden;
@@ -59,7 +60,7 @@
           @include mixins.center-col;
           height: calc(100% - 4.5rem);
           width: 100%;
-          padding-bottom: 4rem;
+          padding-bottom: 2rem;
 
           .no-messages {
             @include mixins.center-col;
@@ -76,6 +77,23 @@
               z-index: 10;
             }
           }
+
+          .message-list {
+            list-style: none;
+            width: 100%;
+            height: 100%;
+            @include mixins.center-col;
+            justify-content: flex-start;
+            padding: 3rem 1rem;
+            gap: 0.6rem;
+
+            .align-end {
+              align-self: flex-end;
+            }
+            .align-start {
+              align-self: flex-start;
+            }
+          }
         }
 
         .messages-panel__form-container {
@@ -88,7 +106,7 @@
           align-items: center;
 
           gap: 1rem;
-          padding: 0.8rem 0.4rem;
+          padding: 0.8rem 2rem;
 
           .icon {
             @include mixins.center-col;
