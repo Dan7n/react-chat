@@ -8,6 +8,13 @@ const ReceivedBubble = styled(motion.div)`
   background: #e5e5ea;
   color: black;
 
+  //TODO fix this
+  &:img:first-of-type {
+    background-color: red !important;
+    max-width: 30%;
+    max-height: 30%;
+  }
+
   &:before {
     content: "";
     position: absolute;
@@ -38,7 +45,7 @@ export const ReceivedMessage = ({ children, i }) => {
     <ReceivedBubble
       initial={{ opacity: 0, translateY: 60 }}
       animate={{ opacity: 1, translateY: 0 }}
-      transition={{ duration: 0.3, delay: i * 0.1 }}>
+      transition={{ duration: 0.3, delay: i * 0.04 }}>
       {children}
     </ReceivedBubble>
   );

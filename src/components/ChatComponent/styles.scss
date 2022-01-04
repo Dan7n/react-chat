@@ -8,6 +8,10 @@
   grid-template-columns: 1fr;
   grid-template-rows: 10% auto;
 
+  .file-uploader-label {
+    background-color: red;
+  }
+
   .loader {
     width: 100vw;
     @include mixins.center-col;
@@ -58,15 +62,17 @@
         position: relative;
         .messages-panel__messages-container {
           @include mixins.center-col;
-          height: calc(100% - 4.5rem);
+          // height: calc(100% - 4.5rem);
           width: 100%;
           padding-bottom: 2rem;
+          height: fit-content;
 
           .no-messages {
             @include mixins.center-col;
             width: 100%;
             height: 100%;
             text-align: center;
+
             img {
               max-width: 26rem;
               z-index: 10;
@@ -86,6 +92,8 @@
             justify-content: flex-start;
             padding: 3rem 1rem;
             gap: 0.6rem;
+            overflow-y: scroll;
+            max-height: 32rem;
 
             .align-end {
               align-self: flex-end;
