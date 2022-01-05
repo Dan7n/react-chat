@@ -3,9 +3,6 @@ import { NormalButton } from "./Button";
 
 export const GoogleButton = styled(NormalButton)`
   --shadow-color: 0deg 0% 0%;
-  /* display: grid;
-  grid-template-columns: 25% 75%;
-  place-items: center; */
   text-align: center;
   position: relative;
 

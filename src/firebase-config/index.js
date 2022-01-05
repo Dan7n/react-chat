@@ -3,6 +3,7 @@ import "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection } from "@firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getStorage, ref } from "firebase/storage";
 
 //Firebase config information can be exposed safely without fear of compromising your application
 const firebaseConfig = {
@@ -19,6 +20,8 @@ const firebaseConfig = {
 export const firebaseApp = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getFirestore();
+export const storage = getStorage(firebaseApp);
+export const imagesStorageRef = ref(storage, "images");
 
 //Collection referenses
 export const usersCollectionRef = collection(db, "users");

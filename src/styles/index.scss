@@ -3,19 +3,29 @@
 :root {
   --main-bg-color: #fffffe;
   --secondary-bg-color: #d1d1e9;
+
+  --dark-gray-9: #1c1c1c;
+  --dark-gray-8: #232323;
+  --dark-gray-7: #282828;
+  --light-gray: #7e7e7e;
+
+  --app-main-color: #6246ea;
+
+  --chat-main-bg: #f2eef5;
+  --chat-secondary: #6246ea;
+  --chat-tertiary: #fbcade;
+  --chat-shadow-color: 275deg 8% 59%;
 }
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--main-bg-color);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
