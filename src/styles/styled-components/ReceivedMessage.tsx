@@ -8,13 +8,6 @@ const ReceivedBubble = styled(motion.div)`
   background: #e5e5ea;
   color: black;
 
-  //TODO fix this
-  &:img:first-of-type {
-    background-color: red !important;
-    max-width: 30%;
-    max-height: 30%;
-  }
-
   &:before {
     content: "";
     position: absolute;
@@ -37,6 +30,12 @@ const ReceivedBubble = styled(motion.div)`
     background: var(--chat-main-bg);
     border-bottom-right-radius: 10px;
     transform: translate(-30px, -2px);
+  }
+
+  img {
+    max-width: 25rem;
+    max-height: 25rem;
+    border-radius: 4px;
   }
 `;
 

@@ -16,7 +16,7 @@ import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { getFirestore, collection, query, where, doc } from "firebase/firestore";
 import { auth, db } from "../../../firebase-config";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface ISidePanel extends IInitialState {
   dispatch: React.Dispatch<any>;
@@ -33,6 +33,8 @@ export const SidePanel = React.memo((props: ISidePanel) => {
   const { dispatch, searchValue, isAutocompleteOpen, isSearchLoading, searchUserFound, loggedInUser } = props;
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<IConversationUser[] | []>([]);
   const debouncedSearchValue = useDebounce(searchValue, 800);
+
+  const params = useParams();
   const navigateTo = useNavigate();
 
   const [userData] = useDocument(doc(db, "users", loggedInUser.uid));
@@ -54,16 +56,30 @@ export const SidePanel = React.memo((props: ISidePanel) => {
     documentsData &&
     documentsData.docs.map((doc, i) => {
       const conversation = doc.data().participants.find(participant => participant.id !== loggedInUser.uid);
+      const messages = doc.data().messages;
+      const lastSentMessage = messages && messages[messages.length - 1]?.text;
+      const lastSentMediaFile = messages && messages[messages.length - 1]?.imageURL;
+      let lastSentText;
+
+      if (!messages.length) lastSentText = "No messages yet";
+      else if (lastSentMessage) lastSentText = lastSentMessage;
+      else if (lastSentMediaFile) lastSentText = "Media file";
+      const isActiveConversation = params["*"] && params["*"] === doc.id;
       return (
         <motion.div
           key={i}
-          className="side-panel__single-conversation"
+          className={`side-panel__single-conversation ${isActiveConversation && "active"}`}
           initial={{ opacity: 0, translateY: 60 }}
           animate={{ opacity: 1, translateY: 0 }}
           transition={{ duration: 0.3, delay: i * 0.1 }}
           onClick={() => navigateTo(`/chat/${doc.id}`)}>
-          <Avatar alt={conversation.displayName} src={conversation.photoURL} />
-          <p>{conversation.displayName}</p>
+          <div>
+            <Avatar alt={conversation.displayName} src={conversation.photoURL} />
+          </div>
+          <div className="side-panel__single-conversation__text">
+            <p>{conversation.displayName || "Unnamed user"}</p>
+            <p>{lastSentText}</p>
+          </div>
         </motion.div>
       );
     });

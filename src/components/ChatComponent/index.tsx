@@ -3,7 +3,7 @@ import React, { useReducer, useContext, useState, useEffect } from "react";
 import { SidePanel } from "./children/SidePanel";
 import { MessagesPanel } from "./children/MessagesPanel";
 import "./styles.scss";
-import { Header } from "./children/Header";
+import { ProfileSettings } from "./children/ProfileSettings";
 
 import { reducer } from "./state/reducer";
 import { initialState } from "./state/initialState";
@@ -31,7 +31,6 @@ export const ChatComponent = React.memo(() => {
 
   return (
     <main className="chat-container">
-      <Header />
       {loggedInUser ? (
         <section className="chat-container__body">
           {isDesktop && <SidePanel {...sidePanelProps} />}
@@ -50,6 +49,7 @@ export const ChatComponent = React.memo(() => {
               }
             />
           </Routes>
+          <ProfileSettings loggedInUser={loggedInUser} />
         </section>
       ) : (
         <div className="loader">

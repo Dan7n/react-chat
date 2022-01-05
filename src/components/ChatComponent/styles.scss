@@ -6,7 +6,6 @@
   background-color: var(--chat-main-bg);
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 10% auto;
 
   .file-uploader-label {
     background-color: red;
@@ -17,15 +16,23 @@
     @include mixins.center-col;
   }
 
-  .chat-container__header {
+  .chat-container__profile {
     width: 100%;
+    border-left: 1px solid #9ca3af;
+    @include mixins.center-col;
+    padding-bottom: 10rem;
+
+    .buttons-container {
+      @include mixins.center-col;
+      gap: 0.7rem;
+    }
   }
 
   .chat-container__body {
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: 25% 1fr;
+    grid-template-columns: 25% 1fr 25%;
 
     @include mixins.media(640px) {
       grid-template-columns: 1fr;
@@ -36,6 +43,7 @@
       .side-panel__conversations-container {
         overflow: hidden;
         @include mixins.center-col;
+        gap: 0.2rem;
         .side-panel__single-conversation {
           display: flex;
           justify-content: flex-start;
@@ -43,10 +51,37 @@
           gap: 0.6rem;
           padding: 0.7rem 6px;
           cursor: pointer;
-          width: 100%;
+          width: 95%;
+          border-radius: 8px;
           transition: all ease-in-out 200ms;
           &:hover {
             background-color: lighten(#6246ea, 30%);
+          }
+
+          .side-panel__single-conversation__text {
+            p:first-of-type {
+              font-weight: bold;
+            }
+            p:nth-of-type(2) {
+              color: #1e293b;
+              font-size: 0.85rem;
+            }
+          }
+        }
+
+        .active {
+          background-color: #6246ea;
+          color: white;
+          .side-panel__single-conversation__text {
+            p:first-of-type {
+              color: white;
+            }
+            p:nth-of-type(2) {
+              color: #f1f5f9;
+            }
+          }
+          &:hover {
+            background-color: #6246ea;
           }
         }
       }

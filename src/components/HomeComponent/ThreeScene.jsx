@@ -1,11 +1,8 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, OrbitControls, Stage, useGLTF, Stars, useHelper } from "@react-three/drei";
+import { useGLTF, PresentationControls } from "@react-three/drei";
 import { Suspense } from "react";
-import { useLoader } from "@react-three/fiber";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useRef } from "react";
 import { motion } from "framer-motion/three";
-import { DirectionalLightHelper } from "three";
 
 export default function Earth({ ...props }) {
   const group = useRef();
@@ -22,8 +19,8 @@ export default function Earth({ ...props }) {
       ref={group}
       {...props}
       dispose={null}
-      animate={{ x: 0, y: 0, z: -200, rotateY: 1 }}
-      initial={{ y: -60, z: -300 }}
+      animate={{ x: 0, y: -60, z: -200, rotateY: 1 }}
+      initial={{ y: -140, z: -300 }}
       transition={{ ease: "easeOut", duration: 1.8 }}>
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <group rotation={[Math.PI / 2, 0, 0]}>
@@ -46,9 +43,9 @@ export const ThreeScene = () => {
           <ambientLight intensity={0.45} />
           <motion.pointLight animate={{ x: 2 }} color="#fff" intensity={0.3} />
           <motion.directionalLight color="#EF2F88" intensity={10} rotation={[0, 7, 0]} animate={{ x: 200 }} />
-          <Earth position={[0, -30, -200]} scale={0.8} />
-          {/* <OrbitControls /> */}
-          {/* <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade /> */}
+          <PresentationControls snap={true} speed={0.65} config={{ mass: 1, tension: 170, friction: 26 }}>
+            <Earth scale={1.3} />
+          </PresentationControls>
         </Suspense>
       </Canvas>
     </div>

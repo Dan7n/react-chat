@@ -1,4 +1,5 @@
 @use "./../../styles/partials/mixins";
+@import url("https://fonts.googleapis.com/css2?family=Spectral:wght@800&display=swap");
 
 .landing-page-container {
   width: 100vw;
@@ -7,19 +8,41 @@
   //   @include mixins.center-col;
 
   .landing-page__hero-text {
-    position: inherit;
+    @include mixins.center-col;
+    position: absolute;
+    width: 100%;
     color: white;
     font-size: 3rem;
-    padding-top: 4rem;
+    padding-top: 7rem;
     text-align: center;
+    z-index: 20;
+
+    @include mixins.media(500px) {
+      padding-top: 10rem;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-family: "Spectral", serif;
+      font-size: clamp(3.8rem, 16vw, 6.5rem);
+    }
+    p {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+        "Droid Sans", "Helvetica Neue", sans-serif;
+      font-size: clamp(0.9rem, 6vw, 2rem);
+      font-weight: 200;
+      max-width: 60%;
+      text-align: center;
+      @include mixins.media(500px) {
+        max-width: 100%;
+        padding: 0 0.4rem;
+      }
+    }
   }
 
   .three-container {
-    position: absolute;
-    right: 0;
-    top: 0;
     width: 100vw;
-    height: 100vw;
+    height: 150vh;
     background-color: #111d5e;
     overflow: hidden;
   }

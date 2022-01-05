@@ -30,6 +30,12 @@ const SentBubble = styled(motion.div)`
     border-bottom-left-radius: 10px;
     transform: translate(-30px, -2px);
   }
+
+  img {
+    max-width: 25rem;
+    max-height: 25rem;
+    border-radius: 4px;
+  }
 `;
 
 export const SentMessage = ({ children, i }) => {
