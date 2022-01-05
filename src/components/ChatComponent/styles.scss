@@ -7,10 +7,6 @@
   display: grid;
   grid-template-columns: 1fr;
 
-  .file-uploader-label {
-    background-color: red;
-  }
-
   .loader {
     width: 100vw;
     @include mixins.center-col;
@@ -18,13 +14,17 @@
 
   .chat-container__profile {
     width: 100%;
-    border-left: 1px solid #9ca3af;
-    @include mixins.center-col;
-    padding-bottom: 10rem;
 
-    .buttons-container {
+    .chat-container__profile__inner {
+      width: 100%;
+      height: 100%;
       @include mixins.center-col;
-      gap: 0.7rem;
+      padding-bottom: 10rem;
+
+      .buttons-container {
+        @include mixins.center-col;
+        gap: 0.7rem;
+      }
     }
   }
 
@@ -32,7 +32,7 @@
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-columns: 25% 1fr 25%;
+    grid-template-columns: 20% 1fr 30%;
 
     @include mixins.media(640px) {
       grid-template-columns: 1fr;
@@ -88,6 +88,8 @@
     }
     .messages-container {
       border-top: 1px solid #9ca3af;
+      border-right: 1px solid #9ca3af;
+
       width: 100%;
       height: 100%;
       overflow: hidden;

@@ -38,7 +38,7 @@ export const ChatComponent = React.memo(() => {
             <Route path="*" element={<h2>Click on a conversation to get started</h2>} />
             {!isDesktop && <Route path="*" element={<SidePanel {...sidePanelProps} />} />}
             <Route
-              path=":documentId"
+              path=":documentId/*"
               element={
                 <motion.div
                   initial={{ opacity: 0, translateX: 50 }}

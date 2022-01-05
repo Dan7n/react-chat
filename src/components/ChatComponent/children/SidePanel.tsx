@@ -16,7 +16,7 @@ import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { getFirestore, collection, query, where, doc } from "firebase/firestore";
 import { auth, db } from "../../../firebase-config";
 import { motion } from "framer-motion";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 
 interface ISidePanel extends IInitialState {
   dispatch: React.Dispatch<any>;
@@ -64,7 +64,7 @@ export const SidePanel = React.memo((props: ISidePanel) => {
       if (!messages.length) lastSentText = "No messages yet";
       else if (lastSentMessage) lastSentText = lastSentMessage;
       else if (lastSentMediaFile) lastSentText = "Media file";
-      const isActiveConversation = params["*"] && params["*"] === doc.id;
+      const isActiveConversation = params["*"] && params["*"].includes(doc.id);
       return (
         <motion.div
           key={i}
@@ -72,7 +72,11 @@ export const SidePanel = React.memo((props: ISidePanel) => {
           initial={{ opacity: 0, translateY: 60 }}
           animate={{ opacity: 1, translateY: 0 }}
           transition={{ duration: 0.3, delay: i * 0.1 }}
-          onClick={() => navigateTo(`/chat/${doc.id}`)}>
+          onClick={() => {
+            params["*"] && params["*"]?.includes("profile")
+              ? navigateTo(`/chat/${doc.id}/profile`)
+              : navigateTo(`/chat/${doc.id}`);
+          }}>
           <div>
             <Avatar alt={conversation.displayName} src={conversation.photoURL} />
           </div>
