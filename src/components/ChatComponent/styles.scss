@@ -34,6 +34,10 @@
     display: grid;
     grid-template-columns: 20% 1fr 30%;
 
+    @include mixins.media(1000px) {
+      grid-template-columns: 30% 1fr;
+    }
+
     @include mixins.media(640px) {
       grid-template-columns: 1fr;
     }

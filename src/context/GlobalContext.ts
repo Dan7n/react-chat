@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { defaultState } from "./defaultState";
+import { IDefaultState } from "./defaultState";
 
 interface IDispatch {
   action?: string;
@@ -7,7 +7,9 @@ interface IDispatch {
 }
 
 export interface IContext {
-  state: typeof defaultState | null | unknown;
+  state: {
+    user: IDefaultState | null | unknown;
+  };
   dispatch: ({ action, payload }: IDispatch) => void;
 }
 

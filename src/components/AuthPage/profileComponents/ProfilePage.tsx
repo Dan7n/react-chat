@@ -1,7 +1,7 @@
-import { useCallback, useState, useMemo } from "react";
+import { useCallback, useState, useMemo, useContext, useEffect } from "react";
 import "./../styles.scss";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 //components
 import TextField from "@mui/material/TextField";
@@ -10,10 +10,11 @@ import { NormalButton } from "../../../styles/styled-components/Button";
 import ScaleLoader from "react-spinners/ClipLoader";
 
 //utils
-import { updateCurrentlyLoggedInUserProfile } from "./../../../utils/firebaseUserHelpers";
+import { updateCurrentlyLoggedInUserProfile, findUserByEmailOrPhoneNumber } from "./../../../utils/firebaseUserHelpers";
 import { checkPhoneNumberValid } from "../../../utils/regexHelpers";
 import { handleEmptyInputFields, handleSuccessfulProfileUpdate } from "../../../utils/toastHelpers";
 import { IDefaultProfileInfo } from "./../../../models/IDefaultProfileInfo";
+import { GlobalContext, IContext } from "../../../context/GlobalContext";
 
 const defaultProfileInfo: IDefaultProfileInfo = {
   photoURL: `https://avatars.dicebear.com/api/bottts/${Date.now()}.svg`,
@@ -21,12 +22,35 @@ const defaultProfileInfo: IDefaultProfileInfo = {
   phoneNumber: "",
 };
 
-//JSX Element
 export const ProfilePage = () => {
   const [profileInfo, setProfileInfo] = useState<IDefaultProfileInfo>(defaultProfileInfo);
   const [isLoading, setIsLoading] = useState(false);
   const { photoURL: avatarUrl, displayName, phoneNumber } = profileInfo;
+
   const navigateTo = useNavigate();
+  const location = useLocation();
+
+  const { state } = useContext<IContext | any>(GlobalContext);
+
+  const isUserComingFromChatComponent: boolean = useMemo(() => {
+    return location.pathname.includes("chat");
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (state.user) {
+      //Due to restrictions in firebase, storing and updating phone numbers is a lot more complicated than normal data
+      //therefore I'm chosing to get the data (including the phone number) from the cloudstore database instead of firebase auth service
+      (async function getUserInfo() {
+        const { foundUser } = await findUserByEmailOrPhoneNumber("email", state.user.email);
+        if (!foundUser) return;
+        setProfileInfo({
+          photoURL: foundUser.photoURL || `https://avatars.dicebear.com/api/bottts/${Date.now()}.svg`,
+          displayName: foundUser.displayName || "",
+          phoneNumber: foundUser.phoneNumber || "",
+        });
+      })();
+    }
+  }, [state?.user]);
 
   const isDisplayNameError = useMemo(() => {
     return displayName !== "" && displayName.length < 4;
@@ -41,6 +65,7 @@ export const ProfilePage = () => {
     return `https://avatars.dicebear.com/api/bottts/${randomSeed}.svg`;
   }, []);
 
+  //Handlers -------------------------
   const handleChange = useCallback(e => {
     setProfileInfo(prevState => ({ ...prevState, [e.target.name]: e.target.value }));
   }, []);
@@ -53,7 +78,7 @@ export const ProfilePage = () => {
     await updateCurrentlyLoggedInUserProfile(profileInfo);
     handleSuccessfulProfileUpdate();
     setTimeout(() => {
-      navigateTo("/chat");
+      isUserComingFromChatComponent ? navigateTo(location.pathname.replace("/profile", "")) : navigateTo("/chat");
     }, 2000);
   }, [profileInfo]);
 
@@ -64,9 +89,16 @@ export const ProfilePage = () => {
       exit={{ x: -300, opacity: 0 }}
       transition={{ ease: "easeInOut", duration: 0.4 }}>
       <main className="profile-container">
+        {isUserComingFromChatComponent && <Link to={location.pathname.replace("/profile", "")}>Go back</Link>}
         <section className="profile-container__title">
-          <h1>Thank you for signing up to ReactChat</h1>
-          <p>Please take a moment to fill out your profile details</p>
+          {!isUserComingFromChatComponent ? (
+            <>
+              <h1>Thank you for signing up to ReactChat</h1>
+              <p>Please take a moment to fill out your profile details</p>
+            </>
+          ) : (
+            <h1>Please fill out the following information and click submit</h1>
+          )}
         </section>
         <section className="profile-container__body">
           <div className="image-container">
@@ -87,7 +119,7 @@ export const ProfilePage = () => {
               value={displayName}
               onChange={handleChange}
               autoComplete="off"
-              sx={{ minWidth: "85%" }}
+              sx={!isUserComingFromChatComponent ? { minWidth: "85%" } : { width: "85%" }}
               error={isDisplayNameError}
               helperText={"Your name should at least be 4 characters long"}
             />
@@ -100,7 +132,7 @@ export const ProfilePage = () => {
               value={phoneNumber}
               onChange={handleChange}
               autoComplete="off"
-              sx={{ minWidth: "85%" }}
+              sx={!isUserComingFromChatComponent ? { minWidth: "85%" } : { width: "85%" }}
               error={isPhoneNumberError}
               helperText={"Enter a valid telephone number"}
             />

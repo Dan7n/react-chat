@@ -4,6 +4,6 @@ export interface IDefaultState {
   user: null | IUser;
 }
 
-export const defaultState = {
+export const defaultState: IDefaultState = {
   user: null,
 };

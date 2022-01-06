@@ -19,6 +19,7 @@ export const ChatComponent = React.memo(() => {
   const [chatState, chatDispatch] = useReducer(reducer, initialState);
   const [loggedInUser] = useAuthState(auth);
   const isDesktop = useMediaQuery("(min-width:640px)");
+  const isLargeDesktop = useMediaQuery("(min-width:1000px)");
 
   const sidePanelProps = {
     dispatch: chatDispatch,
@@ -35,7 +36,7 @@ export const ChatComponent = React.memo(() => {
         <section className="chat-container__body">
           {isDesktop && <SidePanel {...sidePanelProps} />}
           <Routes>
-            <Route path="*" element={<h2>Click on a conversation to get started</h2>} />
+            {isDesktop && <Route path="*" element={<h2>Click on a conversation to get started</h2>} />}
             {!isDesktop && <Route path="*" element={<SidePanel {...sidePanelProps} />} />}
             <Route
               path=":documentId/*"
@@ -49,7 +50,7 @@ export const ChatComponent = React.memo(() => {
               }
             />
           </Routes>
-          <ProfileSettings loggedInUser={loggedInUser} />
+          {isLargeDesktop && <ProfileSettings loggedInUser={loggedInUser} />}
         </section>
       ) : (
         <div className="loader">

@@ -5,6 +5,6 @@ export interface IUser {
   photoURL: string;
   id: string;
   createdAt: Date;
-  emailVerified: boolean;
-  conversations: [];
+  emailVerified?: boolean;
+  conversations?: [];
 }
