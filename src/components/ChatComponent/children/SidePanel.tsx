@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Autocomplete, Avatar, CircularProgress, TextField } from "@mui/material";
+import { Autocomplete, Avatar, CircularProgress, Menu, MenuItem, TextField } from "@mui/material";
+import DoubleArrowRoundedIcon from "@mui/icons-material/DoubleArrowRounded";
+
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useDebounce } from "./../../../hooks/useDebounce";
 
 import {
@@ -16,11 +19,13 @@ import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { getFirestore, collection, query, where, doc } from "firebase/firestore";
 import { auth, db } from "../../../firebase-config";
 import { motion } from "framer-motion";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import { IconContainer } from "../../../styles/styled-components/IconContainer";
 
 interface ISidePanel extends IInitialState {
   dispatch: React.Dispatch<any>;
   loggedInUser: any;
+  isLargeDesktop: boolean;
 }
 
 interface IConversationUser {
@@ -30,15 +35,31 @@ interface IConversationUser {
 }
 
 export const SidePanel = React.memo((props: ISidePanel) => {
-  const { dispatch, searchValue, isAutocompleteOpen, isSearchLoading, searchUserFound, loggedInUser } = props;
+  const { dispatch, searchValue, isAutocompleteOpen, isSearchLoading, searchUserFound, loggedInUser, isLargeDesktop } =
+    props;
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<IConversationUser[] | []>([]);
+  const [anchorEl, setAnchorEl] = useState<null | SVGSVGElement>(null);
+  const isMenuOpen = Boolean(anchorEl);
   const debouncedSearchValue = useDebounce(searchValue, 800);
 
   const params = useParams();
   const navigateTo = useNavigate();
 
-  const [userData] = useDocument(doc(db, "users", loggedInUser.uid));
+  const getNavigationLink = docId => {
+    let navLink;
+    if (isLargeDesktop) {
+      params["*"] && params["*"]?.includes("profile") ? (navLink = `/chat/${docId}/profile`) : navLink`/chat/${docId}`;
+    } else {
+      params["*"] && params["*"]?.includes("settings")
+        ? (navLink = `/chat/${docId}/settings`)
+        : (navLink = `/chat/${docId}`);
+    }
+
+    return navLink;
+  };
+
   //Get document reference to the currently logged in user
+  const [userData] = useDocument(doc(db, "users", loggedInUser.uid));
 
   const getConversationsQuery = useCallback(() => {
     //only returns a valid query if the user has any conversations in their array of conversations
@@ -72,11 +93,7 @@ export const SidePanel = React.memo((props: ISidePanel) => {
           initial={{ opacity: 0, translateY: 60 }}
           animate={{ opacity: 1, translateY: 0 }}
           transition={{ duration: 0.3, delay: i * 0.1 }}
-          onClick={() => {
-            params["*"] && params["*"]?.includes("profile")
-              ? navigateTo(`/chat/${doc.id}/profile`)
-              : navigateTo(`/chat/${doc.id}`);
-          }}>
+          onClick={() => navigateTo(getNavigationLink(doc.id))}>
           <div>
             <Avatar alt={conversation.displayName} src={conversation.photoURL} />
           </div>
@@ -87,15 +104,6 @@ export const SidePanel = React.memo((props: ISidePanel) => {
         </motion.div>
       );
     });
-
-  // useEffect(() => {
-  //   if (documentsData) {
-  //     console.log("data: ");
-  //     documentsData.docs.map(doc => console.log(doc.data()));
-  //   }
-  //   if (loggedInUser) console.log(loggedInUser.uid);
-  //   // if (userData) console.log("user: ", userData.data());
-  // }, [documentsData, userData]);
 
   useEffect(() => {
     if (debouncedSearchValue.length) {
@@ -123,17 +131,30 @@ export const SidePanel = React.memo((props: ISidePanel) => {
       if (loggedInUser) {
         createNewConversation(loggedInUser, conversationPartnerId);
       }
-      //create conversation in cloud firestore
-
-      //add reference of this conversation to both user
-
-      //update UI
     },
     [autoCompleteOptions, setAutoCompleteOptions]
   );
 
   return (
     <section className="side-panel">
+      <div className="side-panel__mobile-header">
+        <div>
+          <Avatar src={loggedInUser?.photoURL} alt={loggedInUser?.displayName} sx={{ width: 56, height: 56 }} />
+          <h1>Chats</h1>
+        </div>
+        <div>
+          <IconContainer>
+            <MoreVertIcon onClick={e => setAnchorEl(e.currentTarget)} />
+          </IconContainer>
+          <Menu anchorEl={anchorEl} open={isMenuOpen} onClose={() => setAnchorEl(null)} className="menu-container">
+            <MenuItem>
+              <Link to={params["*"] ? `${params["*"]?.replace("/settings", "")}/settings` : "settings"}>
+                Go to settings
+              </Link>
+            </MenuItem>
+          </Menu>
+        </div>
+      </div>
       <Autocomplete
         open={isAutocompleteOpen}
         onOpen={() => {

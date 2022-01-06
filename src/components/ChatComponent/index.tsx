@@ -14,6 +14,7 @@ import { ScaleLoader } from "react-spinners";
 import { Route, Routes } from "react-router-dom";
 import { motion } from "framer-motion";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { NoConversationSelected } from "./children/NoConversationSelected";
 
 export const ChatComponent = React.memo(() => {
   const [chatState, chatDispatch] = useReducer(reducer, initialState);
@@ -28,6 +29,7 @@ export const ChatComponent = React.memo(() => {
     isSearchLoading: chatState.isSearchLoading,
     searchUserFound: chatState.searchUserFound,
     loggedInUser: loggedInUser,
+    isLargeDesktop: isLargeDesktop,
   };
 
   return (
@@ -36,10 +38,28 @@ export const ChatComponent = React.memo(() => {
         <section className="chat-container__body">
           {isDesktop && <SidePanel {...sidePanelProps} />}
           <Routes>
-            {isDesktop && <Route path="*" element={<h2>Click on a conversation to get started</h2>} />}
+            {/* Second panel will either show the messages component (or an empty state prompting the user to select a message), 
+            or the profile component on smaller screens */}
+            {isDesktop && <Route path="*" element={<NoConversationSelected />} />}
+
+            {/* Same component <ProfileSettings /> mathes two seperate paths */}
+            {!isLargeDesktop && (
+              <>
+                <Route
+                  path="/settings/*"
+                  element={<ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />}
+                />
+                <Route
+                  path=":documentId/settings/*"
+                  element={<ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />}
+                />
+              </>
+            )}
+
             {!isDesktop && <Route path="*" element={<SidePanel {...sidePanelProps} />} />}
+            {isLargeDesktop && <Route path="/profile" element={<NoConversationSelected />} />}
             <Route
-              path=":documentId/*"
+              path={isLargeDesktop ? ":documentId/*" : ":documentId"}
               element={
                 <motion.div
                   initial={{ opacity: 0, translateX: 50 }}
@@ -50,7 +70,8 @@ export const ChatComponent = React.memo(() => {
               }
             />
           </Routes>
-          {isLargeDesktop && <ProfileSettings loggedInUser={loggedInUser} />}
+          {/* And lastly the third section all the way to the right will show the profile component but only on larger screens */}
+          {isLargeDesktop && <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />}
         </section>
       ) : (
         <div className="loader">

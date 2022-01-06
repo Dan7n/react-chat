@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import "./../styles.scss";
 import { Avatar, CircularProgress } from "@mui/material";
 import { RoundButton } from "./../../../styles/styled-components/RoundButton";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, User } from "firebase/auth";
 import { useNavigate, Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -16,12 +16,15 @@ import { ProfilePage } from "../../AuthPage/profileComponents/ProfilePage";
       exit={{ x: -300, opacity: 0 }}
  */
 
-export function ProfileSettings({ loggedInUser }) {
+interface IProfileSettings {
+  loggedInUser: User;
+  isLargeDesktop: boolean;
+}
+
+export function ProfileSettings({ loggedInUser, isLargeDesktop }: IProfileSettings) {
   const auth = getAuth();
   const navigateTo = useNavigate();
   const location = useLocation();
-
-  console.log({ location });
 
   const handleSignOut = useCallback(() => {
     signOut(auth).then(() => {
@@ -30,6 +33,7 @@ export function ProfileSettings({ loggedInUser }) {
   }, []);
 
   const handleProfileSettings = useCallback(() => {
+    console.log(location.pathname);
     navigateTo(location.pathname + "/profile");
   }, [location.pathname]);
 
@@ -41,7 +45,11 @@ export function ProfileSettings({ loggedInUser }) {
             path="*"
             element={
               <motion.div className="chat-container__profile__inner">
-                <Avatar src={loggedInUser.photoURL} alt={loggedInUser?.displayName} sx={{ width: 140, height: 140 }} />
+                <Avatar
+                  src={loggedInUser?.photoURL!}
+                  alt={loggedInUser?.displayName!}
+                  sx={{ width: 140, height: 140 }}
+                />
                 <div className="buttons-container">
                   <RoundButton buttonText={"Profile settings"} onClick={handleProfileSettings} />
                   <RoundButton
@@ -55,6 +63,7 @@ export function ProfileSettings({ loggedInUser }) {
             }
           />
           <Route path=":id/profile" element={<ProfilePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Routes>
       </AnimatePresence>
     </section>
