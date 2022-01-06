@@ -48,7 +48,9 @@ export const SidePanel = React.memo((props: ISidePanel) => {
   const getNavigationLink = docId => {
     let navLink;
     if (isLargeDesktop) {
-      params["*"] && params["*"]?.includes("profile") ? (navLink = `/chat/${docId}/profile`) : navLink`/chat/${docId}`;
+      params["*"] && params["*"]?.includes("profile")
+        ? (navLink = `/chat/${docId}/profile`)
+        : (navLink = `/chat/${docId}`);
     } else {
       params["*"] && params["*"]?.includes("settings")
         ? (navLink = `/chat/${docId}/settings`)
@@ -143,16 +145,20 @@ export const SidePanel = React.memo((props: ISidePanel) => {
           <h1>Chats</h1>
         </div>
         <div>
-          <IconContainer>
-            <MoreVertIcon onClick={e => setAnchorEl(e.currentTarget)} />
-          </IconContainer>
-          <Menu anchorEl={anchorEl} open={isMenuOpen} onClose={() => setAnchorEl(null)} className="menu-container">
-            <MenuItem>
-              <Link to={params["*"] ? `${params["*"]?.replace("/settings", "")}/settings` : "settings"}>
-                Go to settings
-              </Link>
-            </MenuItem>
-          </Menu>
+          {!isLargeDesktop && (
+            <>
+              <IconContainer>
+                <MoreVertIcon onClick={e => setAnchorEl(e.currentTarget)} />
+              </IconContainer>
+              <Menu anchorEl={anchorEl} open={isMenuOpen} onClose={() => setAnchorEl(null)} className="menu-container">
+                <MenuItem>
+                  <Link to={params["*"] ? `${params["*"]?.replace("/settings", "")}/settings` : "settings"}>
+                    Go to settings
+                  </Link>
+                </MenuItem>
+              </Menu>
+            </>
+          )}
         </div>
       </div>
       <Autocomplete
