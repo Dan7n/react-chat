@@ -9,26 +9,18 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { ProfilePage } from "../../AuthPage/profileComponents/ProfilePage";
 
-/**
- * 
- initial={{ x: 300, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: -300, opacity: 0 }}
- */
-
 interface IProfileSettings {
   loggedInUser: User;
   isLargeDesktop: boolean;
 }
 
+interface IProfileContainer extends IProfileSettings {
+  handleSignOut: () => void;
+}
+
 export function ProfileSettings({ loggedInUser, isLargeDesktop }: IProfileSettings) {
   const auth = getAuth();
   const navigateTo = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    console.log(isLargeDesktop);
-  }, [isLargeDesktop]);
 
   const handleSignOut = useCallback(() => {
     signOut(auth).then(() => {
@@ -71,11 +63,12 @@ export function ProfileSettings({ loggedInUser, isLargeDesktop }: IProfileSettin
   );
 }
 
-const SettingsContainer = ({ loggedInUser, handleSignOut, isLargeDesktop }) => {
+const SettingsContainer = ({ loggedInUser, handleSignOut, isLargeDesktop }: IProfileContainer) => {
   const location = useLocation();
   const navigateTo = useNavigate();
 
   const getNavLink = useMemo(() => {
+    //returns the correct link to navigate to based on which route you're on, and whether or not you're surfing on a mobile device or desktop
     let navLink;
     if (isLargeDesktop) {
       location.pathname.includes("/settings")

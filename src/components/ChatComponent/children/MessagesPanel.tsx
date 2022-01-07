@@ -90,7 +90,7 @@ export function MessagesPanel({ loggedInUser }) {
         <p>{conversationPartner?.displayName || "Unnamed user"}</p>
       </div>
       <div className="messages-panel__messages-container">
-        {noMessages && <NoMessages />}
+        {noMessages && !loading && <NoMessages />}
         {!noMessages && (
           <ul className="message-list">
             {messages}

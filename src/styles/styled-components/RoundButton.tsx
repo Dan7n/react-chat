@@ -7,6 +7,8 @@ interface IButtonProps
   bgColor?: string;
   bgColorHover?: string;
   width?: string;
+  padding?: string;
+  margin?: string;
 }
 
 const Button = styled.button<IButtonProps>`
@@ -24,7 +26,8 @@ const Button = styled.button<IButtonProps>`
   overflow: hidden !important;
   transition: all 0.3s ease-in-out;
   background: ${props => props.bgColor || "transparent"};
-  padding: 0.9rem 4rem;
+  padding: ${props => props.padding || "0.9rem 4rem"};
+  ${props => props.margin && `margin: ${props.margin};`}
   width: ${props => props.width || "80%"};
   position: relative;
   display: inline-block;

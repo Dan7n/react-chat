@@ -43,7 +43,6 @@ export const findUserByEmailOrPhoneNumber = async (queryType: string, queryStrin
 
   try {
     const userSnapshot = await getDocs(searchQuery);
-    console.log(userSnapshot);
 
     if (userSnapshot.empty) {
       foundUser = null;
@@ -127,6 +126,7 @@ export const createNewConversation = async (loggedInUser: User, receiver: IConve
     createdAt: serverTimestamp(),
     participants: [loggedInUserParticipant, receiver],
     messages: [],
+    lastUpdated: serverTimestamp(),
   };
 
   const userDocumentRef = doc(db, "users", loggedInUser.uid);

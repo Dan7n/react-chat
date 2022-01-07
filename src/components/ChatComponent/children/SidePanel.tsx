@@ -16,11 +16,12 @@ import { IInitialState } from "../state/initialState";
 import { checkEmailValid, checkPhoneNumberValid } from "./../../../utils/regexHelpers";
 import { findUserByEmailOrPhoneNumber, createNewConversation } from "../../../utils/firebaseUserHelpers";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
-import { getFirestore, collection, query, where, doc } from "firebase/firestore";
+import { getFirestore, collection, query, where, doc, orderBy } from "firebase/firestore";
 import { auth, db } from "../../../firebase-config";
 import { motion } from "framer-motion";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { IconContainer } from "../../../styles/styled-components/IconContainer";
+import { CreateConversationDialog } from "./CreateConversationDialog";
 
 interface ISidePanel extends IInitialState {
   dispatch: React.Dispatch<any>;
@@ -37,10 +38,21 @@ interface IConversationUser {
 export const SidePanel = React.memo((props: ISidePanel) => {
   const { dispatch, searchValue, isAutocompleteOpen, isSearchLoading, searchUserFound, loggedInUser, isLargeDesktop } =
     props;
-  const [autoCompleteOptions, setAutoCompleteOptions] = useState<IConversationUser[] | []>([]);
   const [anchorEl, setAnchorEl] = useState<null | SVGSVGElement>(null);
   const isMenuOpen = Boolean(anchorEl);
-  const debouncedSearchValue = useDebounce(searchValue, 800);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // const debouncedSearchValue = useDebounce(searchValue, 800);
+
+  const createNewConversationProps = {
+    searchValue,
+    isAutocompleteOpen,
+    isSearchLoading,
+    searchUserFound,
+    dispatch,
+    isDialogOpen,
+    setIsDialogOpen,
+    loggedInUser,
+  };
 
   const params = useParams();
   const navigateTo = useNavigate();
@@ -107,35 +119,35 @@ export const SidePanel = React.memo((props: ISidePanel) => {
       );
     });
 
-  useEffect(() => {
-    if (debouncedSearchValue.length) {
-      const isInputValidPhoneNumber = checkPhoneNumberValid(debouncedSearchValue);
-      const isInputValidEmail = checkEmailValid(debouncedSearchValue);
-      const queryType = isInputValidPhoneNumber ? "phoneNumber" : "email";
+  // useEffect(() => {
+  //   if (debouncedSearchValue.length) {
+  //     const isInputValidPhoneNumber = checkPhoneNumberValid(debouncedSearchValue);
+  //     const isInputValidEmail = checkEmailValid(debouncedSearchValue);
+  //     const queryType = isInputValidPhoneNumber ? "phoneNumber" : "email";
 
-      //   if (!isInputValidPhoneNumber && !isInputValidEmail) {
-      //     return alert("Please make sure you typed in a correct phone number or email adress");
-      //   }
+  //     //   if (!isInputValidPhoneNumber && !isInputValidEmail) {
+  //     //     return alert("Please make sure you typed in a correct phone number or email adress");
+  //     //   }
 
-      findUserByEmailOrPhoneNumber(queryType, debouncedSearchValue).then(res => {
-        const { foundUser } = res;
-        if (foundUser) {
-          setAutoCompleteOptions([
-            { displayName: foundUser!.displayName || "Unnamed user", id: foundUser.id, photoURL: foundUser.photoURL },
-          ]);
-        }
-      });
-    }
-  }, [debouncedSearchValue]);
+  //     findUserByEmailOrPhoneNumber(queryType, debouncedSearchValue).then(res => {
+  //       const { foundUser } = res;
+  //       if (foundUser) {
+  //         setAutoCompleteOptions([
+  //           { displayName: foundUser!.displayName || "Unnamed user", id: foundUser.id, photoURL: foundUser.photoURL },
+  //         ]);
+  //       }
+  //     });
+  //   }
+  // }, [debouncedSearchValue]);
 
-  const startNewConversation = useCallback(
-    async (conversationPartnerId: IConversationUser) => {
-      if (loggedInUser) {
-        createNewConversation(loggedInUser, conversationPartnerId);
-      }
-    },
-    [autoCompleteOptions, setAutoCompleteOptions]
-  );
+  // const startNewConversation = useCallback(
+  //   async (conversationPartnerId: IConversationUser) => {
+  //     if (loggedInUser) {
+  //       createNewConversation(loggedInUser, conversationPartnerId);
+  //     }
+  //   },
+  //   [autoCompleteOptions, setAutoCompleteOptions]
+  // );
 
   return (
     <section className="side-panel">
@@ -161,40 +173,8 @@ export const SidePanel = React.memo((props: ISidePanel) => {
           )}
         </div>
       </div>
-      <Autocomplete
-        open={isAutocompleteOpen}
-        onOpen={() => {
-          dispatch(updateAutocompleteOpen(true));
-        }}
-        onClose={() => {
-          dispatch(updateAutocompleteOpen(false));
-        }}
-        filterOptions={option => option}
-        onChange={(e, newVal) => {
-          if (newVal) startNewConversation(newVal);
-        }}
-        onInputChange={(e, newVal) => dispatch(updateSearchValue(newVal))}
-        getOptionLabel={(option: any) => option.displayName}
-        options={autoCompleteOptions}
-        loading={isSearchLoading}
-        renderInput={params => (
-          <TextField
-            {...params}
-            placeholder="Find a user by email or phone number"
-            value={searchValue}
-            sx={{ padding: "1rem 20px", borderRadius: "10px" }}
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <React.Fragment>
-                  {isSearchLoading ? <CircularProgress color="inherit" size={20} /> : null}
-                  {params.InputProps.endAdornment}
-                </React.Fragment>
-              ),
-            }}
-          />
-        )}
-      />
+      <CreateConversationDialog {...createNewConversationProps} />
+
       <motion.div className="side-panel__conversations-container">{conversations}</motion.div>
     </section>
   );

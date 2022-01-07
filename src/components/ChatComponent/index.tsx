@@ -58,7 +58,7 @@ export const ChatComponent = React.memo(() => {
 
             {!isDesktop && <Route path="*" element={<SidePanel {...sidePanelProps} />} />}
             {isLargeDesktop && <Route path="/profile" element={<NoConversationSelected />} />}
-            {/* <Route
+            <Route
               path={isLargeDesktop ? ":documentId/*" : ":documentId"}
               element={
                 <motion.div
@@ -68,7 +68,7 @@ export const ChatComponent = React.memo(() => {
                   <MessagesPanel loggedInUser={loggedInUser} />
                 </motion.div>
               }
-            /> */}
+            />
           </Routes>
           {/* And lastly the third section all the way to the right will show the profile component but only on larger screens */}
           {isLargeDesktop && <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />}
