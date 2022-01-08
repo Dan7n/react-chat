@@ -7,6 +7,8 @@ const SentBubble = styled(motion.div)`
   border-radius: 25px;
   color: white;
   background: var(--app-main-color);
+  max-width: 25rem;
+  max-height: 25rem;
   &::before {
     content: "";
     position: absolute;
@@ -32,8 +34,8 @@ const SentBubble = styled(motion.div)`
   }
 
   img {
-    max-width: 25rem;
-    max-height: 25rem;
+    max-width: 100%;
+    max-height: 100%;
     border-radius: 4px;
   }
 `;

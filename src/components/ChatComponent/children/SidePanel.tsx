@@ -123,7 +123,7 @@ export const SidePanel = React.memo((props: ISidePanel) => {
     <section className="side-panel">
       <div className="side-panel__mobile-header">
         <div>
-          <Avatar src={loggedInUser?.photoURL} alt={loggedInUser?.displayName} sx={{ width: 56, height: 56 }} />
+          {/* <Avatar src={loggedInUser?.photoURL} alt={loggedInUser?.displayName} sx={{ width: 56, height: 56 }} /> */}
           <h1>Chats</h1>
         </div>
         <div>
@@ -134,7 +134,12 @@ export const SidePanel = React.memo((props: ISidePanel) => {
               </IconContainer>
               <Menu anchorEl={anchorEl} open={isMenuOpen} onClose={() => setAnchorEl(null)} className="menu-container">
                 <MenuItem>
-                  <Link to={params["*"] ? `${params["*"]?.replace("/settings", "")}/settings` : "settings"}>
+                  <Link
+                    to={
+                      params["*"]
+                        ? `${params["*"]?.replace("/settings", "")?.replace("/profile", "")}/settings`
+                        : "settings"
+                    }>
                     Go to settings
                   </Link>
                 </MenuItem>

@@ -56,11 +56,13 @@ export function MessagesPanel({ loggedInUser }) {
         <li key={i} className={isSender ? "align-end" : "align-start"}>
           {isSender ? (
             <SentMessage i={i}>
-              {message.imageURL ? <img src={message.imageURL} alt="" /> : <p>{message.text}</p>}
+              {message.imageURL && <img src={message.imageURL} alt="" />}
+              {message.text && <p>{message.text}</p>}
             </SentMessage>
           ) : (
             <ReceivedMessage i={i}>
-              {message.imageURL ? <img src={message.imageURL} alt="" /> : <p>{message.text}</p>}
+              {message.imageURL && <img src={message.imageURL} alt="" />}
+              {message.text && <p>{message.text}</p>}
             </ReceivedMessage>
           )}
         </li>
