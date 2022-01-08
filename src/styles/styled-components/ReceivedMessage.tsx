@@ -7,6 +7,8 @@ const ReceivedBubble = styled(motion.div)`
   border-radius: 25px;
   background: #e5e5ea;
   color: black;
+  max-width: 25rem;
+  max-height: 25rem;
 
   &:before {
     content: "";
@@ -33,8 +35,8 @@ const ReceivedBubble = styled(motion.div)`
   }
 
   img {
-    max-width: 25rem;
-    max-height: 25rem;
+    max-width: 100%;
+    max-height: 100%;
     border-radius: 4px;
   }
 `;
