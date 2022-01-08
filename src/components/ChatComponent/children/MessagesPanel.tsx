@@ -5,10 +5,9 @@ import { useDocument, useDocumentData } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";
 import { db } from "../../../firebase-config";
 
-import AttachFileIcon from "@mui/icons-material/AttachFile";
 import SendIcon from "@mui/icons-material/Send";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import { Avatar } from "@mui/material";
+import DoubleArrowRoundedIcon from "@mui/icons-material/DoubleArrowRounded";
 
 import { ChatInputField } from "../../../styles/styled-components/ChatInputField";
 import NoMessages from "./NoMessages";
@@ -34,6 +33,11 @@ export function MessagesPanel({ loggedInUser }) {
   const [messageText, setMessageText] = useState("");
   const noMessages = useMemo(() => (snapshot && snapshot?.messages.length ? false : true), [snapshot]);
   const lastElementInMessages = useRef<any>(null);
+
+  const conversationPartner = useMemo(() => {
+    if (!snapshot) return;
+    return snapshot.participants.find(user => user.id !== loggedInUser.uid);
+  }, [snapshot]);
 
   useEffect(() => {
     if (!lastElementInMessages.current) return;
@@ -77,9 +81,16 @@ export function MessagesPanel({ loggedInUser }) {
 
   return (
     <section className="messages-panel">
-      <Link to="/chat">Back to conversations</Link>
+      <div className="messages-panel__header">
+        <Link to="/chat" className="messages-panel__header__link">
+          <DoubleArrowRoundedIcon />
+          Go back
+        </Link>
+        <Avatar src={conversationPartner?.photoURL} alt={conversationPartner?.displayName} />
+        <p>{conversationPartner?.displayName || "Unnamed user"}</p>
+      </div>
       <div className="messages-panel__messages-container">
-        {noMessages && <NoMessages />}
+        {noMessages && !loading && <NoMessages />}
         {!noMessages && (
           <ul className="message-list">
             {messages}

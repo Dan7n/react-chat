@@ -20,3 +20,6 @@ export const handleEmptyInputFields = () => toast.error("Please make sure both f
 
 export const handleSuccessfulProfileUpdate = () =>
   toast.success("Awesome! Your profile has been created and you'll shortly be redirected to the chat page");
+
+export const handleInvalidConversationErrorMessage = () =>
+  toast.error("You cannot create a conversation with yourself!");

@@ -5,7 +5,6 @@
   width: 100vw;
   height: 100vh;
   position: relative;
-  //   @include mixins.center-col;
 
   .landing-page__hero-text {
     @include mixins.center-col;
@@ -25,6 +24,12 @@
     h1 {
       font-family: "Spectral", serif;
       font-size: clamp(3.8rem, 16vw, 6.5rem);
+      background: #f2a485; /* fallback  */
+      background: -webkit-linear-gradient(to right, #f2a485, #9868bf); /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #f2a485, #9868bf);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     p {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",

@@ -13,7 +13,14 @@ import {
   DocumentData,
 } from "@firebase/firestore";
 import { usersCollectionRef, conversationsCollectionRef, db, auth } from "../firebase-config";
-import { sendPasswordResetEmail, sendEmailVerification, updateProfile, getAuth, User } from "firebase/auth";
+import {
+  sendPasswordResetEmail,
+  sendEmailVerification,
+  updateProfile,
+  getAuth,
+  User,
+  updatePhoneNumber,
+} from "firebase/auth";
 import { IUser } from "../models/IUser";
 import { IDefaultProfileInfo } from "../models/IDefaultProfileInfo";
 import { IConversationUser } from "../models/IConversationUser";
@@ -36,7 +43,6 @@ export const findUserByEmailOrPhoneNumber = async (queryType: string, queryStrin
 
   try {
     const userSnapshot = await getDocs(searchQuery);
-    console.log(userSnapshot);
 
     if (userSnapshot.empty) {
       foundUser = null;
@@ -120,6 +126,7 @@ export const createNewConversation = async (loggedInUser: User, receiver: IConve
     createdAt: serverTimestamp(),
     participants: [loggedInUserParticipant, receiver],
     messages: [],
+    lastUpdated: serverTimestamp(),
   };
 
   const userDocumentRef = doc(db, "users", loggedInUser.uid);
@@ -147,6 +154,7 @@ export const createNewConversation = async (loggedInUser: User, receiver: IConve
 
 export const updateCurrentlyLoggedInUserProfile = async (updatedProfileInfo: IDefaultProfileInfo) => {
   const auth = getAuth();
+  console.log("From backend: ", updatedProfileInfo);
 
   try {
     if (auth.currentUser) {
@@ -163,16 +171,3 @@ export const updateCurrentlyLoggedInUserProfile = async (updatedProfileInfo: IDe
 };
 
 //------------------------------------------------------------------
-
-export const sendMessageToCloudFirestore = async (messageText: string, conversationId: string, uid: string) => {
-  const conversationDocRef = doc(db, "conversations", conversationId);
-
-  const messageBody = {
-    text: messageText,
-    sender: uid,
-    createdAt: Date.now(),
-  };
-  await updateDoc(conversationDocRef, {
-    messages: arrayUnion(messageBody),
-  });
-};

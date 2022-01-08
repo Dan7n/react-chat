@@ -1,10 +1,10 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, PresentationControls } from "@react-three/drei";
 import { Suspense } from "react";
-import { useRef } from "react";
+import React, { useRef } from "react";
 import { motion } from "framer-motion/three";
 
-export default function Earth({ ...props }) {
+const Earth = React.memo(({ ...props }) => {
   const group = useRef();
   const { nodes, materials } = useGLTF("/earth.gltf");
 
@@ -33,9 +33,9 @@ export default function Earth({ ...props }) {
       </group>
     </motion.group>
   );
-}
+});
 
-export const ThreeScene = () => {
+export const ThreeScene = React.memo(() => {
   return (
     <div className="three-container">
       <Canvas>
@@ -50,4 +50,4 @@ export const ThreeScene = () => {
       </Canvas>
     </div>
   );
-};
+});

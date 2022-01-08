@@ -2,6 +2,7 @@ import { storage } from "./../firebase-config";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { doc, updateDoc, arrayUnion } from "@firebase/firestore";
 import { usersCollectionRef, conversationsCollectionRef, db, auth } from "../firebase-config";
+import { serverTimestamp } from "@firebase/firestore";
 
 export const sendMessageToCloudFirestore = async (
   messageText: string | null,
@@ -19,6 +20,7 @@ export const sendMessageToCloudFirestore = async (
   };
   await updateDoc(conversationDocRef, {
     messages: arrayUnion(messageBody),
+    lastUpdated: serverTimestamp(),
   });
 };
 
