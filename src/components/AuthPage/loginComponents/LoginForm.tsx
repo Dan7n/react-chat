@@ -102,7 +102,7 @@ export const LoginForm = (props: ILoginForm) => {
   };
 
   const checkUserExists = useCallback(async () => {
-    const { foundUser, userExists, done } = await findUserByEmailOrPhoneNumber("email", email);
+    const { foundUser, done } = await findUserByEmailOrPhoneNumber("email", email);
     done === "OK" && dispatch(updateIsLoading(false));
     if (foundUser) {
       //fires if the user already has an account in firebase

@@ -119,36 +119,6 @@ export const SidePanel = React.memo((props: ISidePanel) => {
       );
     });
 
-  // useEffect(() => {
-  //   if (debouncedSearchValue.length) {
-  //     const isInputValidPhoneNumber = checkPhoneNumberValid(debouncedSearchValue);
-  //     const isInputValidEmail = checkEmailValid(debouncedSearchValue);
-  //     const queryType = isInputValidPhoneNumber ? "phoneNumber" : "email";
-
-  //     //   if (!isInputValidPhoneNumber && !isInputValidEmail) {
-  //     //     return alert("Please make sure you typed in a correct phone number or email adress");
-  //     //   }
-
-  //     findUserByEmailOrPhoneNumber(queryType, debouncedSearchValue).then(res => {
-  //       const { foundUser } = res;
-  //       if (foundUser) {
-  //         setAutoCompleteOptions([
-  //           { displayName: foundUser!.displayName || "Unnamed user", id: foundUser.id, photoURL: foundUser.photoURL },
-  //         ]);
-  //       }
-  //     });
-  //   }
-  // }, [debouncedSearchValue]);
-
-  // const startNewConversation = useCallback(
-  //   async (conversationPartnerId: IConversationUser) => {
-  //     if (loggedInUser) {
-  //       createNewConversation(loggedInUser, conversationPartnerId);
-  //     }
-  //   },
-  //   [autoCompleteOptions, setAutoCompleteOptions]
-  // );
-
   return (
     <section className="side-panel">
       <div className="side-panel__mobile-header">
@@ -174,7 +144,6 @@ export const SidePanel = React.memo((props: ISidePanel) => {
         </div>
       </div>
       <CreateConversationDialog {...createNewConversationProps} />
-
       <motion.div className="side-panel__conversations-container">{conversations}</motion.div>
     </section>
   );
