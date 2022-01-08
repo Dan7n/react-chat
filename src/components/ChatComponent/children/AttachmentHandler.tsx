@@ -3,6 +3,15 @@ import AttachFileIcon from "@mui/icons-material/AttachFile";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ImageIcon from "@mui/icons-material/Image";
+import MicIcon from "@mui/icons-material/Mic";
+import { AudioMessageHandler } from "./AudioMessageHandler";
+
+const style = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: "0.5rem",
+};
 
 export const AttachmentHandler = ({ handleUpload }) => {
   const [anchorEl, setAnchorEl] = useState<null | SVGSVGElement>(null);
@@ -19,12 +28,13 @@ export const AttachmentHandler = ({ handleUpload }) => {
       <AttachFileIcon className="icon" onClick={e => handleClick(e)} />
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose} className="menu-container">
         <MenuItem>
-          <label
-            htmlFor="file-uploader"
-            style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "0.5rem" }}>
+          <label htmlFor="file-uploader" style={style}>
             <ImageIcon /> Upload an image
             <input style={{ display: "none" }} type="file" id="file-uploader" onChange={handleUpload} />
           </label>
+        </MenuItem>
+        <MenuItem>
+          <AudioMessageHandler />
         </MenuItem>
       </Menu>
     </>
