@@ -134,7 +134,12 @@ export const SidePanel = React.memo((props: ISidePanel) => {
               </IconContainer>
               <Menu anchorEl={anchorEl} open={isMenuOpen} onClose={() => setAnchorEl(null)} className="menu-container">
                 <MenuItem>
-                  <Link to={params["*"] ? `${params["*"]?.replace("/settings", "")}/settings` : "settings"}>
+                  <Link
+                    to={
+                      params["*"]
+                        ? `${params["*"]?.replace("/settings", "")?.replace("/profile", "")}/settings`
+                        : "settings"
+                    }>
                     Go to settings
                   </Link>
                 </MenuItem>
