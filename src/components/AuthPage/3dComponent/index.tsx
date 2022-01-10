@@ -1,14 +1,14 @@
 import * as THREE from "three";
 import React, { useMemo, useRef } from "react";
 import { Effects as EffectsComposer, Center, shaderMaterial, Plane } from "@react-three/drei";
-import { extend, useThree, Canvas, useFrame } from "@react-three/fiber";
+import { extend, useThree, Canvas, useFrame, MeshProps } from "@react-three/fiber";
 import { vertexShader, fragmentShader } from "./shaders";
 // import { UnrealBloomPass } from "three-stdlib";
 
 // extend({ UnrealBloomPass });
 
-function Box(props: any) {
-  const mesh = useRef<any>(null);
+function Box(props) {
+  const mesh = useRef<THREE.Mesh>(null);
   // rotate the box
   useFrame((state, delta) => {
     if (mesh.current) {
@@ -24,7 +24,7 @@ function Box(props: any) {
   );
 }
 
-export const ThreeScene = () => {
+export const ThreeScene = React.memo(() => {
   console.log("rendered");
   return (
     <Canvas dpr={window.devicePixelRatio}>
@@ -33,7 +33,7 @@ export const ThreeScene = () => {
       <Box position={[0, 0, 0]} />
     </Canvas>
   );
-};
+});
 
 // export const Effects = () => {
 //   const { size, scene, camera } = useThree();

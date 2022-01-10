@@ -1,16 +1,23 @@
+import { User } from "@firebase/auth";
 import { createContext } from "react";
-import { IDefaultState } from "./defaultState";
 
 interface IDispatch {
   action?: string;
   payload?: any;
 }
 
-export interface IContext {
+export type IContext = {
   state: {
-    user: IDefaultState | null | unknown;
+    user: User | null;
   };
   dispatch: ({ action, payload }: IDispatch) => void;
-}
+};
 
-export const GlobalContext = createContext<IContext | null>(null);
+const defaultValue: IContext = {
+  state: {
+    user: null,
+  },
+  dispatch: () => {},
+};
+
+export const GlobalContext = createContext<IContext>(defaultValue);

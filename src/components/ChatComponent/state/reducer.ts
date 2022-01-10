@@ -1,12 +1,8 @@
 import { IAction } from "../../../models/IAction";
+import { IInitialState } from "./initialState";
 
-export const reducer = (state: any, action: IAction) => {
+export const reducer = (state: IInitialState, action: IAction) => {
   switch (action.type) {
-    /*
-      case "_":
-        return { ...state, _: action.payload };
-        */
-
     case "UPDATE_SEARCH_VALUE":
       return { ...state, searchValue: action.payload };
     case "UPDATE_AUTOCOMPLETE_OPEN":

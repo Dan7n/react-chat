@@ -1,9 +1,10 @@
 import { useState } from "react";
+
+//Components
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ImageIcon from "@mui/icons-material/Image";
-import MicIcon from "@mui/icons-material/Mic";
 import { AudioMessageHandler } from "./AudioMessageHandler";
 
 const style = {
@@ -13,7 +14,14 @@ const style = {
   gap: "0.5rem",
 };
 
-export const AttachmentHandler = ({ handleUpload }) => {
+/**
+ * @abstract A component that shows a little menu with options to upload a photo or an audio file
+ * @param handleUpload: function that runs when the user chooses a photo to upload
+ * @param conversationId: document ID in cloud firestore
+ * @param uid: the ID to the currently logged in user
+ */
+
+export const AttachmentHandler = ({ handleUpload, conversationId, uid }) => {
   const [anchorEl, setAnchorEl] = useState<null | SVGSVGElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
@@ -34,7 +42,7 @@ export const AttachmentHandler = ({ handleUpload }) => {
           </label>
         </MenuItem>
         <MenuItem>
-          <AudioMessageHandler />
+          <AudioMessageHandler conversationId={conversationId} uid={uid} />
         </MenuItem>
       </Menu>
     </>

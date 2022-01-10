@@ -1,7 +1,7 @@
-import { IUser } from "../models/IUser";
+import { User } from "firebase/auth";
 
 export interface IDefaultState {
-  user: null | IUser;
+  user: null | User;
 }
 
 export const defaultState: IDefaultState = {

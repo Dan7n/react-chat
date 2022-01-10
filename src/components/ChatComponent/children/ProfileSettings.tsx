@@ -1,21 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useCallback, useEffect, useMemo } from "react";
-import "./../styles.scss";
-import { Avatar, CircularProgress } from "@mui/material";
-import { RoundButton } from "./../../../styles/styled-components/RoundButton";
-import { getAuth, signOut, User } from "firebase/auth";
+import { useCallback, useMemo } from "react";
+import "./../../../styles/components/ChatComponent/styles.scss";
 import { useNavigate, Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
+//Components
+import { Avatar } from "@mui/material";
+import { RoundButton } from "./../../../styles/styled-components/RoundButton";
 import { ProfilePage } from "../../AuthPage/profileComponents/ProfilePage";
+
+//Firebase
+import { getAuth, signOut, User } from "firebase/auth";
 
 interface IProfileSettings {
   loggedInUser: User;
   isLargeDesktop: boolean;
-}
-
-interface IProfileContainer extends IProfileSettings {
-  handleSignOut: () => void;
 }
 
 export function ProfileSettings({ loggedInUser, isLargeDesktop }: IProfileSettings) {
@@ -61,6 +60,10 @@ export function ProfileSettings({ loggedInUser, isLargeDesktop }: IProfileSettin
       </AnimatePresence>
     </section>
   );
+}
+
+interface IProfileContainer extends IProfileSettings {
+  handleSignOut: () => void;
 }
 
 const SettingsContainer = ({ loggedInUser, handleSignOut, isLargeDesktop }: IProfileContainer) => {

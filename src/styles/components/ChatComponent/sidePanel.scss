@@ -1,0 +1,86 @@
+@use "./../../partials/mixins";
+
+.side-panel {
+  border: 1px solid #e2e8f0;
+  .side-panel__mobile-header {
+    width: 100%;
+    height: 4rem;
+    padding: 0.4rem 0.8rem;
+    @include mixins.center-row;
+    justify-content: space-between;
+    gap: 0.3rem;
+    div {
+      @include mixins.center-row;
+      justify-content: flex-start;
+      gap: 1.5rem;
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
+  }
+  .dialog-container {
+    @include mixins.center-col;
+    padding: 0 9px 1rem 9px;
+    margin: -1.5rem 0 3rem 0;
+  }
+  .side-panel__conversations-container {
+    overflow: hidden;
+    @include mixins.center-col;
+    overflow: hidden;
+    justify-content: flex-start;
+    padding: 8px;
+    background: white;
+    width: 95%;
+    border-radius: 12px;
+    height: 100%;
+    max-height: 65%;
+    margin: 6px;
+    gap: 0.2rem;
+    @include mixins.mediumShadow;
+    .side-panel__single-conversation {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.7rem 6px;
+      cursor: pointer;
+      width: 95%;
+      border-radius: 8px;
+      transition: all ease-in-out 200ms;
+      &:hover {
+        background-color: lighten(#6246ea, 30%);
+      }
+
+      .side-panel__single-conversation__text {
+        p:first-of-type {
+          font-weight: bold;
+        }
+        p:nth-of-type(2) {
+          color: #1e293b;
+          font-size: 0.85rem;
+          max-height: 4ch;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 190px;
+        }
+      }
+    }
+
+    .active {
+      background-color: #6246ea;
+      color: white;
+      .side-panel__single-conversation__text {
+        p:first-of-type {
+          color: white;
+        }
+        p:nth-of-type(2) {
+          color: #f1f5f9;
+        }
+      }
+      &:hover {
+        background-color: #6246ea;
+      }
+    }
+  }
+}

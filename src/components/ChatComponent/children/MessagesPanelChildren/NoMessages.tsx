@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import React from "react";
-import { BlurredBlobs } from "../../../styles/styled-components/BlurredBlobs";
-import noImgSrc from "./../../../assets/no-messages.png";
+import { BlurredBlobs } from "../../../../styles/styled-components/BlurredBlobs";
+import noImgSrc from "./../../../../assets/no-messages.png";
+
+/**
+ * @abstract Simple components that shows an image and a text if a conversation doesn't have any messages yet
+ */
 
 const NoMessages = () => {
   return (
