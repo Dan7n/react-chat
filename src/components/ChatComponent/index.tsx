@@ -2,7 +2,7 @@ import React, { useReducer, useContext, useState, useEffect } from "react";
 
 import { SidePanel } from "./children/SidePanel";
 import { MessagesPanel } from "./children/MessagesPanel";
-import "./styles.scss";
+import "./../../styles/components/ChatComponent/styles.scss";
 import { ProfileSettings } from "./children/ProfileSettings";
 
 import { reducer } from "./state/reducer";
@@ -27,7 +27,6 @@ export const ChatComponent = React.memo(() => {
     searchValue: chatState.searchValue,
     isAutocompleteOpen: chatState.isAutocompleteOpen,
     isSearchLoading: chatState.isSearchLoading,
-    searchUserFound: chatState.searchUserFound,
     loggedInUser: loggedInUser,
     isLargeDesktop: isLargeDesktop,
   };

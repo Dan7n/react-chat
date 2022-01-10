@@ -50,3 +50,7 @@
     9.1px 10.6px 10px rgba(0, 0, 0, 0.025), 16.3px 19px 17.9px rgba(0, 0, 0, 0.03),
     30.5px 35.5px 33.4px rgba(0, 0, 0, 0.036), 73px 85px 80px rgba(0, 0, 0, 0.05);
 }
+
+@mixin mediumShadow {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}

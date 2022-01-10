@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+
+//------------- Firebase -------------
 import "firebase/firestore";
 import "firebase/auth";
-import { firebaseApp, db, auth } from "./firebase-config";
+import { auth } from "./firebase-config";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Routes, Route, useLocation } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
 
 //------------- Component imports -------------
 import HomeComponent from "./components/HomeComponent";
 import AuthPage from "./components/AuthPage";
+import { ChatComponent } from "./components/ChatComponent";
+import { Toaster } from "react-hot-toast";
 
 //------------- Context API -------------
 import { GlobalContext } from "./context/GlobalContext";
@@ -16,11 +20,9 @@ import { defaultState, IDefaultState } from "./context/defaultState";
 import { reducer } from "./context/reducer";
 import { loginUser } from "./context/actionCreators";
 import { IAction } from "./models/IAction";
-import { ChatComponent } from "./components/ChatComponent";
-import { AnimatePresence, motion } from "framer-motion";
 
 function App() {
-  const [loggedInUser, loading, error] = useAuthState(auth);
+  const [loggedInUser] = useAuthState(auth);
   const [globalState, dispatch] = useReducer<React.Reducer<IDefaultState, IAction>>(reducer, defaultState);
   const location = useLocation();
 

@@ -1,5 +1,5 @@
 import { useEffect, useCallback, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 //Components
 import FormControl from "@mui/material/FormControl";
@@ -8,7 +8,6 @@ import { FormHelperText } from "@mui/material";
 import { NormalButton } from "../../../styles/styled-components/Button";
 import ScaleLoader from "react-spinners/ClipLoader";
 import { SignInWithGoogleBtn } from "./SignInWithGoogleBtn";
-import signInImage from "./../../assets/sign-in.png";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -40,8 +39,8 @@ import {
   updateIsDialogOpen,
   toggleShowPassword,
 } from "../state/actionCreators";
-import { ILoginState, ILoginForm } from "../../../models/IFormValue";
-import { GlobalContext } from "../../../context/GlobalContext";
+import { ILoginForm } from "../../../models/IFormValue";
+import { GlobalContext, IContext } from "../../../context/GlobalContext";
 
 import { motion } from "framer-motion";
 
@@ -61,10 +60,9 @@ export const LoginForm = (props: ILoginForm) => {
 
   const [loggedInUser] = useAuthState(auth);
   const navigateTo = useNavigate();
-  const { state } = useContext<any>(GlobalContext);
+  const { state } = useContext<IContext>(GlobalContext);
 
-  const [createUserWithEmailAndPassword, createUserObject, createIsLoading, createError] =
-    useCreateUserWithEmailAndPassword(auth);
+  const [createUserWithEmailAndPassword, createUserObject] = useCreateUserWithEmailAndPassword(auth);
   const [signInWithEmailAndPassword, signinUser, singinLoading, singinError] = useSignInWithEmailAndPassword(auth);
 
   useEffect(() => {

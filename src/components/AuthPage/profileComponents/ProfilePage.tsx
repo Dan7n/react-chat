@@ -30,7 +30,7 @@ export const ProfilePage = () => {
   const navigateTo = useNavigate();
   const location = useLocation();
 
-  const { state } = useContext<IContext | any>(GlobalContext);
+  const { state, dispatch } = useContext<IContext>(GlobalContext);
 
   const isUserComingFromChatComponent: boolean = useMemo(() => {
     return location.pathname.includes("chat");
@@ -40,15 +40,16 @@ export const ProfilePage = () => {
     if (state.user) {
       //Due to restrictions in firebase, storing and updating phone numbers is a lot more complicated than normal data
       //therefore I'm chosing to get the data (including the phone number) from the cloudstore database instead of firebase auth service
-      (async function getUserInfo() {
-        const { foundUser } = await findUserByEmailOrPhoneNumber("email", state.user.email);
+      const getUserInfo = async () => {
+        const { foundUser } = await findUserByEmailOrPhoneNumber("email", state.user?.email!);
         if (!foundUser) return;
         setProfileInfo({
           photoURL: foundUser.photoURL || `https://avatars.dicebear.com/api/bottts/${Date.now()}.svg`,
           displayName: foundUser.displayName || "",
           phoneNumber: foundUser.phoneNumber || "",
         });
-      })();
+      };
+      getUserInfo();
     }
   }, [state?.user]);
 

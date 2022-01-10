@@ -1,23 +1,26 @@
-import React, { useEffect, useState, useCallback, useMemo, useRef, useLayoutEffect } from "react";
-import "./../styles.scss";
+import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
+import "./../../../styles/components/ChatComponent/styles.scss";
 import { Link, useParams } from "react-router-dom";
-import { useDocument, useDocumentData } from "react-firebase-hooks/firestore";
+
+//Firebase
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";
 import { db } from "../../../firebase-config";
+import { sendMessageToCloudFirestore } from "./../../../utils/firebaseChatHelpers";
 
+//Custom hooks
+import { useUpload } from "../../../hooks/useUpload";
+
+//Components
 import SendIcon from "@mui/icons-material/Send";
 import { Avatar } from "@mui/material";
 import DoubleArrowRoundedIcon from "@mui/icons-material/DoubleArrowRounded";
-
 import { ChatInputField } from "../../../styles/styled-components/ChatInputField";
-import NoMessages from "./NoMessages";
-import { sendMessageToCloudFirestore, uploadImageToStorageBucket } from "./../../../utils/firebaseChatHelpers";
+import NoMessages from "./MessagesPanelChildren/NoMessages";
 import { SentMessage } from "./../../../styles/styled-components/SentMessage";
 import { ReceivedMessage } from "./../../../styles/styled-components/ReceivedMessage";
-import { AttachmentHandler } from "./AttachmentHandler";
-
-import { storage } from "./../../../firebase-config";
-import { ref, uploadBytes } from "firebase/storage";
+import { AttachmentHandler } from "./MessagesPanelChildren/AttachmentHandler";
+import { motion } from "framer-motion";
 
 const isInvalidText = (msg: string) => {
   //returns true if the msg is only spaces
@@ -25,14 +28,17 @@ const isInvalidText = (msg: string) => {
 };
 
 export function MessagesPanel({ loggedInUser }) {
+  const [messageText, setMessageText] = useState("");
+  const lastElementInMessages = useRef<any>(null);
+
   const params = useParams();
   const documentId = params.documentId;
+
   const [snapshot, loading, error] = useDocumentData(doc(db, "conversations", documentId!), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
-  const [messageText, setMessageText] = useState("");
   const noMessages = useMemo(() => (snapshot && snapshot?.messages.length ? false : true), [snapshot]);
-  const lastElementInMessages = useRef<any>(null);
+  const [uploadToStorageBucket, isUploadLoading] = useUpload();
 
   const conversationPartner = useMemo(() => {
     if (!snapshot) return;
@@ -40,6 +46,7 @@ export function MessagesPanel({ loggedInUser }) {
   }, [snapshot]);
 
   useEffect(() => {
+    //Scroll to the bottom when a new message is sent/received
     if (!lastElementInMessages.current) return;
     const ref = setTimeout(() => {
       lastElementInMessages.current.scrollIntoView({ behavior: "smooth" });
@@ -48,31 +55,63 @@ export function MessagesPanel({ loggedInUser }) {
     return () => clearTimeout(ref);
   }, [snapshot, lastElementInMessages]);
 
-  const messages =
-    snapshot &&
-    snapshot.messages.map((message, i) => {
+  //Get each single text message/media file
+  const messages = useMemo(() => {
+    if (!snapshot) return <></>;
+
+    return snapshot.messages.map((message, i) => {
       const isSender = loggedInUser.uid === message.sender;
       return (
         <li key={i} className={isSender ? "align-end" : "align-start"}>
-          {isSender ? (
-            <SentMessage i={i}>
-              {message.imageURL && <img src={message.imageURL} alt="" />}
-              {message.text && <p>{message.text}</p>}
-            </SentMessage>
-          ) : (
-            <ReceivedMessage i={i}>
-              {message.imageURL && <img src={message.imageURL} alt="" />}
-              {message.text && <p>{message.text}</p>}
-            </ReceivedMessage>
+          {/* if message is of type text */}
+          {message.text &&
+            (isSender ? (
+              <SentMessage i={i}>
+                <p>{message.text}</p>
+              </SentMessage>
+            ) : (
+              <ReceivedMessage i={i}>
+                <p>{message.text}</p>
+              </ReceivedMessage>
+            ))}
+
+          {/* if message is an image */}
+          {message.imageURL && (
+            <motion.img
+              initial={{ opacity: 0, translateY: 60 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.04 }}
+              src={message.imageURL}
+              alt=""
+            />
+          )}
+
+          {/* if message is an audio recording */}
+          {message.audioURL && (
+            <motion.audio
+              initial={{ opacity: 0, translateY: 60 }}
+              animate={{ opacity: 1, translateY: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.04 }}
+              controls
+              src={message.audioURL}
+            />
           )}
         </li>
       );
     });
+  }, [loggedInUser.uid, snapshot]);
 
+  //Action handlers
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e?.target?.files!.length) return;
     const imageFile = e?.target?.files![0];
-    await uploadImageToStorageBucket(imageFile, documentId!, loggedInUser.uid);
+    const config = {
+      imageFile,
+      audioFile: null,
+      conversationId: documentId!,
+      uid: loggedInUser.uid,
+    };
+    await uploadToStorageBucket(config);
   };
 
   const handleSendMessage = useCallback(async () => {
@@ -101,8 +140,7 @@ export function MessagesPanel({ loggedInUser }) {
         )}
       </div>
       <div className="messages-panel__form-container">
-        <AttachmentHandler handleUpload={handleUpload} />
-        {/* <input type="file" /> */}
+        <AttachmentHandler handleUpload={handleUpload} conversationId={documentId} uid={loggedInUser.uid} />
         <ChatInputField
           value={messageText}
           onChange={e => setMessageText(e.target.value)}

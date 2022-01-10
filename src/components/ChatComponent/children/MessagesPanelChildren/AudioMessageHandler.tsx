@@ -1,4 +1,7 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
+
+//Components
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -6,7 +9,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import MicIcon from "@mui/icons-material/Mic";
-import { motion } from "framer-motion";
+
+//Custom hooks
+import { useUpload } from "../../../../hooks/useUpload";
 
 const style = {
   display: "flex",
@@ -21,23 +26,37 @@ const getRecorderInstance = async () => {
   return new MediaRecorder(stream);
 };
 
-const handleData = (e?: BlobEvent, setState?: React.Dispatch<React.SetStateAction<string>>) => {
-  if (!e || !setState) return;
-  const audioURL = URL.createObjectURL(e.data);
-  setState(audioURL);
-};
+/**
+ * @abstract Component that shows a dialog with a record button - users can record audio, listen to their recording and send it to the storage bucket
+ * @param conversationId: document ID in cloud firestore
+ * @param uid: the ID to the currently logged in user
+ */
 
-export const AudioMessageHandler = () => {
+export const AudioMessageHandler = ({ conversationId, uid }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState("");
+
+  //store a reference to the blob object that we'll eventually upload to cloud storage
+  const blob = useRef<Blob | null>(null);
+
+  const [uploadToStorageBucket, isUploadLoading] = useUpload();
 
   //Event handlers ---------------------
   const handleRecord = useCallback(() => {
     if (!isRecording) setIsRecording(true);
     else setIsRecording(false);
   }, [isRecording, recorder]);
+
+  const handleData = (e?: BlobEvent) => {
+    if (!e) return;
+    const audioURL = URL.createObjectURL(e.data);
+    setAudioURL(audioURL);
+
+    //update blob reference
+    blob.current = [e.data][0];
+  };
 
   const handleClose = () => {
     setIsMenuOpen(false);
@@ -47,7 +66,15 @@ export const AudioMessageHandler = () => {
   };
 
   const handleSend = () => {
-    console.log("Send");
+    //TODO fix alert
+    if (!blob.current) return alert("record something");
+    const config = {
+      imageFile: null,
+      audioFile: blob.current,
+      conversationId,
+      uid,
+    };
+    uploadToStorageBucket(config);
   };
 
   //Set up media recorder ---------------------
@@ -56,9 +83,10 @@ export const AudioMessageHandler = () => {
       getRecorderInstance().then(mediaRecorder => setRecorder(mediaRecorder));
       return;
     } else if (recorder) {
-      recorder!.addEventListener("dataavailable", e => handleData(e, setAudioURL));
+      recorder!.addEventListener("dataavailable", e => handleData(e));
     }
     return () => {
+      //cleanup
       if (recorder) {
         recorder.removeEventListener("dataavailable", handleData);
       }
@@ -66,6 +94,7 @@ export const AudioMessageHandler = () => {
   }, [recorder, isRecording]);
 
   useEffect(() => {
+    //when the user clicks on the microphone
     if (isRecording && recorder) {
       recorder.start();
     } else if (!isRecording && recorder && recorder.state !== "inactive") {

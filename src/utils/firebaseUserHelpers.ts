@@ -9,18 +9,9 @@ import {
   doc,
   updateDoc,
   arrayUnion,
-  QueryDocumentSnapshot,
-  DocumentData,
 } from "@firebase/firestore";
 import { usersCollectionRef, conversationsCollectionRef, db, auth } from "../firebase-config";
-import {
-  sendPasswordResetEmail,
-  sendEmailVerification,
-  updateProfile,
-  getAuth,
-  User,
-  updatePhoneNumber,
-} from "firebase/auth";
+import { sendPasswordResetEmail, updateProfile, getAuth, User } from "firebase/auth";
 import { IUser } from "../models/IUser";
 import { IDefaultProfileInfo } from "../models/IDefaultProfileInfo";
 import { IConversationUser } from "../models/IConversationUser";

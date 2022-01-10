@@ -1,4 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { updateAutocompleteOpen, updateSearchValue } from "../../state/actionCreators";
+import { IConversationUser } from "../../../../models/IConversationUser";
+
+//Components
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,47 +11,37 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { CircularProgress, Autocomplete } from "@mui/material";
-import { RoundButton } from "./../../../styles/styled-components/RoundButton";
-import {
-  updateSearchValue,
-  updateAutocompleteOpen,
-  updateLoadingState,
-  updateSearchUser,
-  resetSearch,
-} from "./../state/actionCreators";
-import { useDebounce } from "../../../hooks/useDebounce";
-import { checkPhoneNumberValid, checkEmailValid } from "../../../utils/regexHelpers";
-import { handleInvalidConversationErrorMessage } from "../../../utils/toastHelpers";
-import { createNewConversation, findUserByEmailOrPhoneNumber } from "../../../utils/firebaseUserHelpers";
-import { IConversationUser } from "../../../models/IConversationUser";
+import { RoundButton } from "../../../../styles/styled-components/RoundButton";
+
+//Custom hooks and helpers
+import { useDebounce } from "../../../../hooks/useDebounce";
+import { checkPhoneNumberValid, checkEmailValid } from "../../../../utils/regexHelpers";
+import { handleInvalidConversationErrorMessage } from "../../../../utils/toastHelpers";
+import { createNewConversation, findUserByEmailOrPhoneNumber } from "../../../../utils/firebaseUserHelpers";
+
+//Firebase
 import { User } from "@firebase/auth";
 
 interface ICreateConversationDialog {
   searchValue: string;
   isAutocompleteOpen: boolean;
   isSearchLoading: boolean;
-  searchUserFound: any;
   dispatch: React.Dispatch<any>;
   isDialogOpen: boolean;
   setIsDialogOpen: (newValue: boolean) => void;
   loggedInUser: User;
 }
 
-export const CreateConversationDialog = (props: ICreateConversationDialog) => {
-  const {
-    searchValue,
-    isAutocompleteOpen,
-    isSearchLoading,
-    searchUserFound,
-    dispatch,
-    isDialogOpen,
-    setIsDialogOpen,
-    loggedInUser,
-  } = props;
+/**
+ * @abstract A popup dialog that enables users to search for other users using an email adress or phone number - upon successful search query a conversation between these two users is created
+ */
 
+export const CreateConversationDialog = (props: ICreateConversationDialog) => {
+  const { searchValue, isAutocompleteOpen, isSearchLoading, dispatch, isDialogOpen, setIsDialogOpen, loggedInUser } =
+    props;
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<IConversationUser[] | []>([]);
   const [error, setError] = useState("");
-  const debouncedSearchValue = useDebounce(searchValue, 800);
+  const debouncedSearchValue = useDebounce(searchValue, 1000);
 
   const handleClickOpen = () => {
     setIsDialogOpen(true);
@@ -72,15 +66,11 @@ export const CreateConversationDialog = (props: ICreateConversationDialog) => {
   }, [isDialogOpen]);
 
   useEffect(() => {
-    //runs with a 0.8s delay as the user types
+    //runs with a 1s delay as the user types
     if (debouncedSearchValue.length) {
       const isInputValidPhoneNumber = checkPhoneNumberValid(debouncedSearchValue);
       const isInputValidEmail = checkEmailValid(debouncedSearchValue);
       const queryType = isInputValidPhoneNumber ? "phoneNumber" : "email";
-
-      //   if (!isInputValidPhoneNumber && !isInputValidEmail) {
-      //     return alert("Please make sure you typed in a correct phone number or email adress");
-      //   }
 
       findUserByEmailOrPhoneNumber(queryType, debouncedSearchValue).then(res => {
         const { foundUser } = res;
@@ -124,11 +114,11 @@ export const CreateConversationDialog = (props: ICreateConversationDialog) => {
               dispatch(updateAutocompleteOpen(false));
             }}
             filterOptions={option => option}
-            onChange={(e, newVal) => {
+            onChange={(_, newVal) => {
               if (newVal) startNewConversation(newVal);
             }}
-            onInputChange={(e, newVal) => dispatch(updateSearchValue(newVal))}
-            getOptionLabel={(option: any) => option.displayName}
+            onInputChange={(_, newVal) => dispatch(updateSearchValue(newVal))}
+            getOptionLabel={(option: IConversationUser) => option.displayName}
             options={autoCompleteOptions}
             loading={isSearchLoading}
             renderInput={params => (

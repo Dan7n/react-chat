@@ -1,0 +1,24 @@
+@use "./../../partials/mixins";
+
+.chat-container__profile {
+  width: 95%;
+  height: 90%;
+  overflow: hidden;
+  background: white;
+  justify-self: center;
+  align-self: center;
+  @include mixins.mediumShadow;
+  border-radius: 12px;
+
+  .chat-container__profile__inner {
+    width: 100%;
+    height: 100%;
+    @include mixins.center-col;
+    padding-bottom: 10rem;
+
+    .buttons-container {
+      @include mixins.center-col;
+      gap: 0.7rem;
+    }
+  }
+}
