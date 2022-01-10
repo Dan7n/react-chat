@@ -2,7 +2,7 @@ import { User } from "@firebase/auth";
 import { createContext } from "react";
 
 interface IDispatch {
-  action?: string;
+  type?: string;
   payload?: any;
 }
 
@@ -10,7 +10,7 @@ export type IContext = {
   state: {
     user: User | null;
   };
-  dispatch: ({ action, payload }: IDispatch) => void;
+  dispatch: ({ type, payload }: IDispatch) => void;
 };
 
 const defaultValue: IContext = {

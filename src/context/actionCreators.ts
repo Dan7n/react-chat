@@ -1,7 +1,6 @@
 import { User } from "firebase/auth";
-import { IUser } from "../models/IUser";
 
-export const loginUser = (userObject: any) => {
+export const loginUser = (userObject: User) => {
   return { type: "LOGIN_USER", payload: userObject };
 };
 

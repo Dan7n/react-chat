@@ -1,0 +1,53 @@
+@use "./../../partials/mixins";
+
+.landing-page-container {
+  width: 100vw;
+  height: 100vh;
+  position: relative;
+
+  .landing-page__hero-text {
+    @include mixins.center-col;
+    position: absolute;
+    width: 100%;
+    color: white;
+    font-size: 3rem;
+    padding-top: 7rem;
+    text-align: center;
+    z-index: 20;
+
+    @include mixins.media(500px) {
+      padding-top: 10rem;
+      gap: 1rem;
+    }
+
+    h1 {
+      font-family: "Spectral", serif;
+      font-size: clamp(3.8rem, 16vw, 6.5rem);
+      background: #f2a485; /* fallback  */
+      background: -webkit-linear-gradient(to right, #f2a485, #9868bf); /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #f2a485, #9868bf);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    p {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
+        "Droid Sans", "Helvetica Neue", sans-serif;
+      font-size: clamp(0.9rem, 6vw, 2rem);
+      font-weight: 200;
+      max-width: 60%;
+      text-align: center;
+      @include mixins.media(500px) {
+        max-width: 100%;
+        padding: 0 0.4rem;
+      }
+    }
+  }
+
+  .three-container {
+    width: 100vw;
+    height: 150vh;
+    background-color: #111d5e;
+    overflow: hidden;
+  }
+}
