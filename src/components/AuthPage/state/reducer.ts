@@ -1,6 +1,7 @@
 import { IAction } from "../../../models/IAction";
+import { ILoginState } from "../../../models/IFormValue";
 
-export const reducer = (state: any, action: IAction) => {
+export const reducer = (state: ILoginState, action: IAction) => {
   switch (action.type) {
     case "UPDATE_EMAIL":
       return { ...state, email: action.payload };

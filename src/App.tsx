@@ -27,7 +27,7 @@ function App() {
   const location = useLocation();
 
   useEffect(() => {
-    if (loggedInUser) dispatch(loginUser(loggedInUser));
+    if (loggedInUser && !globalState.user) dispatch(loginUser(loggedInUser));
   }, [loggedInUser]);
 
   return (

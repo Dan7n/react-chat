@@ -1,8 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useContext } from "react";
 import "./../../../styles/components/ChatComponent/styles.scss";
 import { useNavigate, Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+
+//Context
+import { GlobalContext, IContext } from "../../../context/GlobalContext";
+import { logoutUser } from "../../../context/actionCreators";
 
 //Components
 import { Avatar } from "@mui/material";
@@ -20,9 +24,11 @@ interface IProfileSettings {
 export function ProfileSettings({ loggedInUser, isLargeDesktop }: IProfileSettings) {
   const auth = getAuth();
   const navigateTo = useNavigate();
+  const { dispatch } = useContext<IContext>(GlobalContext);
 
   const handleSignOut = useCallback(() => {
     signOut(auth).then(() => {
+      dispatch(logoutUser());
       navigateTo("/");
     });
   }, []);
