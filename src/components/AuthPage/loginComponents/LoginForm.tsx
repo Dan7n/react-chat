@@ -190,7 +190,7 @@ export const LoginForm = (props: ILoginForm) => {
             </div>
           </FormControl>
           <div className="buttons-container">
-            <NormalButton width="50%" bgColor="#6246ea" hoverShadowColor="251deg 68% 36%" onClick={handleSubmit}>
+            <NormalButton width="55%" bgColor="#6246ea" hoverShadowColor="251deg 68% 36%" onClick={handleSubmit}>
               {isLoading ? <ScaleLoader color="white" /> : "Continue"}
             </NormalButton>
             <SignInWithGoogleBtn />
