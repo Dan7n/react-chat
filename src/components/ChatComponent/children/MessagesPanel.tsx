@@ -130,7 +130,7 @@ export function MessagesPanel({ loggedInUser }) {
         <Avatar src={conversationPartner?.photoURL} alt={conversationPartner?.displayName} />
         <p>{conversationPartner?.displayName || "Unnamed user"}</p>
       </div>
-      <div className="messages-panel__header-lights"></div>
+      <div className="messages-panel__header-lights" role="presentation"></div>
       <div className="messages-panel__messages-container">
         {noMessages && !loading && <NoMessages />}
         {!noMessages && (

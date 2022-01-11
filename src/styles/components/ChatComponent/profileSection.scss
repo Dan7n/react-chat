@@ -16,6 +16,26 @@
     @include mixins.center-col;
     padding-bottom: 10rem;
 
+    .mobile-navigate-back {
+      border: 0;
+      outline: 0;
+      background-color: inherit;
+      cursor: pointer;
+      padding-bottom: 3rem;
+      text-decoration: none;
+      @include mixins.center-row;
+      border-radius: 8px;
+      margin-right: 1rem;
+      transition: all ease-in-out 200ms;
+      gap: 0;
+      svg {
+        transform: rotate(180deg);
+      }
+      &:hover {
+        gap: 0.4rem;
+      }
+    }
+
     .buttons-container {
       @include mixins.center-col;
       gap: 0.7rem;

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useMemo, useContext } from "react";
 import "./../../../styles/components/ChatComponent/styles.scss";
-import { useNavigate, Routes, Route, useLocation } from "react-router-dom";
+import { useNavigate, Routes, Route, useLocation, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 //Context
@@ -12,6 +12,7 @@ import { logoutUser } from "../../../context/actionCreators";
 import { Avatar } from "@mui/material";
 import { RoundButton } from "./../../../styles/styled-components/RoundButton";
 import { ProfilePage } from "../../AuthPage/profileComponents/ProfilePage";
+import DoubleArrowRoundedIcon from "@mui/icons-material/DoubleArrowRounded";
 
 //Firebase
 import { getAuth, signOut, User } from "firebase/auth";
@@ -80,6 +81,12 @@ const SettingsContainer = ({ loggedInUser, handleSignOut, isLargeDesktop }: IPro
 
   return (
     <motion.div className="chat-container__profile__inner">
+      {!isLargeDesktop && (
+        <button className="mobile-navigate-back" onClick={() => navigateTo(-1)}>
+          <DoubleArrowRoundedIcon />
+          Go back{" "}
+        </button>
+      )}
       <Avatar src={loggedInUser?.photoURL!} alt={loggedInUser?.displayName!} sx={{ width: 140, height: 140 }} />
       <div className="buttons-container">
         <RoundButton buttonText={"Profile settings"} onClick={() => navigateTo(getNavLink)} />
