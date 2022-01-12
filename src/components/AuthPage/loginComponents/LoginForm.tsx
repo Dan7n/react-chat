@@ -66,7 +66,7 @@ export const LoginForm = (props: ILoginForm) => {
   const [signInWithEmailAndPassword, signinUser, singinLoading, singinError] = useSignInWithEmailAndPassword(auth);
 
   useEffect(() => {
-    if (createUserObject) {
+    if (createUserObject && loggedInUser) {
       //fires off when a new user gets created
       (async function () {
         await createUserInCloudFirestore(loggedInUser);
@@ -105,7 +105,7 @@ export const LoginForm = (props: ILoginForm) => {
     if (foundUser) {
       //fires if the user already has an account in firebase
       handleUserFoundMsg();
-      dispatch(updateIsAccountFound(foundUser));
+      dispatch(updateIsAccountFound(Boolean(foundUser)));
       handleSignInWithEmailAndPassword("SIGN_IN");
     } else {
       dispatch(updateIsNewUser(true));

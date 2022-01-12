@@ -37,7 +37,7 @@ interface IMessagesPanel {
 
 export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   const [messageText, setMessageText] = useState("");
-  const lastElementInMessages = useRef<any>(null);
+  const lastElementInMessages = useRef<HTMLLIElement>(null);
 
   const params = useParams();
   const documentId = params.documentId;
@@ -57,7 +57,7 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
     //Scroll to the bottom when a new message is sent/received
     if (!lastElementInMessages.current) return;
     const ref = setTimeout(() => {
-      lastElementInMessages.current.scrollIntoView({ behavior: "smooth" });
+      lastElementInMessages!.current!.scrollIntoView({ behavior: "smooth" });
     }, 300);
 
     return () => clearTimeout(ref);

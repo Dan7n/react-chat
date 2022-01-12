@@ -9,6 +9,7 @@ import {
   doc,
   updateDoc,
   arrayUnion,
+  DocumentData,
 } from "@firebase/firestore";
 import { usersCollectionRef, conversationsCollectionRef, db, auth } from "../firebase-config";
 import { sendPasswordResetEmail, updateProfile, getAuth, User } from "firebase/auth";
@@ -26,7 +27,7 @@ import { IConversationUser } from "../models/IConversationUser";
  */
 
 export const findUserByEmailOrPhoneNumber = async (queryType: string, queryString: string) => {
-  let foundUser: IUser | any;
+  let foundUser: IUser | DocumentData | null | undefined;
   let userExists;
   let errorMessage;
   let done;

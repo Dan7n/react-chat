@@ -11,7 +11,7 @@ interface IBlobProps {
   transformTranslate?: string;
 }
 
-export const BlurredBlobs = ({ children }: any) => {
+export const BlurredBlobs = ({ children }) => {
   return (
     <BlobContainer>
       {children}

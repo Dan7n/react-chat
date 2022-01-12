@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { IInitialState } from "../state/initialState";
 import { motion } from "framer-motion";
+import { IAction } from "../../../models/IAction";
 
 //Components
 import { Avatar, Menu, MenuItem } from "@mui/material";
@@ -13,10 +14,11 @@ import { CreateConversationDialog } from "./SidePanelChildren/CreateConversation
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { collection, query, where, doc } from "firebase/firestore";
 import { db } from "../../../firebase-config";
+import { User } from "@firebase/auth";
 
 interface ISidePanel extends IInitialState {
-  dispatch: React.Dispatch<any>;
-  loggedInUser: any;
+  dispatch: React.Dispatch<IAction>;
+  loggedInUser: User;
   isLargeDesktop: boolean;
 }
 

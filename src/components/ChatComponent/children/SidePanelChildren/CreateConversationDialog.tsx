@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { updateAutocompleteOpen, updateSearchValue } from "../../state/actionCreators";
 import { IConversationUser } from "../../../../models/IConversationUser";
+import { IAction } from "../../../../models/IAction";
 
 //Components
 import Button from "@mui/material/Button";
@@ -26,7 +27,7 @@ interface ICreateConversationDialog {
   searchValue: string;
   isAutocompleteOpen: boolean;
   isSearchLoading: boolean;
-  dispatch: React.Dispatch<any>;
+  dispatch: React.Dispatch<IAction>;
   isDialogOpen: boolean;
   setIsDialogOpen: (newValue: boolean) => void;
   loggedInUser: User;

@@ -1,4 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
+
+//Components
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -6,28 +8,20 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { styled } from "@mui/material/styles";
+import { PasswordResetButton } from "../../../styles/styled-components/PasswordResetButton";
+
+//State and reducer-related
 import {
   updateIsDialogOpen,
   updateIsResetEmailValid,
   updateResetEmail,
   resetPasswordResetDialog,
 } from "../state/actionCreators";
+import { IAction } from "../../../models/IAction";
+
+//helpers
 import { checkEmailValid } from "../../../utils/regexHelpers";
 import { findUserByEmailOrPhoneNumber, sendPasswordReset } from "../../../utils/firebaseUserHelpers";
-
-const CustomButton = styled(Button)({
-  backgroundColor: "#6247ea",
-  color: "white",
-  "&:hover": {
-    backgroundColor: "hsl(249.93865030674849, 79.51219512195121%, 40%)",
-  },
-  "&:disabled": {
-    backgroundColor: "#9caaa9",
-    color: "#f9f9f9",
-    cursor: "not-allowed",
-  },
-});
 
 interface IPasswordResetDialog {
   isDialogOpen: boolean;
@@ -35,7 +29,7 @@ interface IPasswordResetDialog {
     resetEmail: string;
     isResetEmailValid: boolean | null;
   };
-  dispatch: React.Dispatch<any>;
+  dispatch: React.Dispatch<IAction>;
 }
 
 const PasswordResetDialog = (props: IPasswordResetDialog) => {
@@ -100,9 +94,9 @@ const PasswordResetDialog = (props: IPasswordResetDialog) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => dispatch(updateIsDialogOpen(false))}>Cancel</Button>
-          <CustomButton onClick={handleSendEmail} disabled={!isResetEmailValid}>
+          <PasswordResetButton onClick={handleSendEmail} disabled={!isResetEmailValid}>
             Send Reset Email
-          </CustomButton>
+          </PasswordResetButton>
         </DialogActions>
       </Dialog>
     </div>

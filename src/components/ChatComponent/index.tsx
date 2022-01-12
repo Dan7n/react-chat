@@ -29,7 +29,7 @@ export const ChatComponent = React.memo(() => {
     searchValue: chatState.searchValue,
     isAutocompleteOpen: chatState.isAutocompleteOpen,
     isSearchLoading: chatState.isSearchLoading,
-    loggedInUser: loggedInUser,
+    loggedInUser: loggedInUser!,
     isLargeDesktop: isLargeDesktop,
   };
 
