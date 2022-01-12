@@ -1,3 +1,5 @@
+import { IAction } from "./IAction";
+
 export interface ILoginState {
   email: string;
   password: string;
@@ -15,7 +17,7 @@ export interface ILoginState {
 
 export interface ILoginForm {
   loginPageState: ILoginState;
-  dispatch: any;
+  dispatch: React.Dispatch<IAction>;
 }
 
 export const initialFormState: ILoginState = {

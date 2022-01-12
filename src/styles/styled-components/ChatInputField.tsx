@@ -10,10 +10,10 @@ export const ChatInputField = styled.textarea`
   overflow: scroll;
   transition: all ease 300ms;
   padding: 4px;
-  background-color: inherit;
+  background-color: white;
 
   &:focus {
     border-color: var(--app-main-color);
-    height: 3.5rem;
+    height: 4.5rem;
   }
 `;

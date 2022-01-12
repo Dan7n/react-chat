@@ -2,8 +2,7 @@ import { GoogleButton } from "../../../styles/styled-components/GoogleButton";
 import { useCallback } from "react";
 import { createUserInCloudFirestore } from "../../../utils/firebaseUserHelpers";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, db } from "../../../firebase-config";
-import { doc, getDoc } from "@firebase/firestore";
+import { auth } from "../../../firebase-config";
 import { useNavigate } from "react-router-dom";
 
 export const SignInWithGoogleBtn = () => {
@@ -22,7 +21,7 @@ export const SignInWithGoogleBtn = () => {
   }, []);
 
   return (
-    <GoogleButton onClick={signInWithGoogleProvider} width="50%">
+    <GoogleButton onClick={signInWithGoogleProvider} width="55%">
       <GoogleSvg />
       Sign in with Google
     </GoogleButton>

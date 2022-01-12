@@ -12,6 +12,7 @@ import { logoutUser } from "../../../context/actionCreators";
 import { Avatar } from "@mui/material";
 import { RoundButton } from "./../../../styles/styled-components/RoundButton";
 import { ProfilePage } from "../../AuthPage/profileComponents/ProfilePage";
+import DoubleArrowRoundedIcon from "@mui/icons-material/DoubleArrowRounded";
 
 //Firebase
 import { getAuth, signOut, User } from "firebase/auth";
@@ -37,29 +38,16 @@ export function ProfileSettings({ loggedInUser, isLargeDesktop }: IProfileSettin
     <section className="chat-container__profile">
       <AnimatePresence>
         <Routes>
-          {isLargeDesktop ? (
-            <Route
-              path="*"
-              element={
-                <SettingsContainer
-                  loggedInUser={loggedInUser}
-                  handleSignOut={handleSignOut}
-                  isLargeDesktop={isLargeDesktop}
-                />
-              }
-            />
-          ) : (
-            <Route
-              path="/"
-              element={
-                <SettingsContainer
-                  loggedInUser={loggedInUser}
-                  handleSignOut={handleSignOut}
-                  isLargeDesktop={isLargeDesktop}
-                />
-              }
-            />
-          )}
+          <Route
+            path={isLargeDesktop ? "*" : "/"}
+            element={
+              <SettingsContainer
+                loggedInUser={loggedInUser}
+                handleSignOut={handleSignOut}
+                isLargeDesktop={isLargeDesktop}
+              />
+            }
+          />
           <Route path=":id/profile" element={<ProfilePage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Routes>
@@ -93,10 +81,16 @@ const SettingsContainer = ({ loggedInUser, handleSignOut, isLargeDesktop }: IPro
 
   return (
     <motion.div className="chat-container__profile__inner">
+      {!isLargeDesktop && (
+        <button className="mobile-navigate-back" onClick={() => navigateTo(-1)}>
+          <DoubleArrowRoundedIcon />
+          Go back{" "}
+        </button>
+      )}
       <Avatar src={loggedInUser?.photoURL!} alt={loggedInUser?.displayName!} sx={{ width: 140, height: 140 }} />
       <div className="buttons-container">
         <RoundButton buttonText={"Profile settings"} onClick={() => navigateTo(getNavLink)} />
-        <RoundButton buttonText={"Logout"} bgColor={"#e54a57"} bgColorHover={"#d31e2d"} onClick={handleSignOut} />
+        <RoundButton buttonText={"Logout"} bgColor={"#ff2768"} bgColorHover={"#c91e51"} onClick={handleSignOut} />
       </div>
     </motion.div>
   );

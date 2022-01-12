@@ -66,7 +66,7 @@ export const LoginForm = (props: ILoginForm) => {
   const [signInWithEmailAndPassword, signinUser, singinLoading, singinError] = useSignInWithEmailAndPassword(auth);
 
   useEffect(() => {
-    if (createUserObject) {
+    if (createUserObject && loggedInUser) {
       //fires off when a new user gets created
       (async function () {
         await createUserInCloudFirestore(loggedInUser);
@@ -105,7 +105,7 @@ export const LoginForm = (props: ILoginForm) => {
     if (foundUser) {
       //fires if the user already has an account in firebase
       handleUserFoundMsg();
-      dispatch(updateIsAccountFound(foundUser));
+      dispatch(updateIsAccountFound(Boolean(foundUser)));
       handleSignInWithEmailAndPassword("SIGN_IN");
     } else {
       dispatch(updateIsNewUser(true));
@@ -190,7 +190,7 @@ export const LoginForm = (props: ILoginForm) => {
             </div>
           </FormControl>
           <div className="buttons-container">
-            <NormalButton width="50%" bgColor="#6246ea" hoverShadowColor="251deg 68% 36%" onClick={handleSubmit}>
+            <NormalButton width="55%" bgColor="#6246ea" hoverShadowColor="251deg 68% 36%" onClick={handleSubmit}>
               {isLoading ? <ScaleLoader color="white" /> : "Continue"}
             </NormalButton>
             <SignInWithGoogleBtn />

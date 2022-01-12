@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useReducer, lazy, Suspense, useContext } from "react";
+import { useReducer, lazy, Suspense } from "react";
 import { reducer } from "./state/reducer";
 import { LoginForm } from "./loginComponents/LoginForm";
 import { ProfilePage } from "./profileComponents/ProfilePage";
 import "./styles.scss";
 import { ILoginState, initialFormState } from "../../models/IFormValue";
-import { GlobalContext, IContext } from "../../context/GlobalContext";
 import { Route, Routes, Link } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { RequireAuth } from "../shared/RequireAuth";

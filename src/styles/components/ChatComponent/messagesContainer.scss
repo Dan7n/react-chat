@@ -10,12 +10,11 @@
   .messages-panel {
     width: 100%;
     height: 100%;
+    margin-top: 15px;
     position: relative;
 
     .messages-panel__header {
-      // width: 100%;
       height: 4rem;
-      // border-bottom: 1px solid #9ca3af;
       @include mixins.center-row;
       justify-content: flex-start;
       padding-left: 0.3rem;
@@ -24,6 +23,14 @@
       background-color: white;
       margin: 6px;
       @include mixins.mediumShadow;
+      z-index: 10;
+      position: relative;
+      top: 5px;
+
+      &:hover + .messages-panel__header-lights {
+        filter: blur(11px);
+        opacity: 0.9;
+      }
 
       .messages-panel__header__link {
         text-decoration: none;
@@ -44,12 +51,36 @@
       }
     }
 
+    .messages-panel__header-lights {
+      height: 4rem;
+      background: linear-gradient(90deg, rgba(219, 39, 119, 1) 0%, rgba(147, 51, 234, 0.7413340336134453) 73%);
+      margin: 6px;
+      border-radius: 12px;
+      padding-left: 0.3rem;
+      position: absolute;
+      width: calc(100% - 7px);
+      top: 0;
+      filter: blur(8px);
+      opacity: 0.6;
+      transition: all 300ms ease;
+    }
+
     .messages-panel__messages-container {
       @include mixins.center-col;
+      position: relative;
       // height: calc(100% - 4.5rem);
       width: 100%;
       // height: fit-content;
       // height: 80vh;
+
+      //   .loader {
+      //     position: absolute;
+      //     background: rgba(255, 255, 255, 0.329);
+      //     z-index: 200;
+      //     width: 100vw;
+      //     height: 100vh;
+      //     @include mixins.center-col;
+      //   }
 
       .no-messages {
         @include mixins.center-col;

@@ -1,5 +1,4 @@
 import React, { useCallback } from "react";
-import { BlurredBlobs } from "./../../styles/styled-components/BlurredBlobs";
 import { ThreeScene } from "./ThreeScene";
 import "./styles.scss";
 import { motion, AnimatePresence } from "framer-motion";

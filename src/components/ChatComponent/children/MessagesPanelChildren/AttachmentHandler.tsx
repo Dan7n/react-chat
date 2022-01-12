@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { IAction } from "../../../../models/IAction";
 
 //Components
 import AttachFileIcon from "@mui/icons-material/AttachFile";
@@ -21,7 +22,14 @@ const style = {
  * @param uid: the ID to the currently logged in user
  */
 
-export const AttachmentHandler = ({ handleUpload, conversationId, uid }) => {
+interface IAttachementHandler {
+  handleUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  conversationId: string;
+  uid: string;
+  dispatch: React.Dispatch<IAction>;
+}
+
+export const AttachmentHandler = ({ handleUpload, conversationId, uid, dispatch }: IAttachementHandler) => {
   const [anchorEl, setAnchorEl] = useState<null | SVGSVGElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<SVGSVGElement>) => {
@@ -42,7 +50,7 @@ export const AttachmentHandler = ({ handleUpload, conversationId, uid }) => {
           </label>
         </MenuItem>
         <MenuItem>
-          <AudioMessageHandler conversationId={conversationId} uid={uid} />
+          <AudioMessageHandler conversationId={conversationId} uid={uid} dispatch={dispatch} />
         </MenuItem>
       </Menu>
     </>

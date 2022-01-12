@@ -1,12 +1,16 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import "./../../../styles/components/ChatComponent/styles.scss";
 import { Link, useParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import { IAction } from "../../../models/IAction";
+import { updateLoadingState } from "../state/actionCreators";
 
 //Firebase
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { doc } from "firebase/firestore";
 import { db } from "../../../firebase-config";
 import { sendMessageToCloudFirestore } from "./../../../utils/firebaseChatHelpers";
+import { User } from "firebase/auth";
 
 //Custom hooks
 import { useUpload } from "../../../hooks/useUpload";
@@ -20,16 +24,20 @@ import NoMessages from "./MessagesPanelChildren/NoMessages";
 import { SentMessage } from "./../../../styles/styled-components/SentMessage";
 import { ReceivedMessage } from "./../../../styles/styled-components/ReceivedMessage";
 import { AttachmentHandler } from "./MessagesPanelChildren/AttachmentHandler";
-import { motion } from "framer-motion";
 
 const isInvalidText = (msg: string) => {
   //returns true if the msg is only spaces
   return msg.trim().length === 0;
 };
 
-export function MessagesPanel({ loggedInUser }) {
+interface IMessagesPanel {
+  loggedInUser: User;
+  dispatch: React.Dispatch<IAction>;
+}
+
+export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   const [messageText, setMessageText] = useState("");
-  const lastElementInMessages = useRef<any>(null);
+  const lastElementInMessages = useRef<HTMLLIElement>(null);
 
   const params = useParams();
   const documentId = params.documentId;
@@ -49,11 +57,16 @@ export function MessagesPanel({ loggedInUser }) {
     //Scroll to the bottom when a new message is sent/received
     if (!lastElementInMessages.current) return;
     const ref = setTimeout(() => {
-      lastElementInMessages.current.scrollIntoView({ behavior: "smooth" });
+      lastElementInMessages!.current!.scrollIntoView({ behavior: "smooth" });
     }, 300);
 
     return () => clearTimeout(ref);
   }, [snapshot, lastElementInMessages]);
+
+  useEffect(() => {
+    //shows/hides loading state when an image is sent
+    dispatch(updateLoadingState(isUploadLoading));
+  }, [isUploadLoading]);
 
   //Get each single text message/media file
   const messages = useMemo(() => {
@@ -130,6 +143,7 @@ export function MessagesPanel({ loggedInUser }) {
         <Avatar src={conversationPartner?.photoURL} alt={conversationPartner?.displayName} />
         <p>{conversationPartner?.displayName || "Unnamed user"}</p>
       </div>
+      <div className="messages-panel__header-lights" role="presentation"></div>
       <div className="messages-panel__messages-container">
         {noMessages && !loading && <NoMessages />}
         {!noMessages && (
@@ -140,7 +154,12 @@ export function MessagesPanel({ loggedInUser }) {
         )}
       </div>
       <div className="messages-panel__form-container">
-        <AttachmentHandler handleUpload={handleUpload} conversationId={documentId} uid={loggedInUser.uid} />
+        <AttachmentHandler
+          handleUpload={handleUpload}
+          conversationId={documentId!}
+          uid={loggedInUser.uid}
+          dispatch={dispatch}
+        />
         <ChatInputField
           value={messageText}
           onChange={e => setMessageText(e.target.value)}
