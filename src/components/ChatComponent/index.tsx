@@ -1,20 +1,22 @@
-import React, { useReducer, useContext, useState, useEffect } from "react";
-
-import { SidePanel } from "./children/SidePanel";
-import { MessagesPanel } from "./children/MessagesPanel";
-import "./../../styles/components/ChatComponent/styles.scss";
-import { ProfileSettings } from "./children/ProfileSettings";
-
+import React, { useReducer } from "react";
 import { reducer } from "./state/reducer";
 import { initialState } from "./state/initialState";
-import { GlobalContext } from "../../context/GlobalContext";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase-config";
-import { ScaleLoader } from "react-spinners";
+import "./../../styles/components/ChatComponent/styles.scss";
 import { Route, Routes } from "react-router-dom";
 import { motion } from "framer-motion";
 import useMediaQuery from "@mui/material/useMediaQuery";
+
+//Children & other components
+import { SidePanel } from "./children/SidePanel";
+import { MessagesPanel } from "./children/MessagesPanel";
+import { ProfileSettings } from "./children/ProfileSettings";
 import { NoConversationSelected } from "./children/NoConversationSelected";
+import { ScaleLoader } from "react-spinners";
+import Backdrop from "@mui/material/Backdrop";
+
+//Firebase
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase-config";
 
 export const ChatComponent = React.memo(() => {
   const [chatState, chatDispatch] = useReducer(reducer, initialState);
@@ -33,7 +35,7 @@ export const ChatComponent = React.memo(() => {
 
   return (
     <main className="chat-container">
-      {loggedInUser ? (
+      {loggedInUser && (
         <section className="chat-container__body">
           {isDesktop && <SidePanel {...sidePanelProps} />}
           <Routes>
@@ -64,7 +66,7 @@ export const ChatComponent = React.memo(() => {
                   initial={{ opacity: 0, translateX: 50 }}
                   animate={{ translateX: 0, opacity: 1 }}
                   className="messages-container">
-                  <MessagesPanel loggedInUser={loggedInUser} />
+                  <MessagesPanel loggedInUser={loggedInUser} dispatch={chatDispatch} />
                 </motion.div>
               }
             />
@@ -72,11 +74,11 @@ export const ChatComponent = React.memo(() => {
           {/* And lastly the third section all the way to the right will show the profile component but only on larger screens */}
           {isLargeDesktop && <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />}
         </section>
-      ) : (
-        <div className="loader">
-          <ScaleLoader color="#6246ea" height="5rem" width="0.5rem" />
-        </div>
       )}
+
+      <Backdrop open={Boolean(!loggedInUser) || chatState?.isMessagesLoading!} sx={{ zIndex: 100 }}>
+        <ScaleLoader color="#fff" height="5rem" width="0.5rem" />
+      </Backdrop>
     </main>
   );
 });

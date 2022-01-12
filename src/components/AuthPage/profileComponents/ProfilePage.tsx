@@ -30,7 +30,7 @@ export const ProfilePage = () => {
   const navigateTo = useNavigate();
   const location = useLocation();
 
-  const { state, dispatch } = useContext<IContext>(GlobalContext);
+  const { state } = useContext<IContext>(GlobalContext);
 
   const isUserComingFromChatComponent: boolean = useMemo(() => {
     return location.pathname.includes("chat");

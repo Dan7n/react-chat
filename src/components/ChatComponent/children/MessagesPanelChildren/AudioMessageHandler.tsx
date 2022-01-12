@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
+import { updateLoadingState } from "./../../state/actionCreators";
+import { IAction } from "../../../../models/IAction";
 
 //Components
 import Button from "@mui/material/Button";
@@ -32,7 +34,13 @@ const getRecorderInstance = async () => {
  * @param uid: the ID to the currently logged in user
  */
 
-export const AudioMessageHandler = ({ conversationId, uid }) => {
+interface IAudioMessageHandler {
+  conversationId: string;
+  uid: string;
+  dispatch: React.Dispatch<IAction>;
+}
+
+export const AudioMessageHandler = ({ conversationId, uid, dispatch }: IAudioMessageHandler) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
@@ -42,6 +50,10 @@ export const AudioMessageHandler = ({ conversationId, uid }) => {
   const blob = useRef<Blob | null>(null);
 
   const [uploadToStorageBucket, isUploadLoading] = useUpload();
+
+  useEffect(() => {
+    dispatch(updateLoadingState(isUploadLoading));
+  }, [isUploadLoading]);
 
   //Event handlers ---------------------
   const handleRecord = useCallback(() => {
@@ -75,6 +87,7 @@ export const AudioMessageHandler = ({ conversationId, uid }) => {
       uid,
     };
     uploadToStorageBucket(config);
+    setIsMenuOpen(false);
   };
 
   //Set up media recorder ---------------------

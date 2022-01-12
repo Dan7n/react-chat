@@ -1,6 +1,6 @@
 import { ref, uploadBytesResumable } from "@firebase/storage";
 import { getDownloadURL } from "firebase/storage";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { storage } from "../firebase-config";
 import { sendMessageToCloudFirestore } from "../utils/firebaseChatHelpers";
 
@@ -32,13 +32,13 @@ export const useUpload = () => {
         "state_changed",
         async snapshot => {
           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log(progress);
+          progress === 100 && setIsUploadLoading(false);
         },
         err => {
           console.log(err);
         },
         async () => {
-          const downloadLink = getDownloadURL(uploadTask.snapshot.ref).then(async downloadURL => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async downloadURL => {
             if (downloadURL) {
               const fileType = imageFile ? "IMAGE" : "AUDIO";
               await sendMessageToCloudFirestore(null, conversationId!, uid!, downloadURL, fileType);
@@ -52,34 +52,4 @@ export const useUpload = () => {
   }, []);
 
   return [uploadToStorageBucket, isUploadLoading] as const;
-};
-
-export const uploadMediaToStorageBucket = async (
-  imgFile?: File | null,
-  audioFile?: Blob | null,
-  conversationId?: string,
-  uid?: string
-) => {
-  const fileRef = ref(storage, imgFile!.name);
-  // let fileRef;
-  // if (imgFile) fileRef = ref(storage, imgFile.name)
-  // else if (audioFile) fileRef = ref(storage, audioFile)
-
-  try {
-    const uploadTask = uploadBytesResumable(fileRef, imgFile!);
-    uploadTask.on(
-      "state_changed",
-      async snapshot => {},
-      err => {
-        console.log(err);
-      },
-      async () => {
-        const downloadLink = getDownloadURL(uploadTask.snapshot.ref).then(async downloadURL => {
-          if (downloadURL) await sendMessageToCloudFirestore(null, conversationId!, uid!, downloadURL);
-        });
-      }
-    );
-  } catch (error) {
-    console.log(error);
-  }
 };

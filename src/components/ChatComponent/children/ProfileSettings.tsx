@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useMemo, useContext } from "react";
 import "./../../../styles/components/ChatComponent/styles.scss";
-import { useNavigate, Routes, Route, useLocation, Link } from "react-router-dom";
+import { useNavigate, Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 //Context

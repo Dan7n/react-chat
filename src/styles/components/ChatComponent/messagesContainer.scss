@@ -67,10 +67,20 @@
 
     .messages-panel__messages-container {
       @include mixins.center-col;
+      position: relative;
       // height: calc(100% - 4.5rem);
       width: 100%;
       // height: fit-content;
       // height: 80vh;
+
+      //   .loader {
+      //     position: absolute;
+      //     background: rgba(255, 255, 255, 0.329);
+      //     z-index: 200;
+      //     width: 100vw;
+      //     height: 100vh;
+      //     @include mixins.center-col;
+      //   }
 
       .no-messages {
         @include mixins.center-col;

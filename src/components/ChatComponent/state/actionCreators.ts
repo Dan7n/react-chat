@@ -7,7 +7,7 @@ export const updateAutocompleteOpen = (isOpen: boolean) => {
 };
 
 export const updateLoadingState = (isLoading: boolean) => {
-  return { type: "UPDATE_IS_LOADING", payload: isLoading };
+  return { type: "UPDATE_IS_MESSAGES_LOADING", payload: isLoading };
 };
 
 export const updateSearchUser = (searchUser: any) => {
