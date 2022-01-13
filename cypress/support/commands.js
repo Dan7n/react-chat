@@ -1,20 +1,18 @@
-const { firebaseApp } = require("./../../src/firebase-config");
+// import { FirebaseApp, initializeApp } from "firebase/app";
+import { firebaseConfig, firebaseApp, db, auth } from "./../../src/firebase-config";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import "firebase/compat/database";
+import "firebase/compat/firestore";
+import { attachCustomCommands } from "cypress-firebase";
 const { getAuth, signOut } = require("firebase/auth");
 
-//**************************************************** Custom Command to log out of firebase when needed
+//configure cypress-firebase to add some custom commands
+firebase.initializeApp(firebaseConfig);
+attachCustomCommands({ Cypress, cy, firebase });
+
+//Custom Command to log out of firebase when needed
 Cypress.Commands.add("signOutFromFirebase", async () => {
   const auth = getAuth(firebaseApp);
   await signOut(auth);
-});
-
-Cypress.Commands.add("loginToTestAccount", () => {
-  const testAccEmail = Cypress.env("email");
-  const testAccPassword = Cypress.env("password");
-  cy.visit("auth/login");
-  cy.get("input[name='email']").type(testAccEmail);
-  cy.contains("Continue").click();
-  cy.contains("Email adress found");
-  cy.get("input[name='password']").type(testAccPassword);
-  cy.contains("Continue").click();
-  cy.url().should("include", "/chat");
 });

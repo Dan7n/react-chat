@@ -3,6 +3,7 @@
   "baseUrl": "http://localhost:3000/",
   "env": {
     "email": "cypress_e2e_testemail@test.com",
-    "password": "TestAccount123"
+    "password": "TestAccount123",
+    "TEST_UID": "2fdJSeDZLkhNJXVXYvhTFvjmSjh1"
   }
 }

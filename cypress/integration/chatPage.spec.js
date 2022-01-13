@@ -1,7 +1,8 @@
 describe("Chat component test suite", () => {
   before(() => {
     cy.signOutFromFirebase();
-    cy.loginToTestAccount();
+    // cy.loginToTestAccount();
+    cy.login();
   });
 
   beforeEach(() => {
@@ -17,7 +18,10 @@ describe("Chat component test suite", () => {
     cy.get("div.side-panel__single-conversation").click();
   });
 
-  it.only("Should be able to record and send audio", () => {});
+  it("Should be able to record and send audio", () => {});
 
-  it("Should be able to log out", () => {});
+  it("Should be able to log out", () => {
+    cy.contains("Logout").click();
+    cy.url().should("not.include", "chat");
+  });
 });

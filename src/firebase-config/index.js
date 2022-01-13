@@ -6,7 +6,7 @@ import { getAuth } from "firebase/auth";
 import { getStorage, ref } from "firebase/storage";
 
 //Firebase config information can be exposed safely without fear of compromising your application
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: "AIzaSyDiFDZKSHZ1prNvvxGle1C5MQiolcbLSi8",
   authDomain: "react-chat-aad5f.firebaseapp.com",
   projectId: "react-chat-aad5f",
