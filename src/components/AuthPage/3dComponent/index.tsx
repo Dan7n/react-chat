@@ -1,8 +1,6 @@
 import * as THREE from "three";
-import React, { useMemo, useRef } from "react";
-import { Effects as EffectsComposer, Center, shaderMaterial, Plane } from "@react-three/drei";
-import { extend, useThree, Canvas, useFrame, MeshProps } from "@react-three/fiber";
-import { vertexShader, fragmentShader } from "./shaders";
+import React, { useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 // import { UnrealBloomPass } from "three-stdlib";
 
 // extend({ UnrealBloomPass });

@@ -38,6 +38,7 @@ import {
   updateMessage,
   updateIsDialogOpen,
   toggleShowPassword,
+  resetForm,
 } from "../state/actionCreators";
 import { ILoginForm } from "../../../models/IFormValue";
 import { GlobalContext, IContext } from "../../../context/GlobalContext";
@@ -62,10 +63,38 @@ export const LoginForm = (props: ILoginForm) => {
   const navigateTo = useNavigate();
   const { state } = useContext<IContext>(GlobalContext);
 
+  const isBtnDisabled =
+    isPasswordValid === false || ((isAccountFound || isNewUser) && password === "") || !isEmailValid;
+
   const [createUserWithEmailAndPassword, createUserObject] = useCreateUserWithEmailAndPassword(auth);
   const [signInWithEmailAndPassword, signinUser, singinLoading, singinError] = useSignInWithEmailAndPassword(auth);
 
+  const handleEmailBlur = useCallback(() => {
+    if (email === "") dispatch(updateIsEmailValid(null));
+  }, [email]);
+
+  const handlePasswordBlur = useCallback(() => {
+    // if (password === "") dispatch(updateIsPasswordValid(null));
+  }, [password]);
+
   useEffect(() => {
+    if (email) {
+      const emailValid = checkEmailValid(email!);
+      dispatch(updateIsEmailValid(emailValid));
+    } else if (email === "") {
+      dispatch(resetForm());
+    }
+  }, [email, isPasswordShown]);
+
+  useEffect(() => {
+    if (password) {
+      const passwordValid = checkPasswordValid(password);
+      dispatch(updateIsPasswordValid(passwordValid));
+    }
+  }, [password, dispatch]);
+
+  useEffect(() => {
+    //Responsible for creating a user in Cloud firestore if the user is signing up, and redirecting to the profile page
     if (createUserObject && loggedInUser) {
       //fires off when a new user gets created
       (async function () {
@@ -86,13 +115,15 @@ export const LoginForm = (props: ILoginForm) => {
     return () => clearTimeout(resetPasswordValidTimer);
   }, [loggedInUser, singinLoading, singinError, createUserObject]);
 
+  useEffect(() => {
+    if (signinUser) navigateTo("/chat");
+  }, [signinUser]);
+
   // Event handlers ------------------
 
   const handleSubmit = async () => {
     if (!email) return handleFalseEmailAdressMsg();
-    const emailValid = checkEmailValid(email!);
-    dispatch(updateIsEmailValid(emailValid));
-    if (!emailValid) return handleFalseEmailAdressMsg();
+    if (!isEmailValid) return handleFalseEmailAdressMsg();
     else {
       dispatch(updateIsLoading(true));
       checkUserExists();
@@ -112,23 +143,19 @@ export const LoginForm = (props: ILoginForm) => {
       handleNewUserMsg();
       handleSignInWithEmailAndPassword("CREATE_ACCOUNT");
     }
-  }, [isEmailValid, email, password]);
+  }, [isEmailValid, isPasswordValid, email, password]);
 
   //Sign in methods
   const handleSignInWithEmailAndPassword = useCallback(
     async (signInCase: "SIGN_IN" | "CREATE_ACCOUNT") => {
-      // if (!password) return handleNoPasswordMsg();
-      const passwordValid = checkPasswordValid(password);
-      if (password === "") return;
-      else dispatch(updateIsPasswordValid(passwordValid));
-
+      if (password === "" || !isPasswordValid || !isEmailValid) return;
       if (signInCase === "SIGN_IN") {
         await signInWithEmailAndPassword(email, password);
       } else {
         await createUserWithEmailAndPassword(email, password);
       }
     },
-    [createUserWithEmailAndPassword, dispatch, email, password, signInWithEmailAndPassword]
+    [email, password, isPasswordValid, isEmailValid]
   );
 
   return (
@@ -155,6 +182,7 @@ export const LoginForm = (props: ILoginForm) => {
                 name="email"
                 value={email}
                 onChange={e => dispatch(updateEmail(e.target.value))}
+                onBlur={handleEmailBlur}
                 onKeyUp={e => {
                   if (e.key === "Enter") handleSubmit();
                 }}
@@ -175,10 +203,9 @@ export const LoginForm = (props: ILoginForm) => {
                   onKeyUp={e => {
                     if (e.key === "Enter") handleSubmit();
                   }}
+                  onBlur={handlePasswordBlur}
                   error={isPasswordValid === false || false}
-                  helperText={
-                    message || (isPasswordValid === false && "Password must be at least 8 chars and contain one number")
-                  }
+                  helperText={message || (isPasswordValid === false && "At least 8 chars, including one number")}
                   InputProps={{
                     endAdornment: <PasswordIcon isPasswordShown={isPasswordShown} dispatch={dispatch} />,
                   }}
@@ -190,7 +217,12 @@ export const LoginForm = (props: ILoginForm) => {
             </div>
           </FormControl>
           <div className="buttons-container">
-            <NormalButton width="55%" bgColor="#6246ea" hoverShadowColor="251deg 68% 36%" onClick={handleSubmit}>
+            <NormalButton
+              width="55%"
+              bgColor={isBtnDisabled ? "gray" : "#6246ea"}
+              hoverShadowColor="251deg 68% 36%"
+              onClick={handleSubmit}
+              disabled={isBtnDisabled}>
               {isLoading ? <ScaleLoader color="white" /> : "Continue"}
             </NormalButton>
             <SignInWithGoogleBtn />
