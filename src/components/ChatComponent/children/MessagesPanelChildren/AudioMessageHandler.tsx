@@ -155,20 +155,20 @@ export const AudioMessageHandler = ({ conversationId, uid, dispatch }: IAudioMes
               }}
               onClick={handleRecord}
             />
-            {error && (
-              <motion.p
-                className="error-message"
-                variants={motionVariants}
-                initial="hidden"
-                animate="visible"
-                transition={{ duration: 0.3 }}>
-                Please record something first
-              </motion.p>
-            )}
             {audioURL && (
               <motion.audio controls src={audioURL} variants={motionVariants} initial="hidden" animate="visible" />
             )}
           </DialogContentText>
+          {error && (
+            <motion.p
+              className="error-message center-text"
+              variants={motionVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ duration: 0.3 }}>
+              Please record something first
+            </motion.p>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsMenuOpen(false)} color="error">
