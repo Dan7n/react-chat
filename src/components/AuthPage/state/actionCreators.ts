@@ -6,11 +6,11 @@ export const updatePassword = (newPassword: string) => {
   return { type: "UPDATE_PASSWORD", payload: newPassword };
 };
 
-export const updateIsEmailValid = (isEmailValid: boolean) => {
+export const updateIsEmailValid = (isEmailValid: boolean | null) => {
   return { type: "SET_EMAIL_VALID", payload: isEmailValid };
 };
 
-export const updateIsPasswordValid = (isPasswordValid: boolean) => {
+export const updateIsPasswordValid = (isPasswordValid: boolean | null) => {
   return { type: "SET_PASSWORD_VALID", payload: isPasswordValid };
 };
 
@@ -47,4 +47,8 @@ export const resetPasswordResetDialog = () => {
 
 export const toggleShowPassword = (isPasswordShown: boolean) => {
   return { type: "TOGGLE_SHOW_PASSWORD", payload: isPasswordShown };
+};
+
+export const resetForm = () => {
+  return { type: "RESET_FORM" };
 };

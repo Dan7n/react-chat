@@ -13,6 +13,15 @@ export const reducer = (state: ILoginState, action: IAction) => {
       return { ...state, isPasswordValid: action.payload };
     case "SET_ACCOUNT_FOUND":
       return { ...state, isAccountFound: action.payload };
+    case "RESET_FORM":
+      return {
+        ...state,
+        password: "",
+        isPasswordValid: null,
+        isEmailValid: null,
+        isAccountFound: null,
+        isNewUser: null,
+      };
     case "SET_NEW_USER":
       return { ...state, isNewUser: action.payload };
     case "SET_LOADING_STATE":

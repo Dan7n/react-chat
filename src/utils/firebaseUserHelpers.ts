@@ -66,7 +66,7 @@ export const findUserByEmailOrPhoneNumber = async (queryType: string, queryStrin
  * @param userCredentials firebase credentials object
  * @returns true if document exists in the "users" collection, otherwise false
  */
-export const checkIfUserExists = async (userCredentials: any) => {
+export const checkIfUserExists = async (userCredentials: User) => {
   //Get a reference to the user document
   const docRef = doc(db, "users", userCredentials.uid);
 
@@ -77,7 +77,7 @@ export const checkIfUserExists = async (userCredentials: any) => {
 
 //------------------------------------------------------------------
 
-export const createUserInCloudFirestore = async (userCredentials: any) => {
+export const createUserInCloudFirestore = async (userCredentials: User) => {
   //Note: all documents in the "users" collections have a title that's equal to their UID, this makes it much easier and more efficient when querying
   const docRef = doc(db, "users", userCredentials.uid);
 

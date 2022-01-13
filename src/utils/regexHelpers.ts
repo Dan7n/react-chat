@@ -20,7 +20,7 @@ export const checkEmailValid = (emailAdress: string) => {
  */
 export const checkPasswordValid = (password: string) => {
   //8 chars, one letter and one number
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{8,}$/;
   return passwordRegex.test(password);
 };
 
