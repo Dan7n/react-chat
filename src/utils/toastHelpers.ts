@@ -2,6 +2,8 @@ import { toast } from "react-hot-toast";
 
 // ------------- Error and Success messages -------------
 
+export const handleLoggedInUserNotification = (emailAdress: string) => toast.success(`Logged in as ${emailAdress}`);
+
 export const handleFalseEmailAdressMsg = () => toast.error("Please provide a valid email adress");
 
 export const handleUserFoundMsg = () =>

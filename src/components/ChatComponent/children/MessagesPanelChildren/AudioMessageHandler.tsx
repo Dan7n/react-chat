@@ -22,6 +22,11 @@ const style = {
   gap: "0.5rem",
 };
 
+const motionVariants = {
+  hidden: { opacity: 0, translateY: -40 },
+  visible: { opacity: 1, translateY: 0 },
+};
+
 //set up microphone functions
 const getRecorderInstance = async () => {
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
@@ -45,50 +50,31 @@ export const AudioMessageHandler = ({ conversationId, uid, dispatch }: IAudioMes
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState("");
+  const [error, setError] = useState(false);
 
   //store a reference to the blob object that we'll eventually upload to cloud storage
   const blob = useRef<Blob | null>(null);
 
   const [uploadToStorageBucket, isUploadLoading] = useUpload();
 
-  useEffect(() => {
-    dispatch(updateLoadingState(isUploadLoading));
-  }, [isUploadLoading]);
-
-  //Event handlers ---------------------
-  const handleRecord = useCallback(() => {
-    if (!isRecording) setIsRecording(true);
-    else setIsRecording(false);
-  }, [isRecording, recorder]);
-
-  const handleData = (e?: BlobEvent) => {
-    if (!e) return;
-    const audioURL = URL.createObjectURL(e.data);
-    setAudioURL(audioURL);
-
-    //update blob reference
-    blob.current = [e.data][0];
-  };
-
   const handleClose = () => {
     setIsMenuOpen(false);
     setRecorder(null);
     setIsRecording(false);
     setAudioURL("");
+    setError(false);
   };
 
-  const handleSend = () => {
-    //TODO fix alert
-    if (!blob.current) return alert("record something");
-    const config = {
-      imageFile: null,
-      audioFile: blob.current,
-      conversationId,
-      uid,
-    };
-    uploadToStorageBucket(config);
-    setIsMenuOpen(false);
-  };
+  //Side effects ---------------------------------------------------------------
+  useEffect(() => {
+    //show/hide loader when upload is undergoing
+    dispatch(updateLoadingState(isUploadLoading));
+  }, [isUploadLoading]);
+
+  useEffect(() => {
+    //cleanup after the menu is closed
+    if (!isMenuOpen) handleClose();
+  }, [isMenuOpen]);
 
   //Set up media recorder ---------------------
   useEffect(() => {
@@ -109,11 +95,38 @@ export const AudioMessageHandler = ({ conversationId, uid, dispatch }: IAudioMes
   useEffect(() => {
     //when the user clicks on the microphone
     if (isRecording && recorder) {
+      if (error) setError(false);
       recorder.start();
     } else if (!isRecording && recorder && recorder.state !== "inactive") {
       recorder.stop();
     }
   }, [isRecording, recorder]);
+
+  //Event handlers ---------------------------------------------------------------
+  const handleRecord = useCallback(() => {
+    if (!isRecording) setIsRecording(true);
+    else setIsRecording(false);
+  }, [isRecording, recorder]);
+
+  const handleData = (e?: BlobEvent) => {
+    if (!e) return;
+    const audioURL = URL.createObjectURL(e.data);
+    setAudioURL(audioURL);
+    //update blob reference
+    blob.current = [e.data][0];
+  };
+
+  const handleSend = () => {
+    if (!blob.current) return setError(true);
+    const config = {
+      imageFile: null,
+      audioFile: blob.current,
+      conversationId,
+      uid,
+    };
+    uploadToStorageBucket(config);
+    setIsMenuOpen(false);
+  };
 
   return (
     <div>
@@ -142,18 +155,23 @@ export const AudioMessageHandler = ({ conversationId, uid, dispatch }: IAudioMes
               }}
               onClick={handleRecord}
             />
+            {error && (
+              <motion.p
+                className="error-message"
+                variants={motionVariants}
+                initial="hidden"
+                animate="visible"
+                transition={{ duration: 0.3 }}>
+                Please record something first
+              </motion.p>
+            )}
             {audioURL && (
-              <motion.audio
-                controls
-                src={audioURL}
-                initial={{ opacity: 0, translateY: -40 }}
-                animate={{ opacity: 1, translateY: 0 }}
-              />
+              <motion.audio controls src={audioURL} variants={motionVariants} initial="hidden" animate="visible" />
             )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="error">
+          <Button onClick={() => setIsMenuOpen(false)} color="error">
             Cancel
           </Button>
           <Button onClick={handleSend} autoFocus>
