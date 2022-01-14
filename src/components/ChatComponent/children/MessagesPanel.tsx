@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import "./../../../styles/components/ChatComponent/styles.scss";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { IAction } from "../../../models/IAction";
 import { updateLoadingState } from "../state/actionCreators";
@@ -40,9 +40,10 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   const lastElementInMessages = useRef<HTMLDivElement>(null);
 
   const params = useParams();
+  const location = useLocation();
   const documentId = params.documentId;
 
-  const [snapshot, loading, error] = useDocumentData(doc(db, "conversations", documentId!), {
+  const [snapshot, loading] = useDocumentData(doc(db, "conversations", documentId!), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
   const noMessages = useMemo(() => (snapshot && snapshot?.messages.length ? false : true), [snapshot]);
@@ -52,6 +53,8 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
     if (!snapshot) return;
     return snapshot.participants.find(user => user.id !== loggedInUser.uid);
   }, [snapshot]);
+
+  //Side effects --------------------------------------------
 
   useEffect(() => {
     //Scroll to the bottom when a new message is sent/received
@@ -68,7 +71,7 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
     dispatch(updateLoadingState(isUploadLoading));
   }, [isUploadLoading]);
 
-  //Get each single text message/media file
+  //Get each single text message/media file --------------------------------------------
   const messages = useMemo(() => {
     if (!snapshot) return <></>;
 
@@ -113,7 +116,13 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
       );
     });
   }, [loggedInUser.uid, snapshot]);
-  //Action handlers
+
+  const getNavLink = useCallback((): string => {
+    //returns correct navlink based on which route you're on
+    return location.pathname.includes("profile") ? "/chat/profile" : "/chat";
+  }, [location.pathname]);
+
+  //Action handlers --------------------------------------------
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e?.target?.files!.length) return;
     const imageFile = e?.target?.files![0];
@@ -135,7 +144,7 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   return (
     <section className="messages-panel">
       <div className="messages-panel__header">
-        <Link to="/chat" className="messages-panel__header__link">
+        <Link to={getNavLink()} className="messages-panel__header__link">
           <DoubleArrowRoundedIcon />
           Go back
         </Link>

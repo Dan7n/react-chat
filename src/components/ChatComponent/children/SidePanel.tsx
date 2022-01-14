@@ -69,9 +69,7 @@ export const SidePanel = React.memo(
           ? (navLink = `/chat/${docId}/profile`)
           : (navLink = `/chat/${docId}`);
       } else {
-        params["*"] && params["*"]?.includes("settings")
-          ? (navLink = `/chat/${docId}/settings`)
-          : (navLink = `/chat/${docId}`);
+        navLink = `/chat/${docId}`;
       }
       return navLink;
     };
@@ -101,7 +99,7 @@ export const SidePanel = React.memo(
             onClick={() => navigateTo(getNavigationLink(doc.id))}>
             <div className="avatar-container">
               <Avatar alt={conversation.displayName} src={conversation.photoURL || ""} className="side-panel__avatar" />
-              <div className={`gradient-border ${getRandomGradient()}`}></div>
+              <ColorfulBorder />
             </div>
             <div className="side-panel__single-conversation__text">
               <p>{conversation.displayName || "Unnamed user"}</p>
@@ -130,14 +128,7 @@ export const SidePanel = React.memo(
                   onClose={() => setAnchorEl(null)}
                   className="menu-container">
                   <MenuItem>
-                    <Link
-                      to={
-                        params["*"]
-                          ? `${params["*"]?.replace("/settings", "")?.replace("/profile", "")}/settings`
-                          : "settings"
-                      }>
-                      Go to settings
-                    </Link>
+                    <Link to="/chat/settings">Go to settings</Link>
                   </MenuItem>
                 </Menu>
               </>
@@ -150,3 +141,8 @@ export const SidePanel = React.memo(
     );
   }
 );
+
+const ColorfulBorder = React.memo(() => {
+  //momoized component to aviod changing the grandient color every time SidePanel re-renders when the user clicks on something
+  return <div className={`gradient-border ${getRandomGradient()}`}></div>;
+});

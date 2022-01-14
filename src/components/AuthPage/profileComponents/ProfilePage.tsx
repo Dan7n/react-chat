@@ -89,7 +89,7 @@ export const ProfilePage = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: -300, opacity: 0 }}
       transition={{ ease: "easeInOut", duration: 0.4 }}>
-      <main className="profile-container">
+      <main className={`profile-container ${isUserComingFromChatComponent && "from-chat"}`}>
         {isUserComingFromChatComponent && <Link to={location.pathname.replace("/profile", "")}>Go back</Link>}
         <section className="profile-container__title">
           {!isUserComingFromChatComponent ? (
@@ -98,7 +98,7 @@ export const ProfilePage = () => {
               <p>Please take a moment to fill out your profile details</p>
             </>
           ) : (
-            <h1>Please fill out the following information and click submit</h1>
+            <h1 style={{ fontSize: "1.15rem" }}>Please fill out the following information and click submit</h1>
           )}
         </section>
         <section className="profile-container__body">

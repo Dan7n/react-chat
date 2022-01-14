@@ -45,45 +45,45 @@ export const ChatComponent = React.memo(() => {
       {loggedInUser && (
         <section className="chat-container__body">
           {isDesktop && <SidePanel {...sidePanelProps} />}
-          <AnimatePresence exitBeforeEnter>
-            <Routes location={location} key={location.pathname}>
-              {/* Second panel will either show the messages component (or an empty state prompting the user to select a message), 
-            or the profile component on smaller screens */}
-              {isDesktop && <Route path="*" element={<NoConversationSelected />} />}
 
-              {/* Same component <ProfileSettings /> mathes two seperate paths */}
-              {!isLargeDesktop && (
-                <>
-                  <Route
-                    path="/settings/*"
-                    element={
-                      <motion.div
-                        variants={profileVarients}
-                        exit="exit"
-                        initial="initial"
-                        animate="animate"
-                        transition={{ duration: 0.4 }}>
-                        <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />
-                      </motion.div>
-                    }
-                  />
-                  <Route
-                    path=":documentId/settings/*"
-                    element={
-                      <motion.div
-                        variants={profileVarients}
-                        exit="exit"
-                        initial="initial"
-                        animate="animate"
-                        transition={{ duration: 0.4 }}>
-                        <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />
-                      </motion.div>
-                    }
-                  />
-                </>
-              )}
+          {/* ********************** Mobile router with enter/exit animations ********************** */}
+          {!isDesktop && (
+            <AnimatePresence exitBeforeEnter>
+              <Routes location={location} key={location.pathname}>
+                {/* Same component <ProfileSettings /> mathes two seperate paths */}
+                {!isLargeDesktop && (
+                  <>
+                    <Route
+                      path="/settings/*"
+                      element={
+                        <motion.div
+                          style={{ width: "100%" }}
+                          variants={profileVarients}
+                          exit="exit"
+                          initial="initial"
+                          animate="animate"
+                          transition={{ duration: 0.4 }}>
+                          <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />
+                        </motion.div>
+                      }
+                    />
+                    <Route
+                      path=":documentId/settings/*"
+                      element={
+                        <motion.div
+                          style={{ width: "100%" }}
+                          variants={profileVarients}
+                          exit="exit"
+                          initial="initial"
+                          animate="animate"
+                          transition={{ duration: 0.4 }}>
+                          <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />
+                        </motion.div>
+                      }
+                    />
+                  </>
+                )}
 
-              {!isDesktop && (
                 <Route
                   path="*"
                   element={
@@ -96,15 +96,51 @@ export const ChatComponent = React.memo(() => {
                     </motion.div>
                   }
                 />
-              )}
+
+                <Route
+                  path={isLargeDesktop ? ":documentId/*" : ":documentId"}
+                  element={
+                    <motion.div
+                      exit={{ translateX: 90, opacity: 0 }}
+                      initial={{ opacity: 0, translateX: 50 }}
+                      animate={{ translateX: 0, opacity: 1 }}
+                      transition={{ duration: 0.4 }}
+                      className="messages-container">
+                      <MessagesPanel loggedInUser={loggedInUser} dispatch={chatDispatch} />
+                    </motion.div>
+                  }
+                />
+              </Routes>
+            </AnimatePresence>
+          )}
+
+          {/* ********************** Desktop router without any enter/exit animations ********************** */}
+
+          {isDesktop && (
+            <Routes>
+              <Route path="/" element={<NoConversationSelected />} />
               {isLargeDesktop && <Route path="/profile" element={<NoConversationSelected />} />}
+              {isLargeDesktop && <Route path="/settings" element={<NoConversationSelected />} />}
+              <Route
+                path="/settings/*"
+                element={
+                  <motion.div
+                    style={{ width: "100%" }}
+                    variants={profileVarients}
+                    exit="exit"
+                    initial="initial"
+                    animate="animate"
+                    transition={{ duration: 0.4 }}>
+                    <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />
+                  </motion.div>
+                }
+              />
               <Route
                 path={isLargeDesktop ? ":documentId/*" : ":documentId"}
                 element={
                   <motion.div
-                    exit={{ translateX: 90, opacity: 0 }}
-                    initial={{ opacity: 0, translateX: 50 }}
-                    animate={{ translateX: 0, opacity: 1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     transition={{ duration: 0.4 }}
                     className="messages-container">
                     <MessagesPanel loggedInUser={loggedInUser} dispatch={chatDispatch} />
@@ -112,7 +148,8 @@ export const ChatComponent = React.memo(() => {
                 }
               />
             </Routes>
-          </AnimatePresence>
+          )}
+
           {/* And lastly the third section all the way to the right will show the profile component but only on larger screens */}
           {isLargeDesktop && <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />}
         </section>

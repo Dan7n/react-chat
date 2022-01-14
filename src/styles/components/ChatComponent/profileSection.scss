@@ -9,6 +9,14 @@
   align-self: center;
   @include mixins.mediumShadow;
   border-radius: 12px;
+  @include mixins.media(1000px) {
+    height: 96%;
+    width: 96%;
+  }
+  @include mixins.media(640px) {
+    height: 100%;
+    width: 100%;
+  }
 
   .chat-container__profile__inner {
     width: 100%;
