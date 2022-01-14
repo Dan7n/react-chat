@@ -149,7 +149,6 @@ export const ChatComponent = React.memo(() => {
               />
             </Routes>
           )}
-
           {/* And lastly the third section all the way to the right will show the profile component but only on larger screens */}
           {isLargeDesktop && <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />}
         </section>
