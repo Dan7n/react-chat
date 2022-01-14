@@ -51,18 +51,9 @@ describe("Chat component test suite", () => {
 
   it.only("Should be able to upload an image", () => {
     cy.get("div.side-panel__single-conversation").click();
-    cy.get("[data-cy=messagesContainer]").then(el => {
-      const originalNumOfChildren = Cypress.$(el)[0].childElementCount;
-      cy.log(originalNumOfChildren);
-    });
-
     cy.get("[data-cy=attachmentHandler]").click();
     cy.get("input[type='file']").attachFile("cute-cat.jpg");
-
-    cy.get("[data-cy=messagesContainer]").then(updatedEl => {
-      const updatedCount = Cypress.$(updatedEl)[0].childElementCount;
-      cy.log(updatedCount);
-    });
+    
   });
 
   it("Should be able to log out", () => {

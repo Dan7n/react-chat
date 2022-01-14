@@ -16,6 +16,11 @@ import { collection, query, where, doc } from "firebase/firestore";
 import { db } from "../../../firebase-config";
 import { User } from "@firebase/auth";
 
+const getRandomGradient = () => {
+  const randomNum = () => Math.floor(Math.random() * 10) + 1;
+  return `gradient${randomNum()}`;
+};
+
 interface ISidePanel extends IInitialState {
   dispatch: React.Dispatch<IAction>;
   loggedInUser: User;
@@ -94,8 +99,9 @@ export const SidePanel = React.memo(
             animate={{ opacity: 1, translateY: 0 }}
             transition={{ duration: 0.3, delay: i * 0.1 }}
             onClick={() => navigateTo(getNavigationLink(doc.id))}>
-            <div>
-              <Avatar alt={conversation.displayName} src={conversation.photoURL} />
+            <div className="avatar-container">
+              <Avatar alt={conversation.displayName} src={conversation.photoURL || ""} className="side-panel__avatar" />
+              <div className={`gradient-border ${getRandomGradient()}`}></div>
             </div>
             <div className="side-panel__single-conversation__text">
               <p>{conversation.displayName || "Unnamed user"}</p>

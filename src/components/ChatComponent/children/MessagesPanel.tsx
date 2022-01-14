@@ -113,7 +113,6 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
       );
     });
   }, [loggedInUser.uid, snapshot]);
-
   //Action handlers
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e?.target?.files!.length) return;
