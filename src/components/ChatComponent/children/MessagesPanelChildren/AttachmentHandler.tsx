@@ -41,8 +41,8 @@ export const AttachmentHandler = ({ handleUpload, conversationId, uid, dispatch 
 
   return (
     <>
-      <AttachFileIcon className="icon" onClick={e => handleClick(e)} />
-      <Menu anchorEl={anchorEl} open={open} onClose={handleClose} className="menu-container">
+      <AttachFileIcon className="icon" data-cy="attachmentHandler" onClick={e => handleClick(e)} />
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose} className="menu-container" data-cy="audioMenu">
         <MenuItem>
           <label htmlFor="file-uploader" style={style}>
             <ImageIcon /> Upload an image

@@ -37,7 +37,7 @@ interface IMessagesPanel {
 
 export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   const [messageText, setMessageText] = useState("");
-  const lastElementInMessages = useRef<HTMLLIElement>(null);
+  const lastElementInMessages = useRef<HTMLDivElement>(null);
 
   const params = useParams();
   const documentId = params.documentId;
@@ -147,9 +147,9 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
       <div className="messages-panel__messages-container">
         {noMessages && !loading && <NoMessages />}
         {!noMessages && (
-          <ul className="message-list">
+          <ul className="message-list" data-cy="messagesContainer">
             {messages}
-            <li ref={lastElementInMessages}></li>
+            <div ref={lastElementInMessages} aria-hidden role="presentation"></div>
           </ul>
         )}
       </div>
@@ -165,8 +165,9 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
           onChange={e => setMessageText(e.target.value)}
           onKeyUp={e => e.shiftKey && e.key === "Enter" && handleSendMessage()}
           placeholder="Write a message"
+          name="chatInputField"
         />
-        <SendIcon className="icon" onClick={handleSendMessage} />
+        <SendIcon className="icon" role="button" data-cy="sendChat" onClick={handleSendMessage} />
       </div>
     </section>
   );

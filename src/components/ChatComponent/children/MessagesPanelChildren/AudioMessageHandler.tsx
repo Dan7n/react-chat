@@ -153,10 +153,18 @@ export const AudioMessageHandler = ({ conversationId, uid, dispatch }: IAudioMes
                 transition: "all ease 300ms",
                 cursor: "pointer",
               }}
+              data-cy="recordIcon"
               onClick={handleRecord}
             />
             {audioURL && (
-              <motion.audio controls src={audioURL} variants={motionVariants} initial="hidden" animate="visible" />
+              <motion.audio
+                controls
+                src={audioURL}
+                variants={motionVariants}
+                initial="hidden"
+                animate="visible"
+                data-cy="audioRecording"
+              />
             )}
           </DialogContentText>
           {error && (
@@ -174,7 +182,7 @@ export const AudioMessageHandler = ({ conversationId, uid, dispatch }: IAudioMes
           <Button onClick={() => setIsMenuOpen(false)} color="error">
             Cancel
           </Button>
-          <Button onClick={handleSend} autoFocus>
+          <Button onClick={handleSend} autoFocus data-cy="uploadAudio">
             Send
           </Button>
         </DialogActions>
