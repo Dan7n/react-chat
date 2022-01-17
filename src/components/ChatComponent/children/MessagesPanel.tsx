@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo, useRef } from "react";
 import "./../../../styles/components/ChatComponent/styles.scss";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { IAction } from "../../../models/IAction";
 import { updateLoadingState } from "../state/actionCreators";
@@ -19,11 +19,13 @@ import { useUpload } from "../../../hooks/useUpload";
 import SendIcon from "@mui/icons-material/Send";
 import { Avatar } from "@mui/material";
 import DoubleArrowRoundedIcon from "@mui/icons-material/DoubleArrowRounded";
-import { ChatInputField } from "../../../styles/styled-components/ChatInputField";
+import { ChatFieldInput } from "../../../styles/styled-components/ChatInputField";
 import NoMessages from "./MessagesPanelChildren/NoMessages";
 import { SentMessage } from "./../../../styles/styled-components/SentMessage";
 import { ReceivedMessage } from "./../../../styles/styled-components/ReceivedMessage";
 import { AttachmentHandler } from "./MessagesPanelChildren/AttachmentHandler";
+import { GoBackBtn } from "../../../styles/styled-components/GoBackBtn";
+import InputEmoji from "react-input-emoji";
 
 const isInvalidText = (msg: string) => {
   //returns true if the msg is only spaces
@@ -37,21 +39,29 @@ interface IMessagesPanel {
 
 export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   const [messageText, setMessageText] = useState("");
-  const lastElementInMessages = useRef<HTMLLIElement>(null);
+  const lastElementInMessages = useRef<HTMLDivElement>(null);
 
   const params = useParams();
+  const location = useLocation();
   const documentId = params.documentId;
 
-  const [snapshot, loading, error] = useDocumentData(doc(db, "conversations", documentId!), {
+  const [snapshot, loading] = useDocumentData(doc(db, "conversations", documentId!), {
     snapshotListenOptions: { includeMetadataChanges: true },
   });
   const noMessages = useMemo(() => (snapshot && snapshot?.messages.length ? false : true), [snapshot]);
   const [uploadToStorageBucket, isUploadLoading] = useUpload();
 
+  const conversationCreatedAt = useMemo(() => {
+    if (!snapshot) return;
+    return snapshot?.createdAt?.toDate();
+  }, [snapshot?.createdAt]);
+
   const conversationPartner = useMemo(() => {
     if (!snapshot) return;
     return snapshot.participants.find(user => user.id !== loggedInUser.uid);
   }, [snapshot]);
+
+  //Side effects --------------------------------------------
 
   useEffect(() => {
     //Scroll to the bottom when a new message is sent/received
@@ -68,7 +78,7 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
     dispatch(updateLoadingState(isUploadLoading));
   }, [isUploadLoading]);
 
-  //Get each single text message/media file
+  //Get each single text message/media file --------------------------------------------
   const messages = useMemo(() => {
     if (!snapshot) return <></>;
 
@@ -114,7 +124,12 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
     });
   }, [loggedInUser.uid, snapshot]);
 
-  //Action handlers
+  const getNavLink = useCallback((): string => {
+    //returns correct navlink based on which route you're on
+    return location.pathname.includes("profile") ? "/chat/profile" : "/chat";
+  }, [location.pathname]);
+
+  //Action handlers --------------------------------------------
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e?.target?.files!.length) return;
     const imageFile = e?.target?.files![0];
@@ -136,10 +151,7 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   return (
     <section className="messages-panel">
       <div className="messages-panel__header">
-        <Link to="/chat" className="messages-panel__header__link">
-          <DoubleArrowRoundedIcon />
-          Go back
-        </Link>
+        <GoBackBtn to={getNavLink()} />
         <Avatar src={conversationPartner?.photoURL} alt={conversationPartner?.displayName} />
         <p>{conversationPartner?.displayName || "Unnamed user"}</p>
       </div>
@@ -147,9 +159,10 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
       <div className="messages-panel__messages-container">
         {noMessages && !loading && <NoMessages />}
         {!noMessages && (
-          <ul className="message-list">
+          <ul className="message-list" data-cy="messagesContainer">
+            <p className="message-list__started">Conversation started on {conversationCreatedAt.toDateString()}</p>
             {messages}
-            <li ref={lastElementInMessages}></li>
+            <div ref={lastElementInMessages} aria-hidden role="presentation"></div>
           </ul>
         )}
       </div>
@@ -160,13 +173,22 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
           uid={loggedInUser.uid}
           dispatch={dispatch}
         />
-        <ChatInputField
+        <ChatFieldInput
           value={messageText}
-          onChange={e => setMessageText(e.target.value)}
-          onKeyUp={e => e.shiftKey && e.key === "Enter" && handleSendMessage()}
+          onChange={setMessageText}
+          cleanOnEnter
+          onEnter={handleSendMessage}
+          maxLength={200}
           placeholder="Write a message"
+          data-cy="chatInputField"
         />
-        <SendIcon className="icon" onClick={handleSendMessage} />
+        <SendIcon
+          className="icon"
+          role="button"
+          data-cy="sendChat"
+          onClick={handleSendMessage}
+          sx={{ color: "#858585" }}
+        />
       </div>
     </section>
   );

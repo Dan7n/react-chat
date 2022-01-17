@@ -19,7 +19,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "noImplicitAny": false,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": ["cypress", "cypress-file-upload"]
   },
   "include": [
     "src"

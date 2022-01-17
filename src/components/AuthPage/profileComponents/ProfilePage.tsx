@@ -1,5 +1,5 @@
 import { useCallback, useState, useMemo, useContext, useEffect } from "react";
-import "./../styles.scss";
+import "./../../../styles/components/AuthComponent/styles.scss";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import { NormalButton } from "../../../styles/styled-components/Button";
 import ScaleLoader from "react-spinners/ClipLoader";
+import { GoBackBtn } from "./../../../styles/styled-components/GoBackBtn";
 
 //utils
 import { updateCurrentlyLoggedInUserProfile, findUserByEmailOrPhoneNumber } from "./../../../utils/firebaseUserHelpers";
@@ -89,8 +90,8 @@ export const ProfilePage = () => {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: -300, opacity: 0 }}
       transition={{ ease: "easeInOut", duration: 0.4 }}>
-      <main className="profile-container">
-        {isUserComingFromChatComponent && <Link to={location.pathname.replace("/profile", "")}>Go back</Link>}
+      <main className={`profile-container ${isUserComingFromChatComponent && "from-chat"}`}>
+        {isUserComingFromChatComponent && <GoBackBtn to={location.pathname.replace("/profile", "")} />}
         <section className="profile-container__title">
           {!isUserComingFromChatComponent ? (
             <>
@@ -98,7 +99,7 @@ export const ProfilePage = () => {
               <p>Please take a moment to fill out your profile details</p>
             </>
           ) : (
-            <h1>Please fill out the following information and click submit</h1>
+            <h1 style={{ fontSize: "1.15rem" }}>Please fill out the following information and click submit</h1>
           )}
         </section>
         <section className="profile-container__body">

@@ -31,24 +31,6 @@
         filter: blur(11px);
         opacity: 0.9;
       }
-
-      .messages-panel__header__link {
-        text-decoration: none;
-        @include mixins.center-row;
-        padding: 0.4rem;
-        border-radius: 8px;
-        margin-right: 1rem;
-        transition: all ease-in-out 200ms;
-        gap: 0;
-        svg {
-          transform: rotate(180deg);
-        }
-        &:hover {
-          color: white;
-          background-color: #6246ea;
-          gap: 0.4rem;
-        }
-      }
     }
 
     .messages-panel__header-lights {
@@ -68,19 +50,7 @@
     .messages-panel__messages-container {
       @include mixins.center-col;
       position: relative;
-      // height: calc(100% - 4.5rem);
       width: 100%;
-      // height: fit-content;
-      // height: 80vh;
-
-      //   .loader {
-      //     position: absolute;
-      //     background: rgba(255, 255, 255, 0.329);
-      //     z-index: 200;
-      //     width: 100vw;
-      //     height: 100vh;
-      //     @include mixins.center-col;
-      //   }
 
       .no-messages {
         @include mixins.center-col;
@@ -106,9 +76,16 @@
         @include mixins.center-col;
         justify-content: flex-start;
         padding: 3rem 1rem;
-        gap: 0.6rem;
+        gap: 0.9rem;
         overflow-y: scroll;
+        overflow-x: hidden;
         max-height: 32rem;
+
+        .message-list__started {
+          margin-bottom: 2rem;
+          color: #363d3f;
+          font-size: 0.9rem;
+        }
 
         .align-end {
           align-self: flex-end;

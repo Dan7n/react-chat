@@ -19,8 +19,8 @@ const Earth = React.memo(({ ...props }) => {
       ref={group}
       {...props}
       dispose={null}
-      animate={{ x: 0, y: -60, z: -200, rotateY: 1 }}
-      initial={{ y: -140, z: -300 }}
+      animate={{ x: 0, y: -20, z: -200, rotateY: 1 }}
+      initial={{ y: -190, z: -500 }}
       transition={{ ease: "easeOut", duration: 1.8 }}>
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <group rotation={[Math.PI / 2, 0, 0]}>
@@ -44,7 +44,7 @@ export const ThreeScene = React.memo(() => {
           <motion.pointLight animate={{ x: 2 }} color="#fff" intensity={0.3} />
           <motion.directionalLight color="#EF2F88" intensity={10} rotation={[0, 7, 0]} animate={{ x: 200 }} />
           <PresentationControls snap={true} speed={0.65} config={{ mass: 1, tension: 170, friction: 26 }}>
-            <Earth scale={1.3} />
+            <Earth scale={1.08} />
           </PresentationControls>
         </Suspense>
       </Canvas>

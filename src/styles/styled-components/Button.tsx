@@ -20,6 +20,10 @@ export const NormalButton = styled.button<IButtonProps>`
     -0.1px 3.1px 3.7px -1.3px hsl(var(--shadow-color) / 0.11), -0.2px 7.2px 8.6px -2px hsl(var(--shadow-color) / 0.13);
   transition: all 300ms ease;
 
+  @media (max-width: 500px) {
+    width: 70%;
+  }
+
   &:hover {
     --shadow-color: 251deg 68% 36%;
     transform: scale(1.01);

@@ -5,6 +5,7 @@ main {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(12, 1fr);
+  background-color: #f7f8fd;
 
   .three-container {
     background-color: var(--secondary-bg-color);
@@ -21,8 +22,22 @@ main {
     width: 100%;
     text-align: center;
     @include mixins.center-col;
+    position: relative;
+
     @include mixins.media(600px) {
       grid-column: 1 / span 12;
+    }
+
+    #loginWave {
+      position: absolute;
+      top: 0;
+      left: 0;
+      aspect-ratio: 900/300;
+      display: none;
+
+      @include mixins.media(600px) {
+        display: block;
+      }
     }
 
     #authForm {
@@ -41,6 +56,10 @@ main {
         @include mixins.center-col;
         gap: 0.7rem;
         min-width: 50%;
+        @include mixins.media(500px) {
+          padding: 1rem 0;
+          min-width: 85%;
+        }
         .authForm--input-field {
           width: 100%;
         }

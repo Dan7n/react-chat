@@ -12,9 +12,14 @@ import { CreateConversationDialog } from "./SidePanelChildren/CreateConversation
 
 //Firebase
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
-import { collection, query, where, doc } from "firebase/firestore";
+import { collection, query, where, doc, QueryDocumentSnapshot, DocumentData } from "firebase/firestore";
 import { db } from "../../../firebase-config";
 import { User } from "@firebase/auth";
+
+const getRandomGradient = () => {
+  const randomNum = () => Math.floor(Math.random() * 10) + 1;
+  return `gradient${randomNum()}`;
+};
 
 interface ISidePanel extends IInitialState {
   dispatch: React.Dispatch<IAction>;
@@ -64,9 +69,7 @@ export const SidePanel = React.memo(
           ? (navLink = `/chat/${docId}/profile`)
           : (navLink = `/chat/${docId}`);
       } else {
-        params["*"] && params["*"]?.includes("settings")
-          ? (navLink = `/chat/${docId}/settings`)
-          : (navLink = `/chat/${docId}`);
+        navLink = `/chat/${docId}`;
       }
       return navLink;
     };
@@ -74,7 +77,15 @@ export const SidePanel = React.memo(
     const conversations = useMemo(() => {
       if (!documentsData) return;
 
-      return documentsData.docs.map((doc, i) => {
+      //sort array by date
+      const orderedList: QueryDocumentSnapshot<DocumentData>[] = documentsData.docs.sort((a, b) => {
+        const date1 = a.data()?.lastUpdated?.toDate();
+        const date2 = b.data()?.lastUpdated?.toDate();
+        return date2 - date1;
+      });
+
+      //iterate and render JSX elements
+      return orderedList.map((doc, i) => {
         const conversation = doc.data().participants.find(participant => participant.id !== loggedInUser.uid);
         const messages = doc.data().messages;
         const lastSentMessage = messages && messages[messages.length - 1]?.text;
@@ -92,10 +103,13 @@ export const SidePanel = React.memo(
             className={`side-panel__single-conversation ${isActiveConversation && "active"}`}
             initial={{ opacity: 0, translateY: 60 }}
             animate={{ opacity: 1, translateY: 0 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.3, delay: i * 0.1 }}
+            layout
             onClick={() => navigateTo(getNavigationLink(doc.id))}>
-            <div>
-              <Avatar alt={conversation.displayName} src={conversation.photoURL} />
+            <div className="avatar-container">
+              <Avatar alt={conversation.displayName} src={conversation.photoURL || ""} className="side-panel__avatar" />
+              <ColorfulBorder />
             </div>
             <div className="side-panel__single-conversation__text">
               <p>{conversation.displayName || "Unnamed user"}</p>
@@ -104,7 +118,7 @@ export const SidePanel = React.memo(
           </motion.div>
         );
       });
-    }, [documentsData, params]);
+    }, [documentsData, params, loggedInUser.uid]);
 
     return (
       <section className="side-panel">
@@ -124,14 +138,7 @@ export const SidePanel = React.memo(
                   onClose={() => setAnchorEl(null)}
                   className="menu-container">
                   <MenuItem>
-                    <Link
-                      to={
-                        params["*"]
-                          ? `${params["*"]?.replace("/settings", "")?.replace("/profile", "")}/settings`
-                          : "settings"
-                      }>
-                      Go to settings
-                    </Link>
+                    <Link to="/chat/settings">Go to settings</Link>
                   </MenuItem>
                 </Menu>
               </>
@@ -144,3 +151,8 @@ export const SidePanel = React.memo(
     );
   }
 );
+
+const ColorfulBorder = React.memo(() => {
+  //momoized component to aviod changing the grandient color every time SidePanel re-renders when the user clicks on something
+  return <div className={`gradient-border ${getRandomGradient()}`}></div>;
+});
