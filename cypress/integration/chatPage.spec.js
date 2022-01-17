@@ -16,15 +16,15 @@ describe("Chat component test suite", () => {
     cy.contains("Chats");
   });
 
-  it("Should be able to send a text message", () => {
+  it.only("Should be able to send a text message", () => {
     const fakeTextMessage = faker.lorem.words();
     cy.get("div.side-panel__single-conversation").click();
-    cy.get("textarea[name='chatInputField']").should("be.visible");
+    cy.get("[data-testid='react-input-emoji--input']").as("inputField").should("be.visible");
     cy.get("[data-cy=messagesContainer]").then(el => {
       const originalNumOfChildren = Cypress.$(el)[0].childElementCount;
-      cy.get("textarea[name='chatInputField']").type(fakeTextMessage);
+      cy.get("@inputField").type(fakeTextMessage);
       cy.get("[data-cy=sendChat]").click();
-      cy.get("textarea[name='chatInputField']").should("have.length", 1);
+      cy.get("@inputField").should("have.length", 1);
       cy.contains(fakeTextMessage);
       cy.get("[data-cy=messagesContainer]").then(updatedEl => {
         const updatedCount = Cypress.$(updatedEl)[0].childElementCount;
@@ -49,11 +49,10 @@ describe("Chat component test suite", () => {
     cy.get("button[data-cy=uploadAudio]").click();
   });
 
-  it.only("Should be able to upload an image", () => {
+  it("Should be able to upload an image", () => {
     cy.get("div.side-panel__single-conversation").click();
     cy.get("[data-cy=attachmentHandler]").click();
     cy.get("input[type='file']").attachFile("cute-cat.jpg");
-    
   });
 
   it("Should be able to log out", () => {

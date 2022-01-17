@@ -19,11 +19,13 @@ import { useUpload } from "../../../hooks/useUpload";
 import SendIcon from "@mui/icons-material/Send";
 import { Avatar } from "@mui/material";
 import DoubleArrowRoundedIcon from "@mui/icons-material/DoubleArrowRounded";
-import { ChatInputField } from "../../../styles/styled-components/ChatInputField";
+import { ChatFieldInput } from "../../../styles/styled-components/ChatInputField";
 import NoMessages from "./MessagesPanelChildren/NoMessages";
 import { SentMessage } from "./../../../styles/styled-components/SentMessage";
 import { ReceivedMessage } from "./../../../styles/styled-components/ReceivedMessage";
 import { AttachmentHandler } from "./MessagesPanelChildren/AttachmentHandler";
+import { GoBackBtn } from "../../../styles/styled-components/GoBackBtn";
+import InputEmoji from "react-input-emoji";
 
 const isInvalidText = (msg: string) => {
   //returns true if the msg is only spaces
@@ -149,10 +151,7 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   return (
     <section className="messages-panel">
       <div className="messages-panel__header">
-        <Link to={getNavLink()} className="messages-panel__header__link">
-          <DoubleArrowRoundedIcon />
-          Go back
-        </Link>
+        <GoBackBtn to={getNavLink()} />
         <Avatar src={conversationPartner?.photoURL} alt={conversationPartner?.displayName} />
         <p>{conversationPartner?.displayName || "Unnamed user"}</p>
       </div>
@@ -174,14 +173,22 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
           uid={loggedInUser.uid}
           dispatch={dispatch}
         />
-        <ChatInputField
+        <ChatFieldInput
           value={messageText}
-          onChange={e => setMessageText(e.target.value)}
-          onKeyUp={e => e.shiftKey && e.key === "Enter" && handleSendMessage()}
+          onChange={setMessageText}
+          cleanOnEnter
+          onEnter={handleSendMessage}
+          maxLength={200}
           placeholder="Write a message"
-          name="chatInputField"
+          data-cy="chatInputField"
         />
-        <SendIcon className="icon" role="button" data-cy="sendChat" onClick={handleSendMessage} />
+        <SendIcon
+          className="icon"
+          role="button"
+          data-cy="sendChat"
+          onClick={handleSendMessage}
+          sx={{ color: "#858585" }}
+        />
       </div>
     </section>
   );

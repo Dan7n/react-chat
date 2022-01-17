@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import { NormalButton } from "../../../styles/styled-components/Button";
 import ScaleLoader from "react-spinners/ClipLoader";
+import { GoBackBtn } from "./../../../styles/styled-components/GoBackBtn";
 
 //utils
 import { updateCurrentlyLoggedInUserProfile, findUserByEmailOrPhoneNumber } from "./../../../utils/firebaseUserHelpers";
@@ -90,7 +91,7 @@ export const ProfilePage = () => {
       exit={{ x: -300, opacity: 0 }}
       transition={{ ease: "easeInOut", duration: 0.4 }}>
       <main className={`profile-container ${isUserComingFromChatComponent && "from-chat"}`}>
-        {isUserComingFromChatComponent && <Link to={location.pathname.replace("/profile", "")}>Go back</Link>}
+        {isUserComingFromChatComponent && <GoBackBtn to={location.pathname.replace("/profile", "")} />}
         <section className="profile-container__title">
           {!isUserComingFromChatComponent ? (
             <>

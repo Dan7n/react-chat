@@ -31,25 +31,6 @@
         filter: blur(11px);
         opacity: 0.9;
       }
-
-      .messages-panel__header__link {
-        text-decoration: none;
-        @include mixins.center-row;
-        padding: 0.4rem;
-        border-radius: 8px;
-        margin-right: 1rem;
-        transition: all ease-in-out 200ms;
-        gap: 0;
-        color: #6246ea;
-        svg {
-          transform: rotate(180deg);
-        }
-        &:hover {
-          color: white;
-          background-color: #6246ea;
-          gap: 0.4rem;
-        }
-      }
     }
 
     .messages-panel__header-lights {
