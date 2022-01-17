@@ -1,6 +1,6 @@
 import { useLocation, Navigate } from "react-router-dom";
 import { ReactChildren, ReactChild, useContext } from "react";
-import { GlobalContext } from "../../context/GlobalContext";
+import { GlobalContext, IContext } from "../../context/GlobalContext";
 
 interface IRequireAuth {
   children: ReactChild | ReactChildren;
@@ -18,8 +18,9 @@ export const RequireAuth = ({
   navigateTo = "auth/login",
   shouldUserBeLoggedIn = true,
 }: IRequireAuth): JSX.Element => {
-  const { state } = useContext<any>(GlobalContext);
+  const { state } = useContext<IContext>(GlobalContext);
   const { user } = state;
+  if (!user) return <></>;
 
   if (shouldUserBeLoggedIn) {
     return user ? <>{children}</> : <Navigate to={navigateTo} />;

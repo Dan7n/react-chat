@@ -1,0 +1,39 @@
+@use "./../../partials/mixins";
+
+.lottie-container {
+  width: 100vw;
+  height: 100vh;
+  @include mixins.center-col;
+
+  h1 {
+    font-family: "Spectral", serif;
+    font-size: 3rem;
+    text-align: center;
+    width: 60%;
+
+    @include mixins.media(600px) {
+      width: 90%;
+    }
+  }
+
+  .nav-link {
+    text-decoration: none;
+    color: inherit;
+    font-size: 1.5rem;
+    padding: 1rem;
+    font-weight: 200;
+    color: var(--app-main-color);
+    transition: all ease 300ms;
+    cursor: pointer;
+
+    &:hover {
+      font-weight: bold;
+      transform: scale(1.1);
+    }
+  }
+
+  .animation {
+    width: 20rem;
+    height: 20rem;
+  }
+}

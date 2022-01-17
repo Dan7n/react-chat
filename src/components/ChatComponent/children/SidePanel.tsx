@@ -60,6 +60,7 @@ export const SidePanel = React.memo(
       isDialogOpen,
       setIsDialogOpen,
       loggedInUser,
+      documentsData,
     };
 
     const getNavigationLink = docId => {

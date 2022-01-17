@@ -79,7 +79,7 @@
         gap: 0.9rem;
         overflow-y: scroll;
         overflow-x: hidden;
-        max-height: 32rem;
+        max-height: calc(100vh - 10rem);
 
         .message-list__started {
           margin-bottom: 2rem;
@@ -111,14 +111,21 @@
     .messages-panel__form-container {
       position: absolute;
       bottom: 0;
+      left: 50%;
       min-height: 3.7rem;
-      width: 100%;
+      width: 99%;
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-
+      grid-gap: 1rem;
       gap: 1rem;
+      background: white;
       padding: 1.5rem 2rem;
+      transform: translateX(-50%);
+      z-index: 99;
+      border-radius: 12px;
+      margin-bottom: 10px;
+      @include mixins.mediumShadow;
 
       .icon {
         @include mixins.center-col;

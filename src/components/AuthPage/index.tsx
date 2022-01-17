@@ -38,18 +38,17 @@ export default function AuthPage() {
             <Route
               path="login"
               element={
-                //todo: change shouldUserBeLoggedIn to false
-                // <RequireAuth navigateTo="/chat" shouldUserBeLoggedIn={false}>
-                <LoginForm loginPageState={formState} dispatch={formDispatch} />
-                // </RequireAuth>
+                <RequireAuth navigateTo="/chat" shouldUserBeLoggedIn={false}>
+                  <LoginForm loginPageState={formState} dispatch={formDispatch} />
+                </RequireAuth>
               }
             />
             <Route
               path="profile"
               element={
-                // <RequireAuth navigateTo="/auth/login">
-                <ProfilePage />
-                // </RequireAuth>
+                <RequireAuth navigateTo="/auth/login">
+                  <ProfilePage />
+                </RequireAuth>
               }
             />
           </Routes>

@@ -20,6 +20,8 @@ import { defaultState, IDefaultState } from "./context/defaultState";
 import { reducer } from "./context/reducer";
 import { loginUser } from "./context/actionCreators";
 import { IAction } from "./models/IAction";
+import { RequireAuth } from "./components/shared/RequireAuth";
+import { NotFound } from "./components/404/NotFound";
 
 function App() {
   const [loggedInUser] = useAuthState(auth);
@@ -37,7 +39,14 @@ function App() {
         {/* <AnimatePresence> */}
         <Routes>
           <Route path="auth/*" element={<AuthPage />} />
-          <Route path="chat/*" element={<ChatComponent />} />
+          <Route
+            path="chat/*"
+            element={
+              <RequireAuth navigateTo={"/auth/login"}>
+                <ChatComponent />
+              </RequireAuth>
+            }
+          />
           <Route
             path="/"
             element={
@@ -46,7 +55,7 @@ function App() {
               </motion.div>
             }
           />
-          <Route path="*" element={<h1>Not found</h1>} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         {/* </AnimatePresence> */}
       </GlobalContext.Provider>

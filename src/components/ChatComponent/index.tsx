@@ -13,6 +13,8 @@ import { ProfileSettings } from "./children/ProfileSettings";
 import { NoConversationSelected } from "./children/NoConversationSelected";
 import { ScaleLoader } from "react-spinners";
 import Backdrop from "@mui/material/Backdrop";
+import Skeleton from "@mui/material/Skeleton";
+import Stack from "@mui/material/Stack";
 
 //Firebase
 import { useAuthState } from "react-firebase-hooks/auth";
