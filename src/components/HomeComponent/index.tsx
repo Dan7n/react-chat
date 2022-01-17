@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect } from "react";
 import { ThreeScene } from "./ThreeScene";
-import "./styles.scss";
+import "./../../styles/components/HomeComponent/styles.scss";
 import { motion, AnimatePresence } from "framer-motion";
 import { ReactComponent as Wave } from "./../../assets/wave.svg";
 import { RoundButton } from "../../styles/styled-components/RoundButton";

@@ -11,12 +11,12 @@
     width: 100%;
     color: white;
     font-size: 3rem;
-    padding-top: 7rem;
+    padding-top: 2rem;
     text-align: center;
     z-index: 20;
 
     @include mixins.media(500px) {
-      padding-top: 10rem;
+      padding-top: 4rem;
       gap: 1rem;
     }
 
@@ -46,8 +46,121 @@
 
   .three-container {
     width: 100vw;
-    height: 150vh;
+    height: 135vh;
+    @include mixins.media(600px) {
+      height: 100vh;
+    }
     background-color: #111d5e;
     overflow: hidden;
+  }
+}
+
+.landing-page__content {
+  h1 {
+    font-weight: bold;
+    font-size: clamp(2.3rem, 9vw, 2rem);
+    text-align: center;
+  }
+
+  position: relative;
+  padding-top: 19rem;
+  @include mixins.media(750px) {
+    padding-top: 11rem;
+  }
+  background-color: #f7f8fd;
+  @include mixins.center-col;
+  justify-content: flex-start;
+  gap: 3rem;
+
+  svg:first-of-type {
+    aspect-ratio: 900/300;
+    position: absolute;
+    top: -3px;
+    left: 0;
+  }
+
+  .landing-page__content__header {
+    @include mixins.center-col;
+    margin-bottom: 4rem;
+    gap: 1.5rem;
+    h1 {
+      width: 70%;
+      font-weight: 900;
+      @include mixins.media(750px) {
+        width: 90;
+      }
+    }
+    .header-text {
+      text-align: center;
+      color: #595959;
+      font-size: 1.2rem;
+      width: 40%;
+
+      @include mixins.media(750px) {
+        width: 75%;
+        font-size: 1rem;
+      }
+      @include mixins.media(430px) {
+        width: 75%;
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  .landing-page__content__section {
+    h1 {
+      line-height: 1.07;
+      font-weight: 400;
+    }
+    p {
+      color: #595959;
+    }
+
+    width: 70%;
+    margin-top: 2rem;
+    @include mixins.center-row;
+    justify-content: space-evenly;
+
+    @include mixins.media(650px) {
+      width: 100%;
+      flex-direction: column;
+    }
+
+    gap: 3rem;
+    .text {
+      @include mixins.center-col;
+      gap: 1rem;
+      text-align: center;
+      width: 50%;
+      @include mixins.media(650px) {
+        h1 {
+          text-align: left;
+        }
+        width: 90%;
+        text-align: left;
+      }
+    }
+    img {
+      max-height: 22rem;
+    }
+  }
+
+  .reverse {
+    flex-direction: row-reverse;
+    @include mixins.media(650px) {
+      flex-direction: column;
+    }
+  }
+
+  .landing-page__content__section:last-of-type {
+    margin-bottom: 13rem;
+  }
+
+  svg:nth-of-type(2) {
+    aspect-ratio: 900/300;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    transform: rotate(180deg);
   }
 }
