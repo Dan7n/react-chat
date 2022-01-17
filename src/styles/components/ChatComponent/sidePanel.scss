@@ -28,7 +28,8 @@
   .side-panel__conversations-container {
     overflow: hidden;
     @include mixins.center-col;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: scroll;
     justify-content: flex-start;
     padding: 8px;
     background: white;

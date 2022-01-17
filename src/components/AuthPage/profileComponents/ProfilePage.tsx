@@ -1,5 +1,5 @@
 import { useCallback, useState, useMemo, useContext, useEffect } from "react";
-import "./../styles.scss";
+import "./../../../styles/components/AuthComponent/styles.scss";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 

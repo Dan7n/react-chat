@@ -49,6 +49,11 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   const noMessages = useMemo(() => (snapshot && snapshot?.messages.length ? false : true), [snapshot]);
   const [uploadToStorageBucket, isUploadLoading] = useUpload();
 
+  const conversationCreatedAt = useMemo(() => {
+    if (!snapshot) return;
+    return snapshot?.createdAt?.toDate();
+  }, [snapshot?.createdAt]);
+
   const conversationPartner = useMemo(() => {
     if (!snapshot) return;
     return snapshot.participants.find(user => user.id !== loggedInUser.uid);
@@ -156,6 +161,7 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
         {noMessages && !loading && <NoMessages />}
         {!noMessages && (
           <ul className="message-list" data-cy="messagesContainer">
+            <p className="message-list__started">Conversation started on {conversationCreatedAt.toDateString()}</p>
             {messages}
             <div ref={lastElementInMessages} aria-hidden role="presentation"></div>
           </ul>
