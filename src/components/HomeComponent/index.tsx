@@ -48,6 +48,7 @@ export default function HomeComponent() {
             bgColor="#111D5E"
             bgColorHover="#9567BE"
             onClick={handleClick}
+            data-cy="landingPageRedirect"
           />
         </motion.div>
         <ThreeScene />
