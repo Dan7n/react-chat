@@ -22,6 +22,7 @@ import { createNewConversation, findUserByEmailOrPhoneNumber } from "../../../..
 
 //Firebase
 import { User } from "@firebase/auth";
+import { QuerySnapshot, DocumentData } from "firebase/firestore";
 
 interface ICreateConversationDialog {
   searchValue: string;
@@ -31,6 +32,7 @@ interface ICreateConversationDialog {
   isDialogOpen: boolean;
   setIsDialogOpen: (newValue: boolean) => void;
   loggedInUser: User;
+  documentsData: QuerySnapshot<DocumentData> | undefined;
 }
 
 /**
@@ -38,8 +40,16 @@ interface ICreateConversationDialog {
  */
 
 export const CreateConversationDialog = (props: ICreateConversationDialog) => {
-  const { searchValue, isAutocompleteOpen, isSearchLoading, dispatch, isDialogOpen, setIsDialogOpen, loggedInUser } =
-    props;
+  const {
+    searchValue,
+    isAutocompleteOpen,
+    isSearchLoading,
+    dispatch,
+    isDialogOpen,
+    setIsDialogOpen,
+    loggedInUser,
+    documentsData,
+  } = props;
   const [autoCompleteOptions, setAutoCompleteOptions] = useState<IConversationUser[] | []>([]);
   const [error, setError] = useState("");
   const debouncedSearchValue = useDebounce(searchValue, 1000);
@@ -52,9 +62,27 @@ export const CreateConversationDialog = (props: ICreateConversationDialog) => {
     setIsDialogOpen(false);
   };
 
-  const handleInvalidConversation = useCallback(() => {
-    handleInvalidConversationErrorMessage();
-    setError("You cannot start a conversation with yourself");
+  const checkIfConversationAlreadyExists = useCallback(
+    /**
+     *
+     * @param conversationPartnerId the ID that we're checking against to see if a conversation alreay exists
+     * @returns true if a conversation already exists, preventing the user from creating duplicate conversations, otherwise false
+     */
+    (conversationPartnerId: string) => {
+      if (!documentsData) return;
+      let conversationExists = false;
+      documentsData.forEach(data => {
+        data.data().participants.forEach(participant => {
+          if (participant.id === conversationPartnerId) conversationExists = true;
+        });
+      });
+      return conversationExists;
+    },
+    [documentsData]
+  );
+
+  const handleInvalidConversation = useCallback((msg: string) => {
+    setError(msg);
     setAutoCompleteOptions([]);
   }, []);
 
@@ -87,8 +115,11 @@ export const CreateConversationDialog = (props: ICreateConversationDialog) => {
   const startNewConversation = useCallback(
     async (conversationPartnerObj: IConversationUser) => {
       if (loggedInUser) {
+        const conversationAlreadyExists = checkIfConversationAlreadyExists(conversationPartnerObj.id);
         if (loggedInUser.uid === conversationPartnerObj.id) {
-          return handleInvalidConversation();
+          return handleInvalidConversation("You cannot start a conversation with yourself");
+        } else if (conversationAlreadyExists) {
+          return handleInvalidConversation("A conversation with this user already exists");
         } else {
           createNewConversation(loggedInUser, conversationPartnerObj);
         }
