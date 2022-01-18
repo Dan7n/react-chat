@@ -19,9 +19,8 @@ describe("Sign up and login page", () => {
     cy.contains("Continue").click();
     //At this point a query is made to cloud firestore to check if the account already exists
     cy.contains("Let's go ahead and create an account for you");
-    cy.get("input[name='password']").type(randomPassword);
+    cy.get("input[name='password']").type(randomPassword + 123); //to make sure it always has letters + numbers
     cy.contains("Continue").click();
-    cy.contains("Thank you for signing up to ReactChat");
 
     //When the account is created, the user should be redirected to the profile page
     cy.url().should("include", "profile");
