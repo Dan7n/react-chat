@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import Lottie from "lottie-react";
 import lottie404 from "../../assets/404.json";
 import "./../../styles/components/404/style.scss";
@@ -5,9 +6,11 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const NotFound = () => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
   return (
     <AnimatePresence>
       <motion.div
+        ref={containerRef}
         className="lottie-container"
         initial={{ opacity: 0, translateY: 150, scale: 1.8 }}
         animate={{ opacity: 1, translateY: 0, scale: 1 }}
@@ -18,7 +21,7 @@ export const NotFound = () => {
         <Link to="/" className="nav-link">
           Go back to the homepage
         </Link>
-        <Lottie animationData={lottie404} loop={true} className="animation" />
+        <Lottie animationData={lottie404} loop={true} className="animation" container={containerRef?.current!} />
       </motion.div>
     </AnimatePresence>
   );

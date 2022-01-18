@@ -4,6 +4,7 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { IAction } from "../../../models/IAction";
 import { updateLoadingState } from "../state/actionCreators";
+import useSound from "use-sound";
 
 //Firebase
 import { useDocumentData } from "react-firebase-hooks/firestore";
@@ -12,8 +13,10 @@ import { db } from "../../../firebase-config";
 import { sendMessageToCloudFirestore } from "./../../../utils/firebaseChatHelpers";
 import { User } from "firebase/auth";
 
-//Custom hooks
+//Custom hooks and helper functions
 import { useUpload } from "../../../hooks/useUpload";
+import { checkValidImageFormat } from "./../../../utils/regexHelpers";
+import { handleInvalidImgFormat } from "./../../../utils/toastHelpers";
 
 //Components
 import SendIcon from "@mui/icons-material/Send";
@@ -26,6 +29,8 @@ import { ReceivedMessage } from "./../../../styles/styled-components/ReceivedMes
 import { AttachmentHandler } from "./MessagesPanelChildren/AttachmentHandler";
 import { GoBackBtn } from "../../../styles/styled-components/GoBackBtn";
 import InputEmoji from "react-input-emoji";
+
+const popSound = require("./../../../assets/pop.mp3");
 
 const isInvalidText = (msg: string) => {
   //returns true if the msg is only spaces
@@ -44,6 +49,7 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   const params = useParams();
   const location = useLocation();
   const documentId = params.documentId;
+  const [play] = useSound(popSound);
 
   const [snapshot, loading] = useDocumentData(doc(db, "conversations", documentId!), {
     snapshotListenOptions: { includeMetadataChanges: true },
@@ -132,6 +138,9 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   //Action handlers --------------------------------------------
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e?.target?.files!.length) return;
+    const filePath = e.target.value;
+    const isValidImageFormat = checkValidImageFormat(filePath);
+    if (!isValidImageFormat) return handleInvalidImgFormat();
     const imageFile = e?.target?.files![0];
     const config = {
       imageFile,
@@ -145,8 +154,9 @@ export function MessagesPanel({ loggedInUser, dispatch }: IMessagesPanel) {
   const handleSendMessage = useCallback(async () => {
     if (isInvalidText(messageText)) return;
     await sendMessageToCloudFirestore(messageText, documentId!, loggedInUser.uid);
+    play();
     setMessageText("");
-  }, [messageText]);
+  }, [messageText, documentId]);
 
   return (
     <section className="messages-panel">

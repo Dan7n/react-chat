@@ -4,6 +4,8 @@ import styled from "styled-components";
 
 interface IGoBackBtn {
   to: string;
+  color?: string;
+  btnText?: string;
 }
 
 const StyledLink = styled(Link)`
@@ -17,22 +19,22 @@ const StyledLink = styled(Link)`
   margin-right: 1rem;
   transition: all ease-in-out 200ms;
   gap: 0;
-  color: #6246ea;
+  color: ${props => props.color};
   svg {
     transform: rotate(180deg);
   }
   &:hover {
     color: white;
-    background-color: #6246ea;
+    background-color: ${props => props.color};
     gap: 0.4rem;
   }
 `;
 
-export const GoBackBtn = ({ to }: IGoBackBtn) => {
+export const GoBackBtn = ({ to, color = "#6246ea", btnText = "Go back" }: IGoBackBtn) => {
   return (
-    <StyledLink to={to}>
+    <StyledLink to={to} color={color}>
       <DoubleArrowRoundedIcon />
-      Go back
+      {btnText}
     </StyledLink>
   );
 };

@@ -16,7 +16,7 @@ describe("Chat component test suite", () => {
     cy.contains("Chats");
   });
 
-  it.only("Should be able to send a text message", () => {
+  it("Should be able to send a text message", () => {
     const fakeTextMessage = faker.lorem.words();
     cy.get("div.side-panel__single-conversation").click();
     cy.get("[data-testid='react-input-emoji--input']").as("inputField").should("be.visible");

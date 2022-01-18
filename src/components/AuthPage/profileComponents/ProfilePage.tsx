@@ -1,7 +1,9 @@
-import { useCallback, useState, useMemo, useContext, useEffect } from "react";
+import { useCallback, useState, useMemo, useContext, useEffect, useRef } from "react";
 import "./../../../styles/components/AuthComponent/styles.scss";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation, Link } from "react-router-dom";
+import Lottie from "lottie-react";
+import confetti from "./../../../assets/confetti.json";
 
 //components
 import TextField from "@mui/material/TextField";
@@ -30,6 +32,8 @@ export const ProfilePage = () => {
 
   const navigateTo = useNavigate();
   const location = useLocation();
+
+  const lottieContainerRef = useRef<HTMLDivElement | null>(null);
 
   const { state } = useContext<IContext>(GlobalContext);
 
@@ -78,7 +82,7 @@ export const ProfilePage = () => {
     }
     setIsLoading(true);
     await updateCurrentlyLoggedInUserProfile(profileInfo);
-    handleSuccessfulProfileUpdate();
+    !isUserComingFromChatComponent && handleSuccessfulProfileUpdate();
     setTimeout(() => {
       isUserComingFromChatComponent ? navigateTo(location.pathname.replace("/profile", "")) : navigateTo("/chat");
     }, 2000);
@@ -86,15 +90,24 @@ export const ProfilePage = () => {
 
   return (
     <motion.div
-      initial={{ x: 300, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      exit={{ x: -300, opacity: 0 }}
+      ref={lottieContainerRef}
+      initial={!isUserComingFromChatComponent ? { x: 300, opacity: 0 } : { translateX: -300, opacity: 0 }}
+      animate={!isUserComingFromChatComponent ? { x: 0, opacity: 1 } : { translateX: 0, opacity: 1 }}
+      exit={!isUserComingFromChatComponent ? { x: -300, opacity: 0 } : { translateX: 300, opacity: 0 }}
       transition={{ ease: "easeInOut", duration: 0.4 }}>
       <main className={`profile-container ${isUserComingFromChatComponent && "from-chat"}`}>
         {isUserComingFromChatComponent && <GoBackBtn to={location.pathname.replace("/profile", "")} />}
         <section className="profile-container__title">
           {!isUserComingFromChatComponent ? (
             <>
+              {!isUserComingFromChatComponent && (
+                <Lottie
+                  container={lottieContainerRef?.current!}
+                  animationData={confetti}
+                  loop
+                  className="lottie-confetti"
+                />
+              )}
               <h1>Thank you for signing up to ReactChat</h1>
               <p>Please take a moment to fill out your profile details</p>
             </>

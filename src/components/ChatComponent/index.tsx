@@ -15,6 +15,7 @@ import { ScaleLoader } from "react-spinners";
 import Backdrop from "@mui/material/Backdrop";
 import Skeleton from "@mui/material/Skeleton";
 import Stack from "@mui/material/Stack";
+import { CustomLoader } from "./../shared/CustomLoader";
 
 //Firebase
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -57,6 +58,21 @@ export const ChatComponent = React.memo(() => {
                   <>
                     <Route
                       path="/settings/*"
+                      element={
+                        <motion.div
+                          style={{ width: "100%" }}
+                          variants={profileVarients}
+                          exit="exit"
+                          initial="initial"
+                          animate="animate"
+                          transition={{ duration: 0.4 }}>
+                          <ProfileSettings loggedInUser={loggedInUser} isLargeDesktop={isLargeDesktop} />
+                        </motion.div>
+                      }
+                    />
+                    {/** Identical component on two separate routes - in case the user resizes the window while on profile compoenent */}
+                    <Route
+                      path="profile"
                       element={
                         <motion.div
                           style={{ width: "100%" }}
@@ -156,9 +172,7 @@ export const ChatComponent = React.memo(() => {
         </section>
       )}
 
-      <Backdrop open={Boolean(!loggedInUser) || chatState?.isMessagesLoading!} sx={{ zIndex: 100 }}>
-        <ScaleLoader color="#fff" height="5rem" width="0.5rem" />
-      </Backdrop>
+      <CustomLoader isVisible={Boolean(!loggedInUser) || chatState?.isMessagesLoading!} />
     </main>
   );
 });

@@ -8,8 +8,7 @@ import { ILoginState, initialFormState } from "../../models/IFormValue";
 import { Route, Routes, Link } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { RequireAuth } from "../shared/RequireAuth";
-
-import { ThreeScene } from "./3dComponent";
+import { SidePanel } from "./sidePanel";
 
 const PasswordResetDialog = lazy(() => import("./loginComponents/PasswordResetDialog"));
 
@@ -19,8 +18,7 @@ export default function AuthPage() {
   return (
     <main>
       <section className="three-container">
-        {/* Placeholder <Link to={"profile"}>to profile</Link> <Link to={"login"}>to login</Link> */}
-        <ThreeScene />
+        <SidePanel />
       </section>
 
       <Suspense fallback={null}>
@@ -35,14 +33,7 @@ export default function AuthPage() {
         <LoginWave />
         <AnimatePresence exitBeforeEnter>
           <Routes>
-            <Route
-              path="login"
-              element={
-                <RequireAuth navigateTo="/chat" shouldUserBeLoggedIn={false}>
-                  <LoginForm loginPageState={formState} dispatch={formDispatch} />
-                </RequireAuth>
-              }
-            />
+            <Route path="login" element={<LoginForm loginPageState={formState} dispatch={formDispatch} />} />
             <Route
               path="profile"
               element={

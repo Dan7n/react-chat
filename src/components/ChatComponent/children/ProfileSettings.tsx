@@ -36,7 +36,7 @@ export function ProfileSettings({ loggedInUser, isLargeDesktop }: IProfileSettin
 
   return (
     <section className="chat-container__profile">
-      <AnimatePresence>
+      <AnimatePresence exitBeforeEnter>
         <Routes>
           <Route
             path={isLargeDesktop ? "*" : "/"}
@@ -82,7 +82,7 @@ const SettingsContainer = ({ loggedInUser, handleSignOut, isLargeDesktop }: IPro
   return (
     <motion.div className="chat-container__profile__inner">
       {!isLargeDesktop && (
-        <button className="mobile-navigate-back" onClick={() => navigateTo(-1)}>
+        <button className="mobile-navigate-back" onClick={() => navigateTo("/chat")}>
           <DoubleArrowRoundedIcon />
           Go back{" "}
         </button>

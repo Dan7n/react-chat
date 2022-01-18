@@ -113,7 +113,7 @@ export const LoginForm = (props: ILoginForm) => {
     const resetPasswordValidTimer = setTimeout(() => updateIsPasswordValid(true), 3000);
 
     return () => clearTimeout(resetPasswordValidTimer);
-  }, [loggedInUser, singinLoading, singinError, createUserObject]);
+  }, [loggedInUser, singinLoading, singinError, createUserObject, dispatch, navigateTo]);
 
   useEffect(() => {
     if (signinUser) navigateTo("/chat");
@@ -131,19 +131,24 @@ export const LoginForm = (props: ILoginForm) => {
   };
 
   const checkUserExists = useCallback(async () => {
-    const { foundUser, done } = await findUserByEmailOrPhoneNumber("email", email);
-    done === "OK" && dispatch(updateIsLoading(false));
-    if (foundUser) {
-      //fires if the user already has an account in firebase
-      handleUserFoundMsg();
-      dispatch(updateIsAccountFound(Boolean(foundUser)));
-      handleSignInWithEmailAndPassword("SIGN_IN");
+    if (!isAccountFound) {
+      //evaluates true only if the user already has an account in cloud firestore
+      const { foundUser, done } = await findUserByEmailOrPhoneNumber("email", email);
+      done === "OK" && dispatch(updateIsLoading(false));
+      if (foundUser) {
+        handleUserFoundMsg();
+        dispatch(updateIsAccountFound(Boolean(foundUser)));
+      } else {
+        dispatch(updateIsNewUser(true));
+        !isPasswordValid && handleNewUserMsg();
+        handleSignInWithEmailAndPassword("CREATE_ACCOUNT");
+      }
+
+      //Else if user is signing in
     } else {
-      dispatch(updateIsNewUser(true));
-      handleNewUserMsg();
-      handleSignInWithEmailAndPassword("CREATE_ACCOUNT");
+      handleSignInWithEmailAndPassword("SIGN_IN");
     }
-  }, [isEmailValid, isPasswordValid, email, password]);
+  }, [isEmailValid, isPasswordValid, email, password, isAccountFound]);
 
   //Sign in methods
   const handleSignInWithEmailAndPassword = useCallback(
@@ -163,7 +168,13 @@ export const LoginForm = (props: ILoginForm) => {
       initial={{ x: 300, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: -300, opacity: 0 }}
-      transition={{ ease: "easeInOut", duration: 0.4 }}>
+      transition={{
+        type: "spring",
+        damping: 10,
+        mass: 0.75,
+        stiffness: 150,
+        duration: 1.3,
+      }}>
       {state.user ? (
         <h1>Logged in</h1>
       ) : (

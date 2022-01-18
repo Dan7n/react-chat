@@ -9,6 +9,7 @@ import { Avatar, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { IconContainer } from "../../../styles/styled-components/IconContainer";
 import { CreateConversationDialog } from "./SidePanelChildren/CreateConversationDialog";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 //Firebase
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
@@ -45,7 +46,7 @@ export const SidePanel = React.memo(
     const getConversationsQuery = useCallback(() => {
       if (userData) {
         const conversationsArray = userData.data()?.conversations;
-        return conversationsArray.length > 0
+        return conversationsArray?.length > 0
           ? query(collection(db, "conversations"), where("__name__", "in", conversationsArray))
           : null;
       }
@@ -133,13 +134,11 @@ export const SidePanel = React.memo(
                 <IconContainer>
                   <MoreVertIcon onClick={e => setAnchorEl(e.currentTarget)} />
                 </IconContainer>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={isMenuOpen}
-                  onClose={() => setAnchorEl(null)}
-                  className="menu-container">
+                <Menu anchorEl={anchorEl} open={isMenuOpen} onClose={() => setAnchorEl(null)}>
                   <MenuItem>
-                    <Link to="/chat/settings">Go to settings</Link>
+                    <Link to="/chat/settings" className="go-to-settings">
+                      <AdminPanelSettingsIcon /> Go to settings
+                    </Link>
                   </MenuItem>
                 </Menu>
               </>
