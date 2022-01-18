@@ -4,6 +4,7 @@
   width: 100vw;
   height: 100vh;
   position: relative;
+  overflow-x: hidden;
 
   .landing-page__hero-text {
     @include mixins.center-col;
@@ -52,6 +53,10 @@
     }
     background-color: #111d5e;
     overflow: hidden;
+
+    canvas {
+      touch-action: none;
+    }
   }
 }
 

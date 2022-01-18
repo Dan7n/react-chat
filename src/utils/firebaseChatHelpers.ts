@@ -1,3 +1,7 @@
+/** ////////////////////////////////////////////////
+ * Firebase chat helper functions
+ **/ ////////////////////////////////////////////////
+
 import { doc, updateDoc, arrayUnion } from "@firebase/firestore";
 import { db } from "../firebase-config";
 import { serverTimestamp } from "@firebase/firestore";

@@ -1,3 +1,9 @@
+/** ////////////////////////////////////////////////
+ * Toast notifications helper functions
+ *
+ * just call on any of these functions to return a toast notification
+ **/ ////////////////////////////////////////////////
+
 import { toast } from "react-hot-toast";
 
 // ------------- Error and Success messages -------------
@@ -25,3 +31,5 @@ export const handleSuccessfulProfileUpdate = () =>
 
 export const handleInvalidConversationErrorMessage = () =>
   toast.error("You cannot create a conversation with yourself!");
+
+export const handleInvalidImgFormat = () => toast.error("File you chose is not a valid image format");

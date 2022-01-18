@@ -20,7 +20,6 @@ import { defaultState, IDefaultState } from "./context/defaultState";
 import { reducer } from "./context/reducer";
 import { loginUser } from "./context/actionCreators";
 import { IAction } from "./models/IAction";
-import { RequireAuth } from "./components/shared/RequireAuth";
 import { NotFound } from "./components/404/NotFound";
 
 function App() {
@@ -39,14 +38,7 @@ function App() {
         {/* <AnimatePresence> */}
         <Routes>
           <Route path="auth/*" element={<AuthPage />} />
-          <Route
-            path="chat/*"
-            element={
-              <RequireAuth navigateTo={"/auth/login"}>
-                <ChatComponent />
-              </RequireAuth>
-            }
-          />
+          <Route path="chat/*" element={<ChatComponent />} />
           <Route
             path="/"
             element={

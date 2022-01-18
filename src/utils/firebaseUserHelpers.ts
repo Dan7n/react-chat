@@ -1,3 +1,7 @@
+/** ////////////////////////////////////////////////
+ * Firebase user helper functions
+ **/ ////////////////////////////////////////////////
+
 import {
   setDoc,
   serverTimestamp,
@@ -82,7 +86,7 @@ export const createUserInCloudFirestore = async (userCredentials: User) => {
   const docRef = doc(db, "users", userCredentials.uid);
 
   const isUserRegistered = await checkIfUserExists(userCredentials);
-  if (isUserRegistered) return console.log("User exists");
+  if (isUserRegistered) return;
 
   const newUser = {
     id: userCredentials.uid,
@@ -146,7 +150,6 @@ export const createNewConversation = async (loggedInUser: User, receiver: IConve
 
 export const updateCurrentlyLoggedInUserProfile = async (updatedProfileInfo: IDefaultProfileInfo) => {
   const auth = getAuth();
-  console.log("From backend: ", updatedProfileInfo);
 
   try {
     if (auth.currentUser) {

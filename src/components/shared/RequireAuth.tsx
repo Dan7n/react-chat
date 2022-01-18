@@ -20,7 +20,6 @@ export const RequireAuth = ({
 }: IRequireAuth): JSX.Element => {
   const { state } = useContext<IContext>(GlobalContext);
   const { user } = state;
-  if (!user) return <></>;
 
   if (shouldUserBeLoggedIn) {
     return user ? <>{children}</> : <Navigate to={navigateTo} />;
