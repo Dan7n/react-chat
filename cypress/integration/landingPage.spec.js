@@ -1,9 +1,9 @@
-describe("My First Test", () => {
+describe("Landing page e2e tests", () => {
   it("Should render the landing page", () => {
     cy.visit("/");
     cy.contains("ReactChat");
   });
-  it.only("Should redirect to /auth/login page if not already logged in from previous session", () => {
+  it("Should redirect to /auth/login page if not already logged in from previous session", () => {
     cy.logout();
     cy.visit("/");
     cy.get("[data-cy='landingPageRedirect']").as("redirectBtn").click();

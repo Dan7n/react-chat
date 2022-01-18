@@ -55,6 +55,13 @@ describe("Chat component test suite", () => {
     cy.get("input[type='file']").attachFile("cute-cat.jpg");
   });
 
+  it("Should not be able to upload files that are not supported image types", () => {
+    cy.get("div.side-panel__single-conversation").click();
+    cy.get("[data-cy=attachmentHandler]").click();
+    cy.get("input[type='file']").attachFile("invalidExample.json");
+    cy.contains("not a valid image format");
+  });
+
   it("Should be able to log out", () => {
     cy.contains("Logout").click();
     cy.url().should("not.include", "chat");

@@ -33,3 +33,6 @@ export const handleInvalidConversationErrorMessage = () =>
   toast.error("You cannot create a conversation with yourself!");
 
 export const handleInvalidImgFormat = () => toast.error("File you chose is not a valid image format");
+
+export const handleUserNotLoggedIn = () =>
+  toast.error("You do not seem to be logged in, you've been redirected to the login page");

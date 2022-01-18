@@ -22,7 +22,7 @@ export const useUpload = () => {
   const uploadToStorageBucket = useCallback(async ({ imageFile, audioFile, conversationId, uid }: IUploadConfig) => {
     setIsUploadLoading(true);
     let fileRef;
-    if (imageFile) fileRef = ref(storage, imageFile!.name);
+    if (imageFile) fileRef = ref(storage, `${imageFile!.name}_${Date.now()}`);
     else if (audioFile) fileRef = ref(storage, `AudioFile_${Date.now()}`);
 
     const fileToUpload = imageFile || audioFile;
