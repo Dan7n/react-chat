@@ -1,8 +1,8 @@
-import React, { useReducer } from "react";
+import React, { useReducer, useEffect } from "react";
 import { reducer } from "./state/reducer";
 import { initialState } from "./state/initialState";
 import "./../../styles/components/ChatComponent/styles.scss";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
@@ -11,15 +11,14 @@ import { SidePanel } from "./children/SidePanel";
 import { MessagesPanel } from "./children/MessagesPanel";
 import { ProfileSettings } from "./children/ProfileSettings";
 import { NoConversationSelected } from "./children/NoConversationSelected";
-import { ScaleLoader } from "react-spinners";
-import Backdrop from "@mui/material/Backdrop";
-import Skeleton from "@mui/material/Skeleton";
-import Stack from "@mui/material/Stack";
 import { CustomLoader } from "./../shared/CustomLoader";
 
 //Firebase
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase-config";
+
+//Helpers
+import { handleUserNotLoggedIn } from "./../../utils/toastHelpers";
 
 export const ChatComponent = React.memo(() => {
   const [chatState, chatDispatch] = useReducer(reducer, initialState);
@@ -27,6 +26,7 @@ export const ChatComponent = React.memo(() => {
   const isDesktop = useMediaQuery("(min-width:640px)");
   const isLargeDesktop = useMediaQuery("(min-width:1000px)");
   const location = useLocation();
+  const navigateTo = useNavigate();
 
   const sidePanelProps = {
     dispatch: chatDispatch,
@@ -42,6 +42,19 @@ export const ChatComponent = React.memo(() => {
     initial: { opacity: 0, translateY: 150 },
     animate: { opacity: 1, translateY: 0 },
   };
+
+  //Side effects
+  useEffect(() => {
+    //Redirect to login page if the user is not logged in after 7s
+    if (loggedInUser) return;
+    const timeout = setTimeout(() => {
+      if (!loggedInUser) {
+        handleUserNotLoggedIn();
+        navigateTo("/auth/login");
+      }
+    }, 7000);
+    return () => clearTimeout(timeout);
+  }, [loggedInUser]);
 
   return (
     <main className="chat-container">
