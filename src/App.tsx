@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
+import { Routes, Route } from "react-router-dom";
+import { motion } from "framer-motion";
 
 //------------- Firebase -------------
 import "firebase/firestore";
@@ -25,7 +25,6 @@ import { NotFound } from "./components/404/NotFound";
 function App() {
   const [loggedInUser] = useAuthState(auth);
   const [globalState, dispatch] = useReducer<React.Reducer<IDefaultState, IAction>>(reducer, defaultState);
-  const location = useLocation();
 
   useEffect(() => {
     if (loggedInUser && !globalState.user) dispatch(loginUser(loggedInUser));
@@ -35,7 +34,6 @@ function App() {
     <>
       <Toaster />
       <GlobalContext.Provider value={{ state: globalState, dispatch: dispatch }}>
-        {/* <AnimatePresence> */}
         <Routes>
           <Route path="auth/*" element={<AuthPage />} />
           <Route path="chat/*" element={<ChatComponent />} />
@@ -49,7 +47,6 @@ function App() {
           />
           <Route path="*" element={<NotFound />} />
         </Routes>
-        {/* </AnimatePresence> */}
       </GlobalContext.Provider>
     </>
   );

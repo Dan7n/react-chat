@@ -1,5 +1,6 @@
 import { useEffect, useCallback, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 //Components
 import FormControl from "@mui/material/FormControl";
@@ -43,8 +44,6 @@ import {
 import { ILoginForm } from "../../../models/IFormValue";
 import { GlobalContext, IContext } from "../../../context/GlobalContext";
 
-import { motion } from "framer-motion";
-
 export const LoginForm = (props: ILoginForm) => {
   const {
     email,
@@ -60,8 +59,8 @@ export const LoginForm = (props: ILoginForm) => {
   const { dispatch } = props;
 
   const [loggedInUser] = useAuthState(auth);
-  const navigateTo = useNavigate();
   const { state } = useContext<IContext>(GlobalContext);
+  const navigateTo = useNavigate();
 
   const isBtnDisabled =
     isPasswordValid === false || ((isAccountFound || isNewUser) && password === "") || !isEmailValid;
@@ -74,7 +73,8 @@ export const LoginForm = (props: ILoginForm) => {
   }, [email]);
 
   const handlePasswordBlur = useCallback(() => {
-    // if (password === "") dispatch(updateIsPasswordValid(null));
+    //removes the red warning text if the password box is empty
+    if (password === "") dispatch(updateIsPasswordValid(null));
   }, [password]);
 
   useEffect(() => {
@@ -99,8 +99,7 @@ export const LoginForm = (props: ILoginForm) => {
       //fires off when a new user gets created
       (async function () {
         await createUserInCloudFirestore(loggedInUser);
-        //TODO fix email vertification
-        await sendEmailVerification(createUserObject.user);
+        await sendEmailVerification(loggedInUser);
         navigateTo("/auth/profile");
       })();
     }

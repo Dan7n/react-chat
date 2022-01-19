@@ -60,8 +60,9 @@ const PasswordResetDialog = (props: IPasswordResetDialog) => {
       dispatch(updateIsResetEmailValid(false));
     }
     dispatch(updateIsResetEmailValid(true));
-    setMessageToUser("An reset link has just been sent to your email adress 🎉");
-    return await sendPasswordReset(resetEmail);
+    const error = await sendPasswordReset(resetEmail);
+    if (error) return setMessageToUser("Your email could not be found in our database");
+    setMessageToUser("A reset link has just been sent to your email adress 🎉");
   }, [data]);
 
   return (

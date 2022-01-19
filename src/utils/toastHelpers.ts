@@ -1,7 +1,5 @@
 /** ////////////////////////////////////////////////
- * Toast notifications helper functions
- *
- * just call on any of these functions to return a toast notification
+ * Toast notifications helper functions -just call on any of these functions to return a toast notification
  **/ ////////////////////////////////////////////////
 
 import { toast } from "react-hot-toast";

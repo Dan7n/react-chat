@@ -105,11 +105,29 @@ export const createUserInCloudFirestore = async (userCredentials: User) => {
   }
 };
 
+//------------------------------------------------------------------
+
+/**
+ * @abstract simple function to send a password reset link to the user's email adress
+ * @param userEmail email adress of the user
+ * @returns an error object if the requres did not go through, for example in the case of the user not having an account
+ */
+
 export const sendPasswordReset = async (userEmail: string) => {
-  return sendPasswordResetEmail(auth, userEmail);
+  try {
+    return await sendPasswordResetEmail(auth, userEmail);
+  } catch (error) {
+    return error;
+  }
 };
 
 //------------------------------------------------------------------
+
+/**
+ * @abstract function that takes two users as its arguments, creates a new conversation document in the "conversations" collection in cloud firestore, and saves a reference of this conversation in both users' documents
+ * @param loggedInUser the currently logged in user's User object
+ * @param receiver the other user that will participate in this conversation
+ */
 
 export const createNewConversation = async (loggedInUser: User, receiver: IConversationUser) => {
   const loggedInUserParticipant = {
