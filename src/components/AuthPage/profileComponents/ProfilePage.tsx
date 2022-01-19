@@ -1,7 +1,7 @@
 import { useCallback, useState, useMemo, useContext, useEffect, useRef } from "react";
 import "./../../../styles/components/AuthComponent/styles.scss";
 import { motion } from "framer-motion";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Lottie from "lottie-react";
 import confetti from "./../../../assets/confetti.json";
 
