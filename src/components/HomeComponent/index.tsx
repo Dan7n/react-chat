@@ -34,7 +34,6 @@ export default function HomeComponent() {
         initial={{ opacity: 0 }}
         transition={{ ease: "easeInOut", duration: 0.2 }}
         exit={{ opacity: 0, translateY: -50 }}>
-        {/* <BlurredBlobs></BlurredBlobs> */}
         <motion.div
           className="landing-page__hero-text"
           animate={{ opacity: 1, translateY: 0 }}

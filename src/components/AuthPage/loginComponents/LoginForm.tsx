@@ -43,6 +43,7 @@ import {
 } from "../state/actionCreators";
 import { ILoginForm } from "../../../models/IFormValue";
 import { GlobalContext, IContext } from "../../../context/GlobalContext";
+import { LoggedInTrue } from "./LoggedInTrue";
 
 export const LoginForm = (props: ILoginForm) => {
   const {
@@ -115,7 +116,11 @@ export const LoginForm = (props: ILoginForm) => {
   }, [loggedInUser, singinLoading, singinError, createUserObject, dispatch, navigateTo]);
 
   useEffect(() => {
-    if (signinUser) navigateTo("/chat");
+    if (!signinUser) return;
+    const timeout = setTimeout(() => {
+      navigateTo("/chat");
+    }, 2000);
+    return () => clearTimeout(timeout);
   }, [signinUser]);
 
   // Event handlers ------------------
@@ -175,7 +180,7 @@ export const LoginForm = (props: ILoginForm) => {
         duration: 1.3,
       }}>
       {state.user ? (
-        <h1>Logged in</h1>
+        <LoggedInTrue />
       ) : (
         <>
           <FormControl id="authForm">
