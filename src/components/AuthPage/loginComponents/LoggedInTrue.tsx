@@ -14,8 +14,6 @@ export const LoggedInTrue = React.memo(() => {
     }, 2000);
     return () => clearTimeout(timeout);
   }, []);
-
-  console.log("rendered");
   return (
     <motion.div className="login-successfull">
       <motion.p
