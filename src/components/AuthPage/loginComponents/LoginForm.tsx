@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 //Components
 import FormControl from "@mui/material/FormControl";
@@ -183,54 +183,64 @@ export const LoginForm = (props: ILoginForm) => {
         <LoggedInTrue />
       ) : (
         <>
-          <FormControl id="authForm">
-            <h1>What is your email adress?</h1>
-            <FormHelperText>
-              If you have an account you'll be able to sign in with your password, if not we'll create one for you.
-            </FormHelperText>
-            <div className="input-fields-container">
-              <TextField
-                label="Email Adress"
-                id="emailInput"
-                size="small"
-                className="authForm--input-field"
-                name="email"
-                value={email}
-                onChange={e => dispatch(updateEmail(e.target.value))}
-                onBlur={handleEmailBlur}
-                onKeyUp={e => {
-                  if (e.key === "Enter") handleSubmit();
-                }}
-                autoComplete="off"
-                error={isEmailValid === false || false}
-              />
-
-              {(isAccountFound || isNewUser) && (
+          <AnimatePresence>
+            <FormControl id="authForm">
+              <h1>What is your email adress?</h1>
+              <FormHelperText>
+                If you have an account you'll be able to sign in with your password, if not we'll create one for you.
+              </FormHelperText>
+              <div className="input-fields-container">
                 <TextField
-                  label="Password"
-                  id="passwordInput"
+                  label="Email Adress"
+                  id="emailInput"
                   size="small"
                   className="authForm--input-field"
-                  name="password"
-                  type={isPasswordShown ? "text" : "password"}
-                  value={password}
-                  onChange={e => dispatch(updatePassword(e.target.value))}
+                  name="email"
+                  value={email}
+                  onChange={e => dispatch(updateEmail(e.target.value))}
+                  onBlur={handleEmailBlur}
                   onKeyUp={e => {
                     if (e.key === "Enter") handleSubmit();
                   }}
-                  onBlur={handlePasswordBlur}
-                  error={isPasswordValid === false || false}
-                  helperText={message || (isPasswordValid === false && "At least 8 chars, including one number")}
-                  InputProps={{
-                    endAdornment: <PasswordIcon isPasswordShown={isPasswordShown} dispatch={dispatch} />,
-                  }}
+                  autoComplete="off"
+                  error={isEmailValid === false || false}
                 />
-              )}
-              <button className="authForm__reset-link" onClick={() => dispatch(updateIsDialogOpen(true))}>
-                Forget password?
-              </button>
-            </div>
-          </FormControl>
+
+                {(isAccountFound || isNewUser) && (
+                  <motion.div
+                    className="input-fields-container__password-container"
+                    initial={{ translateY: 30, opacity: 0 }}
+                    animate={{ translateY: 0, opacity: 1 }}
+                    exit={{ translateY: -30, opacity: 0 }}
+                    transition={{ duration: 0.4 }}>
+                    <TextField
+                      label="Password"
+                      id="passwordInput"
+                      size="small"
+                      className="authForm--input-field"
+                      name="password"
+                      type={isPasswordShown ? "text" : "password"}
+                      value={password}
+                      onChange={e => dispatch(updatePassword(e.target.value))}
+                      onKeyUp={e => {
+                        if (e.key === "Enter") handleSubmit();
+                      }}
+                      onBlur={handlePasswordBlur}
+                      error={isPasswordValid === false || false}
+                      helperText={message || (isPasswordValid === false && "At least 8 chars, including one number")}
+                      InputProps={{
+                        endAdornment: <PasswordIcon isPasswordShown={isPasswordShown} dispatch={dispatch} />,
+                      }}
+                    />
+                  </motion.div>
+                )}
+                <button className="authForm__reset-link" onClick={() => dispatch(updateIsDialogOpen(true))}>
+                  Forget password?
+                </button>
+              </div>
+            </FormControl>
+          </AnimatePresence>
+
           <div className="buttons-container">
             <NormalButton
               width="55%"

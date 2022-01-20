@@ -77,6 +77,11 @@ main {
         .authForm--input-field {
           width: 100%;
         }
+
+        .input-fields-container__password-container {
+          width: 100%;
+          height: 100%;
+        }
       }
 
       .authForm__error {
