@@ -13,7 +13,9 @@ export const SignInWithGoogleBtn = () => {
     signInWithPopup(auth, provider)
       .then(async credentials => {
         await createUserInCloudFirestore(credentials.user);
-        navigateTo("/chat");
+        setTimeout(() => {
+          navigateTo("/chat");
+        }, 2000);
       })
       .catch(error => {
         console.log(error);
